@@ -1,5 +1,5 @@
 const { MongooseError } = require('mongoose');
-const {USER_WRAPPER} = require('../DATABASE');
+const {UserRepository} = require('../DATABASE');
 
 class User{
     registration_id;
@@ -14,6 +14,7 @@ class User{
     enable_state;
     createdAt_timestamp;
     updatedAt_timestamp;
+    _type;
 
     
     constructor(){
@@ -22,7 +23,7 @@ class User{
 
     async save(){
         try {
-            this.user_wrapper = new USER_WRAPPER();
+            this.user_wrapper = new UserRepository();
             
             const user = new User();
             
@@ -36,6 +37,7 @@ class User{
             user.refresh_token = this.refresh_token;
             user.last_login = this.last_login;
             user.enable_state = this.enable_state;
+            user._type = this._type;
             user.createdAt_timestamp = this.createdAt_timestamp;
             user.updatedAt_timestamp = this.updatedAt_timestamp;
 
@@ -63,7 +65,7 @@ class User{
     async findById(user_id){
         
         try {
-            this.user_wrapper = new USER_WRAPPER();
+            this.user_wrapper = new UserRepository();
             const found_user = await this.user_wrapper.findById(user_id);
             
             const user = new User();
@@ -90,17 +92,15 @@ class User{
        
     }
 
-    async updateById(user_id, update_data){
-        try {
-            this.user_wrapper = new USER_WRAPPER();
-            const found_user = await this.user_wrapper.findById(user_id);
-            
-            const user = new User();
+    async find(){
+        const params = {
 
-        } catch (error) {
-            
-        }    
+        }
+
+
     }
+
+
 }
 
 module.exports = User;
