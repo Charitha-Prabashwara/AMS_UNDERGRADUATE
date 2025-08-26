@@ -75,6 +75,11 @@ const userSchema = new mongoose.Schema(
     enable_state: {
       type: Boolean,
       default: true
+    },
+    type:{
+      type:String,
+      enum: ['user', 'admin', 'student', 'department', 'lecturer'],
+      default: 'user'
     }
   },
   {
