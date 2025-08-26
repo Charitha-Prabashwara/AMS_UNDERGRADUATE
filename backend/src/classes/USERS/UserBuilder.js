@@ -1,4 +1,4 @@
-const {USER_WRAPPER} = require('../DATABASE');
+const {UserRepository} = require('../DATABASE');
 const User = require('./user');
 class USER_BUILDER{
   id  
@@ -21,7 +21,7 @@ class USER_BUILDER{
   }
 
   async create(){
-    const user_wrapper = await new USER_WRAPPER()
+    const user_wrapper = await new UserRepository()
 
     .create_new_user(
       this.registration_id,
