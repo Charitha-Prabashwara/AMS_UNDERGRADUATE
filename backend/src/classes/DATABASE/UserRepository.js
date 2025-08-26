@@ -1,7 +1,7 @@
 const { default: mongoose, MongooseError } = require('mongoose');
-const {UserModel} = require('../../models/');
-
-class MONGODB_USER_WRAPPER{
+const {UserModel} = require('../../models');
+const { hashPassword } = require('../../config');
+class UserRepository{
   
   constructor(){
     this.user = UserModel;
@@ -24,7 +24,7 @@ class MONGODB_USER_WRAPPER{
         
         address:{line1:line1, line2:line2, zip:zip},
         name:{first_name:first_name, last_name: last_name, with_initial_name: with_initial, full_name:full_name},
-        password:password
+        password: await hashPassword(password)
       });
       
       return user.toObject();
@@ -85,6 +85,31 @@ class MONGODB_USER_WRAPPER{
         throw error;
       }
   }
+
+  async directUpdate(user_id, fields){
+    try {
+      if(!mongoose.isValidObjectId(user_id)){
+          throw new MongooseError('UserId is not acceptable.')
+      }
+
+      const user = await this.user.findByIdAndUpdate(user_id, fields, { new: true, lean: true });
+      return user;
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async find(filter){
+    const {} = filter;
+    const feed_params = {};
+    try {
+      
+      const users = await this.user.find()
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
-module.exports=MONGODB_USER_WRAPPER;
+module.exports= UserRepository;
