@@ -1,2 +1,3 @@
 const config = require('./Config')
-module.exports = {config};
+const hashPassword = require('./hashPassword')
+module.exports = {config, hashPassword};
