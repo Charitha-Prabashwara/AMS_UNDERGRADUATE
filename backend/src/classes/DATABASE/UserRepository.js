@@ -1,114 +1,56 @@
 const { default: mongoose, MongooseError } = require('mongoose');
 const {UserModel} = require('../../models');
-const { hashPassword } = require('../../config');
+const {UserNotFoundError, InvalidUserIdError} = require('../../errors')
+
 class UserRepository{
   
   constructor(){
     this.user = UserModel;
   }
-  async create_new_user(
-    registration_id, 
-    email, 
-    address={}, 
-    name={}, 
-    password
-  ){
-    const {line1, line2, zip} = address;
-    const {first_name, last_name, full_name, with_initial} = name;
-    
-    try {
-      const user = await this.user.create({
 
-        registration_id:registration_id,
-        email:email,
+  _validateId(id){
+    if(!mongoose.isValidObjectId(id)) throw new InvalidUserIdError()
+  }
+
+  async findById(id){
+        this._validateId(id)
+        return await this.user.findById(id).lean();
         
-        address:{line1:line1, line2:line2, zip:zip},
-        name:{first_name:first_name, last_name: last_name, with_initial_name: with_initial, full_name:full_name},
-        password: await hashPassword(password)
-      });
-      
+  }
+  async create(userObject){
+      const user = await this.user.create(userObject)
       return user.toObject();
-      
-    } catch (error) {
-      throw error;
-    }    
   }
 
-  async findById(user_id){
-      try {
-        if(!mongoose.isValidObjectId(user_id)){
-          throw new MongooseError('UserId is not acceptable.')
-        }
-        const user = await this.user.findById(user_id).lean();
-        return user;
-
-      } catch (error) {
-        throw error;
-      }
+  async save(user){
+        const id = user._id || user.id;
+        this._validateId(id)
+        const found_user = await this.user.findByIdAndUpdate(id.toString(), user,{ new: true, lean: true })
+        if(!found_user) throw new UserNotFoundError()
+        return found_user
   }
 
-  async save(userObject){
-      try {
-        let user = await this.user.findById(userObject.id)
-        
-        if(!user){
-         
-          user = await this.user.create({
-
-          registration_id:userObject.registration_id,
-          email:userObject.email,
-          
-          address:userObject.address,
-          name:userObject.name,
-          password:userObject.password,
-          enable_state:userObject.enable_state,
-          access_token: userObject.access_token,
-          refresh_token: userObject.refresh_token,
-          last_login:userObject.last_login,
-          });
-        }else{
-          user.registration_id=userObject.registration_id;
-          user.email=userObject.email;
-          user.address=userObject.address;
-          user.name=userObject.name;
-          user.password=userObject.password;
-          user.enable_state=userObject.enable_state;
-          user.access_token= userObject.access_token;
-          user.refresh_token= userObject.refresh_token;
-          user.last_login=userObject.last_login;
-
-          return (await user.save()).toObject();
-        }
-        return user.toObject();
-
-      } catch (error) {
-        throw error;
-      }
+  async directUpdate(id, fields){
+      this._validateId(id)
+      return await this.user.findByIdAndUpdate(id, fields, { new: true, lean: true }); 
   }
 
-  async directUpdate(user_id, fields){
-    try {
-      if(!mongoose.isValidObjectId(user_id)){
-          throw new MongooseError('UserId is not acceptable.')
-      }
-
-      const user = await this.user.findByIdAndUpdate(user_id, fields, { new: true, lean: true });
-      return user;
-
-    } catch (error) {
-      throw error;
-    }
+  async find(filter={}, options={}){
+    const { limit = null, skip = 0, select = null, sort = null } = options;
+    let query = this.user.find(filter).skip(skip);
+      if (limit) query = query.limit(limit);
+      if (select) query = query.select(select);
+      if (sort) query = query.sort(sort);
+    return await query.lean();
   }
 
-  async find(filter){
-    const {} = filter;
-    const feed_params = {};
-    try {
-      
-      const users = await this.user.find()
-    } catch (error) {
-      throw error
-    }
+  async deleteOne(filter){
+      const deleted = await this.user.findOneAndDelete(filter).lean()
+      if(!deleted) throw new UserNotFoundError();
+      return deleted;
+  }
+  async deleteMany(filter){
+      return await this.user.deleteMany(filter);
   }
 }
 
