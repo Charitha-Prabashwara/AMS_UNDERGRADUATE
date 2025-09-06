@@ -52,6 +52,13 @@ class UserRepository{
   async deleteMany(filter){
       return await this.user.deleteMany(filter);
   }
+
+  async deleteById(id){
+    this._validateId(id)
+    const deleted = await this.user.findByIdAndDelete(id).lean()
+    if(!deleted) throw new UserNotFoundError();
+    return deleted
+  }
 }
 
 module.exports= UserRepository;

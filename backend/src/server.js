@@ -3,12 +3,19 @@ const {config} = require('./config');
 const {DB_connect} = require('./database/db');
 
 
-
-
 // Error handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something went wrong!");
+app.use((error, req, res, next) => {
+  
+    if(error){
+      const date =new Date().toISOString() 
+      console.error(error.message + ":" +date );
+      return res.status(error.statusCode).json({
+      success: error.success,
+      message: error.message,
+      details: error.details,
+      timestamp:date
+    });
+    }
 });
 
 app.listen(config.APPLICATION_PORT, () => {

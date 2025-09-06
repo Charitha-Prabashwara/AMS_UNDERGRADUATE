@@ -9,8 +9,11 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cookieParser = require("cookie-parser")
 const Redis = require('ioredis');
+const compression = require("compression");
 
-
+app.use(compression({
+  threshold: 1024 // compress only if response > 1 KB
+}));
 
 // const redis = new Redis({
 //   host: '192.168.1.100',   // Replace with your Redis server IP
@@ -88,7 +91,7 @@ app.use(bodyParser.json({ limit: "10mb" }));
 // const {autoInactiveExpiredOffers} = require("./services/offer.service");
 
 // // Routes imports
-const {base_router} = require('./routes');
+const {base_router, adminRouter} = require('./routes');
 // const categoryRouter = require("./routes/category.route");
 // const subcategoryRouter = require("./routes/subcategory.route");
 // const brandRouter = require("./routes/brand.route");
@@ -120,19 +123,6 @@ const {base_router} = require('./routes');
 
 // // Routes
 app.use("/api/v1/", base_router)
-// app.use("/api/v1/categories", categoryRouter);
-// app.use("/api/v1/subcategories", subcategoryRouter);
-// app.use("/api/v1/brands", brandRouter);
-// app.use("/api/v1/products", productRouter);
-// app.use("/api/v1/ratings", ratingRouter);
-// app.use("/api/v1/offers", offerRouter);
-// app.use("/api/v1/banners", bannerRouter);
-// app.use("/api/v1/orders", orderRouter);
-
-// app.use("/api/v1/tags", tagsRouter);
-// app.use('/api/v1/users', userRouter);
-// app.use('/api/v1/contacts', contactRouter);
-// app.use('/api/v1/testimonial', testimonialRouter);
-// app.use('/api/v1/faq', FAQRouter);
+app.use("/api/v1/admin/", adminRouter)
 
 module.exports = app

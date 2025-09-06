@@ -1,44 +1,65 @@
 const {UserRepository} = require('../DATABASE');
 const User = require('./user');
+const {PasswordHashService} = require('../../services');
+
 class USER_BUILDER{
-  id  
-  registration_id;
-  name;
-  email;
-  address;
-  #password;
+    registration_id;
+    name;
+    email;
+    address;
+    id;
+    password;
+    access_token;
+    refresh_token;
+    last_login;
+    enable_state;
+    createdAt_timestamp;
+    updatedAt_timestamp;
+    _type;
 
-    constructor(){
-      this.registration_id;   
-      this.name;
-      this.email;
-      this.address;     
-      this.#password;
-  }
 
-  set password(password){
-    this.#password  = password;
+    constructor(data={}){
+        this.id = data._id;
+        this.registration_id = data.registration_id;
+        this.name = data.name;
+        this.email = data.email;
+        this.address = data.address;
+        this.password = data.password;
+        this.access_token = data.access_token;
+        this.refresh_token = data.refresh_token;
+        this.last_login = data.last_login;
+        this.enable_state = data.enable_state;
+        this._type = data.type;
+        this.createdAt_timestamp = data.createdAt_timestamp;
+        this.updatedAt_timestamp = data.updatedAt_timestamp;
+        
+       
   }
 
   async create(){
+    try {
+      const fields = [
+            'id', 'registration_id', 'name', 'email', 'address',
+            'password', 'access_token', 'refresh_token', 'last_login',
+            'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
+        ];
+
+        const params = {};
+
+        for (const field of fields) {
+            if (this[field] !== undefined) {
+                params[field === '_type' ? 'type' : field] = this[field];
+            }
+        }
+
     const user_wrapper = await new UserRepository()
-
-    .create_new_user(
-      this.registration_id,
-      this.email,
-      this.address,
-      this.name,
-      this.#password
-    )
-    const user = new User();
-    user.registration_id = user_wrapper.registration_id;
-    user.name = user_wrapper.name;
-    user.email = user_wrapper.email;
-    user.address = user_wrapper.address;
-    user.id = user_wrapper._id;
-    user.password = user_wrapper.password;
-
-    return user;
+    const user = await user_wrapper.create(params)
+    return new User(user);
+  
+    } catch (error) {
+      throw error
+    }
+    
   }
 }
 

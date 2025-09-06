@@ -1,5 +1,5 @@
 
-const { UserBuilder, User} = require('../src/classes/USERS');
+const { AdminBuilder, Admin} = require('../src/classes/USERS');
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 const {config} = require('../src/config');
@@ -19,7 +19,7 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-describe('Test User class', () => {
+describe('Test Admin class', () => {
 
     const registration_id =  faker.string.uuid();
     const first_name = faker.person.firstName();
@@ -36,9 +36,9 @@ describe('Test User class', () => {
     }
     const email = faker.internet.email().toLowerCase();
 
-  test('Create new User', async () => {
+  test('Create new Admin', async () => {
 
-    const builder = new UserBuilder();
+    const builder = new AdminBuilder();
         builder.registration_id = registration_id;
         builder.name = {
         first_name:first_name,
@@ -64,12 +64,13 @@ describe('Test User class', () => {
    
   }, 20000);
 
-  test('Select created User', async()=>{
-    const user  = new User();
+  test('Select created Admin', async()=>{
+    const user  = new Admin();
     user.email = email
     const find = await user.find({
       email: email
     })
+    expect(find[0]._type).toBe('admin')
     expect(find.length).toBeGreaterThan(0);
     expect(email).toBe(find[0].email);
     expect(registration_id).toBe(find[0].registration_id)
@@ -87,11 +88,16 @@ describe('Test User class', () => {
     const compare = await PasswordHashService.verifyPassword(default_test_password, find[0].password)
     expect(compare).toBe(true)
   }, 20000)
-  const new_email = faker.internet.email().toLowerCase()
-  test('Update selected User', async() => {
-    const updateUser = await new User();
-    updateUser.email= email
+ const new_email = faker.internet.email().toLowerCase();
+  test('Update selected Admin', async() => {
+    
+    const updateUser = await new Admin({
+        email: email
+    });
+   
     let users  = await updateUser.find();
+
+    expect(users.length).toBeGreaterThan(0);
     expect(users.length).toBeGreaterThan(0);
 
     const user = users[0];
@@ -104,7 +110,7 @@ describe('Test User class', () => {
         full_name:"updated full name",
         with_initial_name:"name with initial"
       }
-    
+   
     const new_password = "789555"
     
     user.registration_id = new_registration_id;
@@ -115,7 +121,7 @@ describe('Test User class', () => {
     
     await user.save();
 
-    users  = await new User({email:new_email}).find();
+    users  = await new Admin({email: new_email}).find();
 
     expect(new_registration_id).toBe(users[0].registration_id)
     expect(new_name).toStrictEqual(users[0].name)
@@ -124,14 +130,14 @@ describe('Test User class', () => {
     
   },20000)
 
-  test('Delete User', async() => {
-    const deleted_user = await new User({
-      email:new_email
+  test('Delete Admin', async() => {
+    const deleted_user = await new Admin({
+        email:new_email
     }).deleteOne()
     expect(deleted_user.email).toBe(new_email);
 
     //create new user
-    const builder = new UserBuilder();
+    const builder = new AdminBuilder();
         builder.registration_id = registration_id;
         builder.name = {
         first_name:first_name,
@@ -157,13 +163,17 @@ describe('Test User class', () => {
 
     //delete created user
 
-    const deleted_user2 = await new User().deleteById(result.id)
+    const deleted_user2 = await new Admin().deleteById(result.id)
 
     expect(deleted_user2.registration_id).toBe(registration_id);
     expect(deleted_user2.name.first_name).toBe(first_name);
     expect(deleted_user2.name.last_name).toBe(last_name);
     expect(deleted_user2.name.full_name).toBe(full_name);
     expect(deleted_user2.name.with_initial_name).toBe(with_initial);
-  })
+
+    
+
+
+  },20000)
 
 });
