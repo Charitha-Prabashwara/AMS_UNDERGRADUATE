@@ -1,22 +1,11 @@
 const app = require('./app')
 const {config} = require('./config');
 const {DB_connect} = require('./database/db');
+const {ErrorTranslator, ErrorHandler} = require('./middleware')
 
 
-// Error handling
-app.use((error, req, res, next) => {
-  
-    if(error){
-      const date =new Date().toISOString() 
-      console.error(error.message + ":" +date );
-      return res.status(error.statusCode).json({
-      success: error.success,
-      message: error.message,
-      details: error.details,
-      timestamp:date
-    });
-    }
-});
+app.use(ErrorTranslator);
+app.use(ErrorHandler)
 
 app.listen(config.APPLICATION_PORT, () => {
  
