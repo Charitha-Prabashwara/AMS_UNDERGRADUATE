@@ -1,8 +1,8 @@
 const {UserRepository} = require('../DATABASE');
-const User = require('./user');
-const {PasswordHashService} = require('../../services');
+const User = require('./User');
 
-class USER_BUILDER{
+
+class UserBuilder{
     registration_id;
     name;
     email;
@@ -63,4 +63,4 @@ class USER_BUILDER{
   }
 }
 
-module.exports=USER_BUILDER;
+module.exports = UserBuilder;
