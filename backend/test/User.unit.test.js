@@ -1,9 +1,11 @@
 
-const { UserBuilder, User} = require('../src/classes/USERS');
+const {User} = require('../src/classes/USERS');
+const UserBuilder = require('../src/classes/USERS/UserBuilder')
+
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 const {config} = require('../src/config');
-const {PasswordHashService} =require('../src/services')
+const PasswordHashService =require('../src/services/PasswordHashService')
 
 beforeAll(async () => {
    try {
