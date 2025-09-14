@@ -1,3 +1,5 @@
 const {validateDTO} = require('./validateDTO');
 const {withDTO} = require('./withDTO')
-module.exports = {validateDTO, withDTO}
+const ErrorTranslator = require('./ErrorTranslator')
+const ErrorHandler = require('./ErrorHandler')
+module.exports = {validateDTO, withDTO, ErrorTranslator, ErrorHandler}
