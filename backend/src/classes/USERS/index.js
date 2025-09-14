@@ -1,7 +1,7 @@
-const UserBuilder = require('./UserBuilder');
-const AdminBuilder = require('./AdminBuilder');
-
 const User = require('./User');
 const Admin = require('./Admin');
+const DepartmentHead = require('./DepartmentHead');
+const Lecturer = require('./Lecturer');
+const Student = require('./Student');
 
-module.exports = {UserBuilder, AdminBuilder, User, Admin};
+module.exports = {User, Admin, DepartmentHead, Lecturer, Student};
