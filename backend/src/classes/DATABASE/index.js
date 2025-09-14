@@ -1,2 +1,3 @@
 const UserRepository = require('./UserRepository');
-module.exports = {UserRepository};
+const DepartmentRepository = require('./DepartmentRepository')
+module.exports = {UserRepository, DepartmentRepository};
