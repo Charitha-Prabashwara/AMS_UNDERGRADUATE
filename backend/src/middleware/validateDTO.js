@@ -1,5 +1,5 @@
 const {ValidationFailedError} = require('../errors')
-const {ErrorResponseDTO} = require('../classes/DTO/')
+
 
 function validateDTO(DtoClass) {
   return (req, res, next) => {
