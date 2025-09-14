@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-
+const {userTypes} = require('../config')
 const userSchema = new mongoose.Schema(
   {
    
     registration_id: {
       type: String,
+      unique: true,
       required: true,
       trim: true
     },
@@ -78,8 +79,8 @@ const userSchema = new mongoose.Schema(
     },
     type:{
       type:String,
-      enum: ['user', 'admin', 'student', 'department', 'lecturer'],
-      default: 'user'
+      enum: userTypes.USER_TYPES,
+      default: userTypes.USER_USER
     }
   },
   {
