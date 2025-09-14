@@ -1,2 +1,3 @@
 const UserModel = require('./user.model');
-module.exports = {UserModel};
+const DepartmentModel = require('./department.model')
+module.exports = {UserModel, DepartmentModel};
