@@ -1,3 +1,4 @@
 const UserRepository = require('./UserRepository');
 const DepartmentRepository = require('./DepartmentRepository')
-module.exports = {UserRepository, DepartmentRepository};
+const BatchRepository = require('./BatchRepository')
+module.exports = {UserRepository, DepartmentRepository, BatchRepository};

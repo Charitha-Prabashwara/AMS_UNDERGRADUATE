@@ -10,6 +10,10 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const cookieParser = require("cookie-parser")
 const Redis = require('ioredis');
 const compression = require("compression");
+const {DB_connect} = require('./database/db');
+
+// Database connection
+DB_connect();
 
 app.use(compression({
   threshold: 1024 // compress only if response > 1 KB

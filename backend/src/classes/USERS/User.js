@@ -117,7 +117,8 @@ class User{
 
         try {
             this.user_wrapper = new UserRepository();
-            return await this.user_wrapper.deleteOne(params);
+           const user = await this.user_wrapper.deleteOne(params);
+           return new User(user)
         } catch (error) {
             throw error
         }
@@ -130,7 +131,7 @@ class User{
             const deleted  =await this.user_wrapper.deleteById(id)
             return new User(deleted)
         } catch (error) {
-            
+            throw error
         }
     }
 
