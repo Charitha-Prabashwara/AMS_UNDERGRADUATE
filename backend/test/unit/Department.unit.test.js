@@ -1,9 +1,9 @@
 const { faker, de } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config} = require('../src/config');
+const {config} = require('../../src/config');
 
-const Department = require('../src/classes//Department')
-const DepartmentBuilder = require('../src/classes/DepartmentBuilder')
+const Department = require('../../src/classes//Department')
+const DepartmentBuilder = require('../../src/classes/DepartmentBuilder')
 
 beforeAll(async () => {
    try {

@@ -1,9 +1,9 @@
 const {faker} = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config} = require('../src/config');
+const {config} = require('../../src/config');
 
-const Batch = require('../src/classes/Batch')
-const BatchBuilder = require('../src/classes/BatchBuilder')
+const Batch = require('../../src/classes/Batch')
+const BatchBuilder = require('../../src/classes/BatchBuilder')
 
 beforeAll(async () => {
      try {
