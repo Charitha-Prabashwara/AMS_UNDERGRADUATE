@@ -41,6 +41,67 @@ class Batch{
         }
     }
 
+    async findById(id){
+        try {
+            const batch = await this.repository.findById(id)
+            return new Batch(batch);
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
+    async find(){
+        try {
+            const fields = [
+                'id', 'name' ,'academic', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
+            ]
+            const params = {}
+
+            for(const field of fields){
+                if(this[field] !== undefined){
+                    params[field === 'id' ? '_id' : field] = this[field];
+                }
+            }
+
+            const batchs = await this.repository.find(params)
+            return batchs.map(batch => new Batch(batch));
+            
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deleteOne(){
+        try {
+            const fields = [
+                'id', 'name' ,'academic', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
+            ]
+            const params = {}
+
+            for(const field of fields){
+                if(this[field] !== undefined){
+                    params[field === 'id' ? '_id' : field] = this[field];
+                }
+            }
+
+            const batch = await this.repository.deleteOne(params)
+
+            //Not implemented
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async deleteById(id){
+        try {
+            const batch = await this.repository.deleteById(id);
+            return new Batch(batch);
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
 }
 
