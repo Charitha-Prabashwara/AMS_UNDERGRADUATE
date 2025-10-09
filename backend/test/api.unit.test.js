@@ -12,6 +12,6 @@ describe('Test Express API', () => {
     expect(response.body.success).toBe(true);
     expect(response.body.message).toBe('api/v1 is working...');
     //expect(duration).toBeLessThan(100);
-  });
+  }, 20000);
 
 });

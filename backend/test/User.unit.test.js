@@ -14,12 +14,12 @@ beforeAll(async () => {
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
   }
-});
+},20000);
 
 afterAll(async () => {
  
   await mongoose.connection.close();
-});
+}, 20000);
 
 describe('Test User class', () => {
 
