@@ -83,7 +83,7 @@ class Department{
 
             const dept = this.repository.deleteOne(params)
 
-
+            //Not implemented
         } catch (error) {
             throw error;
         }
