@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const batchSchema = mongoose.Schema({
+const batchSchema = new mongoose.Schema({
+
     name:{
         type:String,
         required:true
