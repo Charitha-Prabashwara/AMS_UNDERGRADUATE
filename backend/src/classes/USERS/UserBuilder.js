@@ -1,23 +1,45 @@
 const {UserRepository} = require('../DATABASE');
 const User = require('./User');
+const repository = new UserRepository()
 
-
+/**
+ * UserBuilder is responsible for creating User instances.
+ * It allows flexible initialization of user data and handles
+ * the creation process through the repository.
+ */
 class UserBuilder{
+  /** @type {string} */
     registration_id;
+    /** @type {string} */
     name;
+    /** @type {string} */
     email;
+    /** @type {string} */
     address;
+    /** @type {string} */
     id;
+    /** @type {string} */
     password;
+    /** @type {string} */
     access_token;
+    /** @type {string} */
     refresh_token;
+    /** @type {Date} */
     last_login;
+    /** @type {boolean} */
     enable_state;
+    /** @type {Date} */
     createdAt_timestamp;
+    /** @type {Date} */
     updatedAt_timestamp;
+    /** @type {string} */
     _type;
 
 
+    /**
+     * Creates a new UserBuilder instance.
+     * @param {Object} data - Optional data to initialize the builder.
+     */
     constructor(data={}){
         this.id = data._id;
         this.registration_id = data.registration_id;
@@ -31,31 +53,40 @@ class UserBuilder{
         this.enable_state = data.enable_state;
         this._type = data.type;
         this.createdAt_timestamp = data.createdAt_timestamp;
-        this.updatedAt_timestamp = data.updatedAt_timestamp;
-        
-       
+        this.updatedAt_timestamp = data.updatedAt_timestamp;   
   }
 
+    /**
+    * Prepares a parameter object for database operations,
+    * including only defined fields.
+    * @private
+    * @returns {Promise<Object>} Parameters object for queries.
+    */
+    async #matchFieldsAndParams(){
+      const fields = [
+        'id', 'registration_id', 'name', 'email', 'address',
+        'password', 'access_token', 'refresh_token', 'last_login',
+        'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
+      ];
+
+      const params = {};
+      for (const field of fields) {
+        if (this[field] !== undefined) { params[field === '_type' ? 'type' : field] = this[field];}
+      }
+      return params;
+    }
+
+  /**
+  * Prepares a parameter object for database operations,
+  * including only fields that are defined on the builder.
+  * @private
+  * @returns {Promise<Object>} Parameters object ready for DB operations.
+  */
   async create(){
     try {
-      const fields = [
-            'id', 'registration_id', 'name', 'email', 'address',
-            'password', 'access_token', 'refresh_token', 'last_login',
-            'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
-        ];
-
-        const params = {};
-
-        for (const field of fields) {
-            if (this[field] !== undefined) {
-                params[field === '_type' ? 'type' : field] = this[field];
-            }
-        }
-
-    const user_wrapper = await new UserRepository()
-    const user = await user_wrapper.create(params)
-    return new User(user);
-  
+      const params = await this.#matchFieldsAndParams();
+      const user = await repository.create(params)
+      return new User(user);
     } catch (error) {
       throw error
     }
