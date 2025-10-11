@@ -1,21 +1,43 @@
 const {UserRepository} = require('../DATABASE');
+const repository = new UserRepository();
 
+
+/**
+ * Represents a User in the system.
+ * Provides methods to create, read, update, and delete users.
+ */
 class User{
+    /** @type {string} */
     registration_id;
+    /** @type {string} */
     name;
+    /** @type {string} */
     email;
+    /** @type {string} */
     address;
+    /** @type {string} */
     id;
+    /** @type {string} */
     password;
+    /** @type {string} */
     access_token;
+    /** @type {string} */
     refresh_token;
+    /** @type {Date} */
     last_login;
+    /** @type {boolean} */
     enable_state;
+    /** @type {Date} */
     createdAt_timestamp;
+    /** @type {Date} */
     updatedAt_timestamp;
+    /** @type {string} */
     _type;
 
-    
+    /**
+     * Creates a new User instance.
+     * @param {Object} data - Initial data to populate the User.
+     */
     constructor(data={}){
         this.id = data._id;
         this.registration_id = data.registration_id;
@@ -29,49 +51,17 @@ class User{
         this.enable_state = data.enable_state;
         this._type = data.type;
         this.createdAt_timestamp = data.createdAt_timestamp;
-        this.updatedAt_timestamp = data.updatedAt_timestamp;  
+        this.updatedAt_timestamp = data.updatedAt_timestamp;
     }
 
-    async save(){
-        try {
-            this.user_wrapper = new UserRepository();
-            
-            const fields = [
-            'id', 'registration_id', 'name', 'email', 'address',
-            'password', 'access_token', 'refresh_token', 'last_login',
-            'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ];
+     /**
+     * Prepares a parameter object for database operations,
+     * including only defined fields.
+     * @private
+     * @returns {Promise<Object>} Parameters object for queries.
+     */
+    async #matchFieldsAndParams(){
 
-            const params = {};
-
-            for (const field of fields) {
-                if (this[field] !== undefined) {
-                    params[field === '_type' ? 'type' : field] = this[field];
-                }
-            }
-            const returned_object = await this.user_wrapper.save(params);
-            return new User(returned_object)
-            
-        } catch (error) {
-            throw error
-        }
-    }
-
-    async findById(user_id){
-        
-        try {
-            this.user_wrapper = new UserRepository();
-            const found_user = await this.user_wrapper.findById(user_id);            
-            return new User(found_user);
-        } catch (error) {
-            throw new Error(error)
-        }
-
-       
-    }
-
-    async find(){
-        
         const fields = [
             'id', 'registration_id', 'name', 'email', 'address',
             'password', 'access_token', 'refresh_token', 'last_login',
@@ -79,63 +69,86 @@ class User{
         ];
 
         const params = {};
-
         for (const field of fields) {
-            if (this[field] !== undefined) {
-                params[field === '_type' ? 'type' : field] = this[field];
-            }
+            if (this[field] !== undefined) { params[field === '_type' ? 'type' : field] = this[field];}
         }
+        return params;
+    }
 
+    /**
+     * Saves the user to the database (create or update).
+     * @returns {Promise<User>} The saved User instance.
+     * @throws Will throw an error if saving fails.
+     */
+    async save(){
+        try {         
+            const params = await this.#matchFieldsAndParams();
+            const returned_object = await repository.save(params);
+            return new User(returned_object)   
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
+     * Finds a user by ID.
+     * @param {string} user_id - The ID of the user to find.
+     * @returns {Promise<User>} The found User instance.
+     * @throws Will throw an error if the user is not found or DB error occurs.
+     */
+    async findById(user_id){ 
         try {
+            const user = await repository.findById(user_id);            
+            return new User(user);
+        } catch (error) {
+            throw error        
+        }     
+    }
 
-            this.user_wrapper = new UserRepository();
-            const users_object = await this.user_wrapper.find(params);
-            return users_object.map(user => new User(user));
-            
+    /**
+     * Finds users matching the current User instance fields.
+     * @returns {Promise<User[]>} Array of User instances that match.
+     * @throws Will throw an error if the query fails.
+     */
+    async find(){    
+        try {
+            const params = await this.#matchFieldsAndParams()
+            const users = await repository.find(params)
+            return users.map(user => new User(user));
         } catch (error) {
             throw error;
         }
-
-
     }
 
+    /**
+     * Deletes a user matching the current User instance fields.
+     * @returns {Promise<User>} The deleted User instance.
+     * @throws Will throw an error if the deletion fails.
+     */
     async deleteOne() {
-
-        const fields = [
-            'id', 'registration_id', 'name', 'email', 'address',
-            'password', 'access_token', 'refresh_token', 'last_login',
-            'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
-        ];
-
-        const params = {};
-
-        for (const field of fields) {
-            if (this[field] !== undefined) {
-                params[field === '_type' ? 'type' : field] = this[field];
-            }
-        }
-
         try {
-            this.user_wrapper = new UserRepository();
-           const user = await this.user_wrapper.deleteOne(params);
+           const params = await this.#matchFieldsAndParams()
+           const user = await repository.deleteOne(params);
            return new User(user)
         } catch (error) {
             throw error
-        }
-        
+        }     
     }
 
+    /**
+     * Deletes a user by ID.
+     * @param {string} id - The ID of the user to delete.
+     * @returns {Promise<User>} The deleted User instance.
+     * @throws Will throw an error if deletion fails.
+     */
     async deleteById(id){
         try {
-            this.user_wrapper = new UserRepository();
-            const deleted  =await this.user_wrapper.deleteById(id)
+            const deleted = await repository.deleteById(id)
             return new User(deleted)
         } catch (error) {
             throw error
         }
     }
-
-
 }
 
 module.exports = User;
