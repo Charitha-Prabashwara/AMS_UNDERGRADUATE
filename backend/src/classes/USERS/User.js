@@ -35,7 +35,7 @@ class User{
     _type;
 
     /** @type {string} */
-    #department
+    _department
 
     /**
      * Creates a new User instance.
@@ -52,7 +52,7 @@ class User{
         this.#refresh_token = data.refresh_token;
         this.#last_login = data.last_login;
         this.#enable_state = data.enable_state;
-        this.#department = data.department
+        this._department = data.department
         this._type = data.type;
         
         this.#createdAt_timestamp = data.createdAt_timestamp;
@@ -99,10 +99,6 @@ class User{
     set _type(_type){this._type = _type}
 
 
-    get department(){return this.#department}
-    set department(department){this.#department = department}
-    
-
      /**
      * Prepares a parameter object for database operations,
      * including only defined fields.
@@ -115,12 +111,14 @@ class User{
             'id', 'registration_id', 'name', 'email', 'address',
             'password', 'access_token', 'refresh_token', 'last_login',
             'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp',
-            'department'
+            '_department'
         ];
 
         const params = {};
         for (const field of fields) {
-            if (this[field] !== undefined) { params[field === '_type' ? 'type' : field] = this[field];}
+            if (this[field] !== undefined) { 
+                params[field === '_type' ? 'type' : field === '_department' ? 'department' : field] = this[field];
+            }
         }
         return params;
     }

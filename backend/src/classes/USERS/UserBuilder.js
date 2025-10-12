@@ -30,7 +30,7 @@ class UserBuilder{
     /** @type {string} */
     _type;
     /** @type {string} */
-    #department
+    _department;
 
 
 
@@ -49,7 +49,7 @@ class UserBuilder{
         this.#last_login = data.last_login;
         this.#enable_state = data.enable_state;
         this._type = data.type;
-        this.#department = data.department;
+        this._department = data.department;
   }
 
     get registration_id(){return this.#registration_id}
@@ -83,9 +83,6 @@ class UserBuilder{
     set _type(_type){this._type = _type}
 
 
-    get department(){return this.#department}
-    set department(department){this.#department = department}
-
     /**
     * Prepares a parameter object for database operations,
     * including only defined fields.
@@ -96,12 +93,12 @@ class UserBuilder{
       const fields = [
         'registration_id', 'name', 'email', 'address',
         'password', 'access_token', 'refresh_token', 'last_login',
-        'enable_state', '_type', 'department'
+        'enable_state', '_type', '_department'
       ];
 
       const params = {};
       for (const field of fields) {
-        if (this[field] !== undefined) { params[field === '_type' ? 'type' : field] = this[field];}
+        params[field === '_type' ? 'type' : field === '_department' ? 'department' : field] = this[field];
       }
       return params;
     }
