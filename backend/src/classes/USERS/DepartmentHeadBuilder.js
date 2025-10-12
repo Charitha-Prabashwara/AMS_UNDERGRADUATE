@@ -2,8 +2,7 @@ const UserBuilder = require('./UserBuilder');
 const {userTypes} = require('../../config');
 
 class DepartmentHeadBuilder extends UserBuilder {
-    /** @type {string} */
-    _department
+   
     
     constructor(data = {}) {
         super({...data, type: userTypes.USER_DEPARTMENT});
@@ -16,9 +15,7 @@ class DepartmentHeadBuilder extends UserBuilder {
         });
     }
 
-    get department(){return this._department}
-    set department(department){this._department = department}
-
+    
 }
 
 module.exports = DepartmentHeadBuilder;
