@@ -8,51 +8,96 @@ const repository = new UserRepository();
  */
 class User{
     /** @type {string} */
-    registration_id;
+    #registration_id;
     /** @type {string} */
-    name;
+    #name;
     /** @type {string} */
-    email;
+    #email;
     /** @type {string} */
-    address;
+    #address;
     /** @type {string} */
-    id;
+    #id;
     /** @type {string} */
-    password;
+    #password;
     /** @type {string} */
-    access_token;
+    #access_token;
     /** @type {string} */
-    refresh_token;
+    #refresh_token;
     /** @type {Date} */
-    last_login;
+    #last_login;
     /** @type {boolean} */
-    enable_state;
+    #enable_state;
     /** @type {Date} */
-    createdAt_timestamp;
+    #createdAt_timestamp;
     /** @type {Date} */
-    updatedAt_timestamp;
+    #updatedAt_timestamp;
     /** @type {string} */
     _type;
+
+    /** @type {string} */
+    _department
 
     /**
      * Creates a new User instance.
      * @param {Object} data - Initial data to populate the User.
      */
     constructor(data={}){
-        this.id = data._id;
-        this.registration_id = data.registration_id;
-        this.name = data.name;
-        this.email = data.email;
-        this.address = data.address;
-        this.password = data.password;
-        this.access_token = data.access_token;
-        this.refresh_token = data.refresh_token;
-        this.last_login = data.last_login;
-        this.enable_state = data.enable_state;
+        this.#id = data._id;
+        this.#registration_id = data.registration_id;
+        this.#name = data.name;
+        this.#email = data.email;
+        this.#address = data.address;
+        this.#password = data.password;
+        this.#access_token = data.access_token;
+        this.#refresh_token = data.refresh_token;
+        this.#last_login = data.last_login;
+        this.#enable_state = data.enable_state;
+        this._department = data.department
         this._type = data.type;
-        this.createdAt_timestamp = data.createdAt_timestamp;
-        this.updatedAt_timestamp = data.updatedAt_timestamp;
+        
+        this.#createdAt_timestamp = data.createdAt_timestamp;
+        this.#updatedAt_timestamp = data.updatedAt_timestamp;
     }
+
+    get id(){return this.#id}
+    set id(id){this.#id = id}
+
+    get registration_id(){return this.#registration_id}
+    set registration_id(registration_id){this.#registration_id = registration_id}
+
+    get name(){return this.#name}
+    set name(name){this.#name = name};
+
+    get email(){return this.#email}
+    set email(email){this.#email = email}
+
+    get address(){return this.#address}
+    set address(address){this.#address = address}
+
+    get password(){return this.#password}
+    set password(password){this.#password = password}
+
+    get access_token(){return this.#access_token}
+    set access_token(access_token){this.#access_token = access_token}
+
+    get refresh_token(){return this.#refresh_token}
+    set refresh_token(refresh_token){this.#refresh_token = refresh_token}
+
+    get last_login(){return this.#last_login}
+    set last_login(last_login){this.#last_login = last_login}
+
+    get enable_state(){return this.#enable_state}
+    set enable_state(enable_state){this.#enable_state = enable_state}
+
+    get createdAt_timestamp(){return this.#createdAt_timestamp}
+    set createdAt_timestamp(createdAt_timestamp){this.#createdAt_timestamp = createdAt_timestamp}
+
+    get updatedAt_timestamp(){return this.#updatedAt_timestamp}
+    set updatedAt_timestamp(updatedAt_timestamp){this.#updatedAt_timestamp = updatedAt_timestamp}
+
+    get _type(){return this._type}
+    set _type(_type){this._type = _type}
+
 
      /**
      * Prepares a parameter object for database operations,
@@ -65,12 +110,15 @@ class User{
         const fields = [
             'id', 'registration_id', 'name', 'email', 'address',
             'password', 'access_token', 'refresh_token', 'last_login',
-            'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
+            'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp',
+            '_department'
         ];
 
         const params = {};
         for (const field of fields) {
-            if (this[field] !== undefined) { params[field === '_type' ? 'type' : field] = this[field];}
+            if (this[field] !== undefined) { 
+                params[field === '_type' ? 'type' : field === '_department' ? 'department' : field] = this[field];
+            }
         }
         return params;
     }
@@ -149,6 +197,8 @@ class User{
             throw error
         }
     }
+
+
 }
 
 module.exports = User;
