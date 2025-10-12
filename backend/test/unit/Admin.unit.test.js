@@ -6,19 +6,19 @@ const mongoose = require('mongoose');
 const {config} = require('../../src/config');
 const PasswordHashService =require('../../src/services/PasswordHashService')
 
+const { MongoMemoryServer } = require('mongodb-memory-server');
+let mongoServer;
+
 beforeAll(async () => {
-   try {
-    await mongoose.connect(config.DB_MONGODB_URI + config.DB_MONGODB_DATABASE_TEST);
-   
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-  }
-},20000);
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
 
 afterAll(async () => {
- 
-  await mongoose.connection.close();
-},20000);
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
 describe('Test Admin class', () => {
 
@@ -63,7 +63,7 @@ describe('Test Admin class', () => {
     expect(result.name.full_name).toBe(full_name);
     expect(result.name.with_initial_name).toBe(with_initial);
    
-  }, 20000);
+  });
 
   test('Select created Admin', async()=>{
     const user  = new Admin();
@@ -88,7 +88,7 @@ describe('Test Admin class', () => {
     }).toStrictEqual(find[0].address)
     const compare = await PasswordHashService.verifyPassword(default_test_password, find[0].password)
     expect(compare).toBe(true)
-  }, 20000)
+  })
  const new_email = faker.internet.email().toLowerCase();
   test('Update selected Admin', async() => {
     
@@ -129,7 +129,7 @@ describe('Test Admin class', () => {
     expect(new_email).toBe(users[0].email)
     expect(new_password).toBe(users[0].password)
     
-  },20000)
+  })
 
   test('Delete Admin', async() => {
     const deleted_user = await new Admin({
@@ -175,6 +175,6 @@ describe('Test Admin class', () => {
     
 
 
-  },20000)
+  })
 
 });

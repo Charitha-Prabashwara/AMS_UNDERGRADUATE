@@ -5,18 +5,19 @@ const {config} = require('../../src/config');
 const Batch = require('../../src/classes/Batch')
 const BatchBuilder = require('../../src/classes/BatchBuilder')
 
+const { MongoMemoryServer } = require('mongodb-memory-server');
+let mongoServer;
+
 beforeAll(async () => {
-     try {
-        await mongoose.connect(config.DB_MONGODB_URI + config.DB_MONGODB_DATABASE_TEST);
-       
-      } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-      }
-},20000);
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
 
 afterAll(async () => {
-    await mongoose.connection.close();
-}, 20000);
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
 describe('Test Batch class', ()=>{
     const name = faker.person.jobTitle();
@@ -35,7 +36,7 @@ describe('Test Batch class', ()=>{
         expect(result.academic).toStrictEqual({ lb:lb, ub:ub})
         batchId = result.id;
 
-    },20000);
+    });
 
     test('Select created Batch', async()=>{
         const batch = new Batch();
@@ -49,7 +50,7 @@ describe('Test Batch class', ()=>{
 
 
        
-    }, 20000)
+    })
 
     test('Select batch ById', async()=>{
         const batch = await new Batch().findById(batchId);
@@ -57,7 +58,7 @@ describe('Test Batch class', ()=>{
         expect(batch.academic).toStrictEqual({ lb:lb, ub:ub})
         expect(batch.id).toStrictEqual(batchId)
 
-    }, 20000)
+    })
 
     test('Update batchById', async()=>{
         const batch = new Batch();
@@ -80,11 +81,11 @@ describe('Test Batch class', ()=>{
         const updated_batch = await result[0].save()
         expect(updated_batch.name).toBe(new_batch_name)
         expect(updated_batch.academic).toStrictEqual(new_academic)
-    }, 20000);
+    });
 
     test('Delete batch by id', async()=>{
         const batch =await new Batch().deleteById(batchId);
         expect(batch.id).toStrictEqual(batchId)
-    },20000)
+    })
 
 })

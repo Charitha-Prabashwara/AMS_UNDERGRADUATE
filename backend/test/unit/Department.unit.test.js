@@ -5,18 +5,19 @@ const {config} = require('../../src/config');
 const Department = require('../../src/classes//Department')
 const DepartmentBuilder = require('../../src/classes/DepartmentBuilder')
 
+const { MongoMemoryServer } = require('mongodb-memory-server');
+let mongoServer;
+
 beforeAll(async () => {
-   try {
-    await mongoose.connect(config.DB_MONGODB_URI + config.DB_MONGODB_DATABASE_TEST);
-   
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-  }
-},20000);
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
 
 afterAll(async () => {
-  await mongoose.connection.close();
-}, 20000);
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
 describe('Test Department class', ()=>{
     const name ={
@@ -36,7 +37,7 @@ describe('Test Department class', ()=>{
        expect(result.name).toStrictEqual(name);
        expect(result.description).toBe(description)
        departmentId = result.id;
-    },20000)
+    })
 
     test('Select created department', async()=>{
       const department = new Department()
@@ -45,12 +46,12 @@ describe('Test Department class', ()=>{
       const found_department = await department.find()
       expect(found_department.length).toBeGreaterThan(0)
       expect(found_department[0].name).toStrictEqual(name);
-    },20000);
+    });
     test('Select department by id', async()=>{
       const department = new Department()
       const found_department = await department.findById(departmentId);
       expect(found_department.name).toStrictEqual(name);
-    }, 20000)
+    })
 
     test('Update department by id', async()=>{
       const department = new Department();
@@ -70,7 +71,7 @@ describe('Test Department class', ()=>{
       const updated = await found_department[0].save()
 
       expect(updated.name).toStrictEqual(new_name) 
-    }, 20000)
+    })
 
     test('Delete department by id', async()=>{
       const department = new Department()
@@ -80,7 +81,7 @@ describe('Test Department class', ()=>{
 
       const deleted_department = await department.deleteById(found_department[0].id)
       expect(deleted_department.id).toStrictEqual(found_department[0].id)
-    }, 20000)
+    })
 })
 
 

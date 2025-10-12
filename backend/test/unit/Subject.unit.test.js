@@ -5,18 +5,19 @@ const {config} = require('../../src/config');
 const Subject = require('../../src/classes/Subject')
 const SubjectBuilder = require('../../src/classes/SubjectBuilder')
 
+const { MongoMemoryServer } = require('mongodb-memory-server');
+let mongoServer;
+
 beforeAll(async () => {
-   try {
-    await mongoose.connect(config.DB_MONGODB_URI + config.DB_MONGODB_DATABASE_TEST);
-   
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-  }
-},20000);
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
 
 afterAll(async () => {
-  await mongoose.connection.close();
-}, 20000);
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
 
 describe('Test Subject class', ()=>{
@@ -39,7 +40,7 @@ describe('Test Subject class', ()=>{
         expect(subject.credits).toBe(creadits)
         subjectId = subject.id
         
-    }, 20000)
+    })
 
     test('Select find created Subject', async()=>{
 
@@ -54,7 +55,7 @@ describe('Test Subject class', ()=>{
       expect(result[0].credits).toBe(creadits)
 
 
-    }, 20000)
+    })
 
     test('Select subject byId', async()=>{
       const subject = await new Subject().findById(subjectId);
@@ -63,7 +64,7 @@ describe('Test Subject class', ()=>{
       expect(subject.code).toBe(code)
       expect(subject.credits).toBe(creadits)
       
-    }, 20000)
+    })
 
     test('Update subject ById', async()=>{
 
@@ -82,10 +83,10 @@ describe('Test Subject class', ()=>{
       expect(updated_subject.name).toBe(new_name)
       expect(updated_subject.code).toBe(new_code)
       expect(updated_subject.credits).toBe(new_credits)
-    }, 20000);
+    });
 
     test('Delete subject ById', async()=>{
       const subject = await new Subject().deleteById(subjectId);
       expect(subject.id).toStrictEqual(subjectId)
-    }, 20000)
+    })
 })
