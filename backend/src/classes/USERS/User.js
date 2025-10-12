@@ -60,7 +60,7 @@ class User{
      * @private
      * @returns {Promise<Object>} Parameters object for queries.
      */
-    async #matchFieldsAndParams(){
+    #matchFieldsAndParams(){
 
         const fields = [
             'id', 'registration_id', 'name', 'email', 'address',
@@ -82,7 +82,7 @@ class User{
      */
     async save(){
         try {         
-            const params = await this.#matchFieldsAndParams();
+            const params = this.#matchFieldsAndParams();
             const returned_object = await repository.save(params);
             return new User(returned_object)   
         } catch (error) {
@@ -112,7 +112,7 @@ class User{
      */
     async find(){    
         try {
-            const params = await this.#matchFieldsAndParams()
+            const params = this.#matchFieldsAndParams()
             const users = await repository.find(params)
             return users.map(user => new User(user));
         } catch (error) {
@@ -127,7 +127,7 @@ class User{
      */
     async deleteOne() {
         try {
-           const params = await this.#matchFieldsAndParams()
+           const params = this.#matchFieldsAndParams()
            const user = await repository.deleteOne(params);
            return new User(user)
         } catch (error) {
