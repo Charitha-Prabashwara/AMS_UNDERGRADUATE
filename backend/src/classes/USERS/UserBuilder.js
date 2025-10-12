@@ -54,7 +54,7 @@ class UserBuilder{
     * @private
     * @returns {Promise<Object>} Parameters object for queries.
     */
-    async #matchFieldsAndParams(){
+    #matchFieldsAndParams(){
       const fields = [
         'registration_id', 'name', 'email', 'address',
         'password', 'access_token', 'refresh_token', 'last_login',
@@ -76,7 +76,7 @@ class UserBuilder{
   */
   async create(){
     try {
-      const params = await this.#matchFieldsAndParams();
+      const params = this.#matchFieldsAndParams();
       const user = await repository.create(params)
       return new User(user);
     } catch (error) {
