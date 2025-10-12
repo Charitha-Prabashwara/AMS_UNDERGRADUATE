@@ -27,10 +27,6 @@ class UserBuilder{
     last_login;
     /** @type {boolean} */
     enable_state;
-    /** @type {Date} */
-    createdAt_timestamp;
-    /** @type {Date} */
-    updatedAt_timestamp;
     /** @type {string} */
     _type;
 
@@ -50,8 +46,6 @@ class UserBuilder{
         this.last_login = data.last_login;
         this.enable_state = data.enable_state;
         this._type = data.type;
-        this.createdAt_timestamp = data.createdAt_timestamp;
-        this.updatedAt_timestamp = data.updatedAt_timestamp;   
   }
 
     /**
@@ -64,7 +58,7 @@ class UserBuilder{
       const fields = [
         'registration_id', 'name', 'email', 'address',
         'password', 'access_token', 'refresh_token', 'last_login',
-        'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
+        'enable_state', '_type'
       ];
 
       const params = {};
