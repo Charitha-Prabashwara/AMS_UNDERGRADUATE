@@ -17,8 +17,7 @@ class UserBuilder{
     /** @type {string} */
     address;
     /** @type {string} */
-    id;
-    /** @type {string} */
+
     password;
     /** @type {string} */
     access_token;
@@ -41,7 +40,6 @@ class UserBuilder{
      * @param {Object} data - Optional data to initialize the builder.
      */
     constructor(data={}){
-        this.id = data._id;
         this.registration_id = data.registration_id;
         this.name = data.name;
         this.email = data.email;
@@ -64,7 +62,7 @@ class UserBuilder{
     */
     async #matchFieldsAndParams(){
       const fields = [
-        'id', 'registration_id', 'name', 'email', 'address',
+        'registration_id', 'name', 'email', 'address',
         'password', 'access_token', 'refresh_token', 'last_login',
         'enable_state', '_type', 'createdAt_timestamp', 'updatedAt_timestamp'
       ];
