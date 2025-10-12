@@ -1,4 +1,5 @@
 const UserBuilder = require('./UserBuilder');
+const DepartmentHead = require('./DepartmentHead')
 const {userTypes} = require('../../config');
 
 class DepartmentHeadBuilder extends UserBuilder {
@@ -15,7 +16,10 @@ class DepartmentHeadBuilder extends UserBuilder {
         });
     }
 
-    
+    async create(){
+        const departmentHead = await super.create();  
+        return new DepartmentHead(departmentHead)
+    }
 }
 
 module.exports = DepartmentHeadBuilder;

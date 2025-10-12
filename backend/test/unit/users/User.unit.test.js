@@ -1,11 +1,11 @@
 
-const {User} = require('../../src/classes/USERS');
-const UserBuilder = require('../../src/classes/USERS/UserBuilder')
+const {User} = require('../../../src/classes/USERS');
+const UserBuilder = require('../../../src/classes/USERS/UserBuilder')
 
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config} = require('../../src/config');
-const PasswordHashService =require('../../src/services/PasswordHashService')
+const {config} = require('../../../src/config');
+const PasswordHashService =require('../../../src/services/PasswordHashService')
 const { MongoMemoryServer } = require('mongodb-memory-server');
 let mongoServer;
 

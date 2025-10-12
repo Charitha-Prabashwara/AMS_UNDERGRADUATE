@@ -42,7 +42,7 @@ class User{
      * @param {Object} data - Initial data to populate the User.
      */
     constructor(data={}){
-        this.id = data._id;
+        this.id = data._id || data.id;
         this.registration_id = data.registration_id;
         this.name = data.name;
         this.email = data.email;
