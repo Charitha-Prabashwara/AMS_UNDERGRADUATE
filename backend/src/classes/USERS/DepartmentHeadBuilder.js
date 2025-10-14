@@ -9,8 +9,8 @@ class DepartmentHeadBuilder extends UserBuilder {
         super({...data, type: userTypes.USER_DEPARTMENT});
         
         Object.defineProperty(this, '_type', {
-            value: userTypes.USER_DEPARTMENT,
-            writable: false, 
+            get() { return userTypes.USER_DEPARTMENT; },
+            set() { throw new TypeError('Cannot modify _type'); },
             enumerable: true,
             configurable: false
         });
