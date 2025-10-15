@@ -44,6 +44,23 @@ class BatchBuilder{
         this.academic = data.academic
         this.repository = new BatchRepository();
     }
+         /**
+     * Prepares a parameter object for database operations,
+     * including only defined fields.
+     * @private
+     * @returns {Promise<Object>} Parameters object for queries.
+     */
+    #matchFieldsAndParams(){
+
+        const fields = ['name' ,'academic']
+        const params = {};
+        for (const field of fields) {
+            if (this[field] !== undefined) { 
+                 params[field] = this[field];
+            }
+        }
+        return params;
+    }
 
     /**
      * Create a Batch record in the repository using the fields set on the builder.
@@ -54,17 +71,7 @@ class BatchBuilder{
      */
     async create(){
           try {
-            const fields = [
-                'id', 'name' ,'academic'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field] = this[field]
-                }
-            }
-
+            const params = this.#matchFieldsAndParams()
             const batch = await this.repository.create(params)
             return new Batch(batch)
         } catch (error) {
@@ -73,5 +80,4 @@ class BatchBuilder{
     }
 
 }
-
 module.exports = BatchBuilder;

@@ -20,22 +20,29 @@ class Batch{
         this.repository = new BatchRepository();
     }
 
+     /**
+     * Prepares a parameter object for database operations,
+     * including only defined fields.
+     * @private
+     * @returns {Promise<Object>} Parameters object for queries.
+     */
+    #matchFieldsAndParams(){
+
+        const fields = ['id', 'name' ,'academic', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp']
+        const params = {};
+        for (const field of fields) {
+            if (this[field] !== undefined) { 
+                 params[field === 'id' ? '_id' : field] = this[field];
+            }
+        }
+        return params;
+    }
+
     async save(){
         try {
-            const fields = [
-                'id', 'name' ,'academic', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
+            const params = this.#matchFieldsAndParams()
             const batch = await this.repository.save(params)
             return new Batch(batch)
-            
         } catch (error) {
             throw error
         }
@@ -53,20 +60,9 @@ class Batch{
 
     async find(){
         try {
-            const fields = [
-                'id', 'name' ,'academic', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
-            const batchs = await this.repository.find(params)
-            return batchs.map(batch => new Batch(batch));
-            
+            const params =this.#matchFieldsAndParams();
+            const batches = await this.repository.find(params)
+            return batches.map(batch => new Batch(batch));   
         } catch (error) {
             throw error
         }
@@ -74,20 +70,9 @@ class Batch{
 
     async deleteOne(){
         try {
-            const fields = [
-                'id', 'name' ,'academic', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
+            const params = this.#matchFieldsAndParams();
             const batch = await this.repository.deleteOne(params)
-
-            //Not implemented
+            return new Batch(batch)
         } catch (error) {
             throw error;
         }
