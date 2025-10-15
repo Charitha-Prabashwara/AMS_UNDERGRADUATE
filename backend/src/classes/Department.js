@@ -8,7 +8,7 @@ class Department{
     updatedAt_timestamp
 
     constructor(data={}){
-        this.id = data._id
+        this.id = data._id ?? data.id
         this.name = data.name
         this.description = data.description
         this.deleted = data.deleted;
