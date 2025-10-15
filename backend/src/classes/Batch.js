@@ -10,7 +10,7 @@ class Batch{
     deleted
 
     constructor(data={}){
-        this.id = data._id;
+        this.id = data._id || data.id;
         this.name = data.name;
         this.academic = data.academic;
         this.deleted = data.deleted;
