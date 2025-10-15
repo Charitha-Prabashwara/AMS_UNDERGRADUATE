@@ -10,7 +10,7 @@ class Subject{
     updatedAt_timestamp
 
     constructor(data={}){
-        this.id = data._id
+        this.id = data._id ?? data.id
         this.name = data.name
         this.code = data.code
         this.credits = data.credits
