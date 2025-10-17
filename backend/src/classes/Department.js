@@ -18,19 +18,23 @@ class Department{
         this.repository = new DepartmentRepository();
     }
 
+    #matchFieldsAndParams(){
+        const fields = [
+                'id', 'name' ,'description', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
+        ]
+        const params = {}
+
+        for(const field of fields){
+            if(this[field] !== undefined){
+                params[field === 'id' ? '_id' : field] = this[field];
+            }
+        }
+        return params
+    }
+
     async save(){
         try {
-            const fields = [
-                'id', 'name' ,'description', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
+            const params = this.#matchFieldsAndParams()
             const dept = await this.repository.save(params)
             return new Department(dept)
         } catch (error) {
@@ -49,17 +53,7 @@ class Department{
 
     async find(){
         try {
-            const fields = [
-                'id', 'name' ,'description', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
+            const params = this.#matchFieldsAndParams()
             const dept = await this.repository.find(params);
             return dept.map(department => new Department(department));
 
@@ -70,20 +64,9 @@ class Department{
 
     async deleteOne(){
         try {
-            const fields = [
-                'id', 'name' ,'description', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
+            const params = this.#matchFieldsAndParams()
             const dept = this.repository.deleteOne(params)
-
-            //Not implemented
+            return new Department(dept)
         } catch (error) {
             throw error;
         }
