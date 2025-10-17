@@ -19,24 +19,27 @@ class Subject{
         this.updatedAt = data.updatedAt_timestamp;
 
 
-        this.respository = new SubjectRepository();
+        this.repository = new SubjectRepository();
+    }
+    #matchFieldsAndParams(){
+        const fields = [
+            'id', 'name' ,'code', 'credits', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
+        ]
+        const params = {}
+
+        for(const field of fields){
+            if(this[field] !== undefined){
+                params[field === 'id' ? '_id' : field] = this[field];
+            }
+        }
+        return params
     }
 
     async save(){
 
         try {
-             const fields = [
-                'id', 'name' ,'code', 'credits', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
-            const subject = await this.respository.save(params)
+            const params = this.#matchFieldsAndParams()
+            const subject = await this.repository.save(params)
             return new Subject(subject)
 
         } catch (error) {
@@ -46,7 +49,7 @@ class Subject{
 
     async findById(id){
         try {
-            const subject = await this.respository.findById(id)
+            const subject = await this.repository.findById(id)
             return new Subject(subject);
         } catch (error) {
             throw error
@@ -55,17 +58,8 @@ class Subject{
 
     async find(){
         try {
-            const fields = [
-                'id', 'name' ,'code', 'credits', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-            const subjects = await this.respository.find(params)
+            const params = this.#matchFieldsAndParams()
+            const subjects = await this.repository.find(params)
             return subjects.map(subject=> new Subject(subject))
 
         } catch (error) {
@@ -75,18 +69,8 @@ class Subject{
 
     async deleteOne(){
         try {
-             const fields = [
-                'id', 'name' ,'code', 'credits', 'deleted', 'createdAt_timestamp', 'updatedAt_timestamp'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field === 'id' ? '_id' : field] = this[field];
-                }
-            }
-
-            const subject =await this.respository.deleteOne(params);
+            const params = this.#matchFieldsAndParams()
+            const subject =await this.repository.deleteOne(params);
             //not implemented
         } catch (error) {
             throw error
@@ -95,7 +79,7 @@ class Subject{
 
     async deleteById(id){
         try {
-            const subject = await this.respository.deleteById(id);
+            const subject = await this.repository.deleteById(id);
             return new Subject(subject)
         } catch (error) {
             throw error

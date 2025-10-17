@@ -13,23 +13,26 @@ class SubjectBuilder{
         this.name - data.name
         this.code = data.code
         this.credits = data.credits
-        this.respository = new SubjectRepository();
+        this.repository = new SubjectRepository();
+    }
+
+    #matchFieldsAndParams(){
+        const fields = [
+            'name', 'code' ,'credits'
+        ]
+        const params = {}
+        for(const field of fields){
+            if(this[field] !== undefined){
+                params[field] = this[field]
+            }
+        }
+        return params      
     }
 
     async create(){
         try {
-
-            const fields = [
-                'name', 'code' ,'credits'
-            ]
-            const params = {}
-
-            for(const field of fields){
-                if(this[field] !== undefined){
-                    params[field] = this[field]
-                }
-            }
-            const subject = await this.respository.create(params);
+            const params = this.#matchFieldsAndParams()
+            const subject = await this.repository.create(params);
             return new Subject(subject)
         } catch (error) {
             throw error;
