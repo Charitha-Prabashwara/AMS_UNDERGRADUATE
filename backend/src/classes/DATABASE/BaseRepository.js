@@ -24,7 +24,7 @@ class BaseRepository{
   async save(user){
         const id = user._id || user.id;
         this._validateId(id)
-        const found_user = await this.model.findByIdAndUpdate(id.toString(), user,{ new: true, lean: true })
+        const found_user = await this.model.findByIdAndUpdate(id.toString(), user,{ new: true, lean: true }).lean()
         if(!found_user) throw new UserNotFoundError()
         return found_user
   }
