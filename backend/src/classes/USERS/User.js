@@ -1,4 +1,5 @@
 const {UserRepository} = require('../DATABASE');
+const NullUser = require('./NullUser')
 const repository = new UserRepository();
 
 
@@ -84,6 +85,15 @@ class User{
         return params;
     }
 
+    #wrapTONullUser(){
+        return NullUser;
+    }
+
+    #wrapToUser(obj){
+        if (!obj) return this.#wrapTONullUser();
+        return new User(obj);
+    }
+
     /**
      * Saves the user to the database (create or update).
      * @returns {Promise<User>} The saved User instance.
@@ -93,7 +103,7 @@ class User{
         try {         
             const params = this.#matchFieldsAndParams();
             const returned_object = await repository.save(params);
-            return new User(returned_object)   
+            return this.#wrapToUser(returned_object)  
         } catch (error) {
             throw error
         }
@@ -108,7 +118,7 @@ class User{
     async findById(user_id){ 
         try {
             const user = await repository.findById(user_id);            
-            return new User(user);
+            return this.#wrapToUser(user)
         } catch (error) {
             throw error        
         }     
@@ -123,7 +133,8 @@ class User{
         try {
             const params = this.#matchFieldsAndParams()
             const users = await repository.find(params)
-            return users.map(user => new User(user));
+        
+            return users.map(user => this.#wrapToUser(user));
         } catch (error) {
             throw error;
         }
@@ -138,7 +149,7 @@ class User{
         try {
            const params = this.#matchFieldsAndParams()
            const user = await repository.deleteOne(params);
-           return new User(user)
+           return this.#wrapToUser(user)
         } catch (error) {
             throw error
         }     
@@ -153,7 +164,7 @@ class User{
     async deleteById(id){
         try {
             const deleted = await repository.deleteById(id)
-            return new User(deleted)
+            return this.#wrapToUser(deleted)
         } catch (error) {
             throw error
         }
