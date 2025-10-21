@@ -14,7 +14,7 @@ class Lecturer extends User {
     }
     
     static _wrapToLecturer(obj) {
-        if (obj === NullUser) return NullUser;
+        if (obj === NullUser) return obj;
         return new Lecturer(obj);
     }
 

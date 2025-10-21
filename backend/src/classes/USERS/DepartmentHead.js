@@ -15,7 +15,7 @@ class DepartmentHead extends User {
     }
 
     static _wrapToDepartmentHead(obj) {
-        if (obj === NullUser) return NullUser;
+        if (obj === NullUser) return obj;
         return new DepartmentHead(obj);
     }
 

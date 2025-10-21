@@ -14,7 +14,7 @@ class Admin extends User {
   
     }
   static _wrapToAdmin(obj) {
-    if (obj === NullUser) return NullUser;
+    if (obj === NullUser) return obj;
     return new Admin(obj);
   }
 
