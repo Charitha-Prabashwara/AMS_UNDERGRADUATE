@@ -32,6 +32,7 @@ class CreateUserDTO {
                         .messages({
                           'any.only': 'Confirm password must match password'
                         }),
+        departmentId: Joi.string()
         
     });
 
