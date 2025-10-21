@@ -1,4 +1,4 @@
-const {DepartmentHead} = require('../../../src/classes/USERS');
+const {DepartmentHead, NullUser} = require('../../../src/classes/USERS');
 const DepartmentHeadBuilder = require('../../../src/classes/USERS/DepartmentHeadBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
@@ -238,3 +238,24 @@ test('Should handle concurrent Department-Head creation safely', async () => {
   const allDepartmentHeads = await new DepartmentHead().find();
   expect(allDepartmentHeads.length).toBeGreaterThanOrEqual(parallelTasks);
 });
+
+
+ describe('NullUser object test', () => {
+    test('find by id', async () => { 
+        const id = new mongoose.Types.ObjectId();
+        const user = await new DepartmentHead().findById(id);
+        expect(user).toBe(NullUser)
+     })
+
+    test('find', async () => { 
+      const registration_id = faker.string.uuid()
+      const user = new DepartmentHead({registration_id:registration_id})
+
+      expect(registration_id).toBe(user.registration_id)
+      const result = await user.find()
+      result.forEach(user => {
+        expect(user).toBe(NullUser)
+      });
+  })
+})
+ 

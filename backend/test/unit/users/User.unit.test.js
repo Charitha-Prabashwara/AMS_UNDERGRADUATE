@@ -1,5 +1,5 @@
 
-const {User} = require('../../../src/classes/USERS');
+const {User, NullUser} = require('../../../src/classes/USERS');
 const UserBuilder = require('../../../src/classes/USERS/UserBuilder')
 
 const { faker } = require('@faker-js/faker');
@@ -164,6 +164,26 @@ describe('Test User class', () => {
     expect(deleted_user2.name.last_name).toBe(last_name);
     expect(deleted_user2.name.full_name).toBe(full_name);
     expect(deleted_user2.name.with_initial_name).toBe(with_initial);
+  })
+
+  describe('NullUser object test', () => {
+    test('find by id', async () => { 
+        const id = new mongoose.Types.ObjectId();
+        const user = await new User().findById(id);
+        expect(user).toBe(NullUser)
+     })
+
+    test('find', async () => { 
+      const registration_id = faker.string.uuid()
+      const user = new User({registration_id:registration_id})
+
+      expect(registration_id).toBe(user.registration_id)
+      const result = await user.find()
+      result.forEach(user => {
+        expect(user).toBe(NullUser)
+      });
+    })
+ 
   })
 
 });

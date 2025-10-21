@@ -1,5 +1,5 @@
 
-const {Student} = require('../../../src/classes/USERS');
+const {Student, NullUser} = require('../../../src/classes/USERS');
 const StudentBuilder = require('../../../src/classes/USERS/StudentBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
@@ -239,4 +239,25 @@ test('Should handle concurrent student creation safely', async () => {
   const allStudents = await new Student().find();
   expect(allStudents.length).toBeGreaterThanOrEqual(parallelTasks);
 });
+
+
+ describe('NullUser object test', () => {
+    test('find by id', async () => { 
+        const id = new mongoose.Types.ObjectId();
+        const user = await new Student().findById(id);
+        expect(user).toBe(NullUser)
+     })
+
+    test('find', async () => { 
+      const registration_id = faker.string.uuid()
+      const user = new Student({registration_id:registration_id})
+
+      expect(registration_id).toBe(user.registration_id)
+      const result = await user.find()
+      result.forEach(user => {
+        expect(user).toBe(NullUser)
+      });
+    })
+ 
+  })
 

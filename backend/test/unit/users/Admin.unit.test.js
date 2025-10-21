@@ -1,5 +1,5 @@
 
-const {Admin} = require('../../../src/classes/USERS');
+const {Admin, NullUser} = require('../../../src/classes/USERS');
 const AdminBuilder = require('../../../src/classes/USERS/AdminBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
@@ -239,3 +239,23 @@ test('Should handle concurrent Admin creation safely', async () => {
   const allAdmins = await new Admin().find();
   expect(allAdmins.length).toBeGreaterThanOrEqual(parallelTasks);
 });
+
+ describe('NullUser object test', () => {
+    test('find by id', async () => { 
+        const id = new mongoose.Types.ObjectId();
+        const user = await new Admin().findById(id);
+        expect(user).toBe(NullUser)
+     })
+
+    test('find', async () => { 
+      const registration_id = faker.string.uuid()
+      const user = new Admin({registration_id:registration_id})
+
+      expect(registration_id).toBe(user.registration_id)
+      const result = await user.find()
+      result.forEach(user => {
+        expect(user).toBe(NullUser)
+      });
+    })
+ 
+  })
