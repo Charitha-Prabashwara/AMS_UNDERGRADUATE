@@ -25,7 +25,7 @@ const Batch = require('./Batch')
  */
 class BatchBuilder{
 
-    id
+ 
     name
     academic
   
@@ -39,7 +39,7 @@ class BatchBuilder{
      * @param {number} [data.ub]
      */
     constructor(data={}){
-        this.id = data._id
+       
         this.name = data.name
         this.academic = data.academic
         this.repository = new BatchRepository();
