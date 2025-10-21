@@ -1,4 +1,5 @@
 const User = require('./User');
+const NullUser = require('./NullUser')
 const {userTypes} = require('../../config')
 class Lecturer extends User {
     constructor(data = {}) {
@@ -13,8 +14,7 @@ class Lecturer extends User {
     }
     
     static _wrapToLecturer(obj) {
-        if (!obj) return obj;
-        if (obj instanceof Lecturer) return obj;
+        if (obj === NullUser) return NullUser;
         return new Lecturer(obj);
     }
 

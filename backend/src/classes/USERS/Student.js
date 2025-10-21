@@ -1,5 +1,6 @@
 const User = require('./User');
-const {userTypes} = require('../../config')
+const {userTypes} = require('../../config');
+const NullUser = require('./NullUser');
 class Student extends User {
     constructor(data = {}) {
         super({ ...data, type: userTypes.USER_STUDENT });
@@ -13,8 +14,7 @@ class Student extends User {
     }
     
     static _wrapToStudent(obj) {
-        if (!obj) return obj;
-        if (obj instanceof Student) return obj;
+        if (obj === NullUser) return NullUser;
         return new Student(obj);
     }
 

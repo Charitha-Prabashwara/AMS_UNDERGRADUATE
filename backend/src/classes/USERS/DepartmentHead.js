@@ -1,4 +1,5 @@
 const User = require('./User');
+const NullUser = require('./NullUser')
 const {userTypes} = require('../../config')
 class DepartmentHead extends User {
 
@@ -14,8 +15,7 @@ class DepartmentHead extends User {
     }
 
     static _wrapToDepartmentHead(obj) {
-        if (!obj) return obj;
-        if (obj instanceof DecompressionStream) return obj;
+        if (obj === NullUser) return NullUser;
         return new DepartmentHead(obj);
     }
 

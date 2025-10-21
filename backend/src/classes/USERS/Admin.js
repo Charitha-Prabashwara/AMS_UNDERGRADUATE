@@ -1,4 +1,5 @@
 const User = require('./User');
+const NullUser = require('./NullUser')
 const {userTypes} = require('../../config')
 class Admin extends User {
     constructor(data = {}) {
@@ -13,10 +14,10 @@ class Admin extends User {
   
     }
   static _wrapToAdmin(obj) {
-    if (!obj) return obj;
-    if (obj instanceof Admin) return obj;
+    if (obj === NullUser) return NullUser;
     return new Admin(obj);
   }
+
 
   async save(){
     const user = await super.save()
