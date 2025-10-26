@@ -3,7 +3,8 @@ const BaseRepository = require('./BaseRepository')
 
 class SubjectRepository extends BaseRepository{
     constructor(){
-        super(SubjectModel);
+        const defaultSelectList = []
+        super(SubjectModel, defaultSelectList)
     }
 }
 

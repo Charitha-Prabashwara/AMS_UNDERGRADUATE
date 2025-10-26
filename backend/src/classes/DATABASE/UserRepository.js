@@ -5,7 +5,8 @@ const BaseRepository = require('./BaseRepository')
 class UserRepository extends BaseRepository{
   
   constructor(){
-    super(UserModel)
+    const defaultSelectList = ['-password']
+    super(UserModel, defaultSelectList)
   }
 
 }

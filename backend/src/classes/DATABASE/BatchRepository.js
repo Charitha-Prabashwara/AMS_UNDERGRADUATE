@@ -3,7 +3,8 @@ const BaseRepository = require('./BaseRepository')
 
 class BatchRepository extends BaseRepository{
     constructor(){
-        super(BatchModel)
+        const defaultSelectList = []
+        super(BatchModel, defaultSelectList)
     }
 }
 
