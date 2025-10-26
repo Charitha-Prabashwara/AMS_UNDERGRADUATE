@@ -3,8 +3,10 @@ const {UserNotFoundError, InvalidUserIdError} = require('../../errors')
 
 class BaseRepository{
   model;
-  constructor(model){
+  #selectList;
+  constructor(model, select=[]){
     this.model = model;
+    this.#selectList = select;
   }
 
   _validateId(id){
@@ -12,7 +14,7 @@ class BaseRepository{
   }
 
   #selectProjection(select=[]){
-    return select.length ? select.join(' ') : '-password';
+    return select.length ? select.join(' ') : this.#selectList;
   }
 
   async findById(id, select=[]){
