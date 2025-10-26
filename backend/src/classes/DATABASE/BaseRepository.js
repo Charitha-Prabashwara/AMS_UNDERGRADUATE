@@ -11,9 +11,13 @@ class BaseRepository{
     if(!mongoose.isValidObjectId(id)) throw new InvalidUserIdError()
   }
 
-  async findById(id){
+  #selectProjection(select=[]){
+    return select.length ? select.join(' ') : '-password';
+  }
+
+  async findById(id, select=[]){
         this._validateId(id)
-        return await this.model.findById(id).lean();
+        return await this.model.findById(id).select(this.#selectProjection(select)).lean();
         
   }
   async create(userObject){
@@ -21,40 +25,40 @@ class BaseRepository{
       return user.toObject();
   }
 
-  async save(user){
+  async save(user, select=[]){
         const id = user._id || user.id;
         this._validateId(id)
-        const found_user = await this.model.findByIdAndUpdate(id.toString(), user,{ new: true, lean: true }).lean()
+        const found_user = await this.model.findByIdAndUpdate(id.toString(), user,{ new: true, lean: true }).select(this.#selectProjection(select)).lean()
         if(!found_user) throw new UserNotFoundError()
         return found_user
   }
 
-  async directUpdate(id, fields){
+  async directUpdate(id, fields, select=[]){
       this._validateId(id)
-      return await this.model.findByIdAndUpdate(id, fields, { new: true, lean: true }); 
+      return await this.model.findByIdAndUpdate(id, fields, { new: true, lean: true }).select(this.#selectProjection(select)); 
   }
 
   async find(filter={}, options={}){
     const { limit = null, skip = 0, select = null, sort = null } = options;
     let query = this.model.find(filter).skip(skip);
       if (limit) query = query.limit(limit);
-      if (select) query = query.select(select);
+      if (select) query = query.select(this.#selectProjection(select));
       if (sort) query = query.sort(sort);
     return await query.lean();
   }
 
-  async deleteOne(filter){
-      const deleted = await this.model.findOneAndDelete(filter).lean()
+  async deleteOne(filter, select=[]){
+      const deleted = await this.model.findOneAndDelete(filter).select(this.#selectProjection(select)).lean()
       if(!deleted) throw new UserNotFoundError();
       return deleted;
   }
-  async deleteMany(filter){
-      return await this.model.deleteMany(filter);
+  async deleteMany(filter, select=[]){
+      return await this.model.deleteMany(filter).select(this.#selectProjection(SELECT));
   }
 
-  async deleteById(id){
+  async deleteById(id, select=[]){
     this._validateId(id)
-    const deleted = await this.model.findByIdAndDelete(id).lean()
+    const deleted = await this.model.findByIdAndDelete(id).select(this.#selectProjection(select)).lean()
     if(!deleted) throw new UserNotFoundError();
     return deleted
   }
