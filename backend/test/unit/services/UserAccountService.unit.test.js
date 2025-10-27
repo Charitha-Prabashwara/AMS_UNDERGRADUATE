@@ -1,8 +1,9 @@
 
-const {Admin, NullUser, Lecturer, Student} = require('../../../src/classes/USERS');
+const {Admin, NullUser, Lecturer, Student, DepartmentHead} = require('../../../src/classes/USERS');
 const AdminBuilder = require('../../../src/classes/USERS/AdminBuilder')
 const LecturerBuilder = require('../../../src/classes/USERS/LecturerBuilder')
 const StudentBuilder = require('../../../src/classes/USERS/StudentBuilder')
+const DepartmentHeadBuilder = require('../../../src/classes/USERS/DepartmentHeadBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 const {config, userTypes} = require('../../../src/config');
@@ -213,4 +214,66 @@ describe('Should create an Student and get Student using user-account-service', 
     })
   })
 
+
+  describe('Should create an DepartmentHead and get DepartmentHead using user-account-service', () => {
+    const defaultPassword = '123456';
+    const registration_id = faker.string.uuid();
+    const first_name = faker.person.firstName();
+    const last_name = faker.person.lastName();
+    const full_name = faker.person.fullName();
+    const with_initial = faker.person.fullName();
+    const address = {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: undefined,
+      zip: faker.location.zipCode()
+    };
+    const email = faker.internet.email().toLowerCase();
+
+    let createdDepartmentHead;
+    
+    test('Should create a new DepartmentHead successfully', async () => {
+      const builder = new DepartmentHeadBuilder();
+      builder.registration_id = registration_id;
+      builder.name = {
+        first_name,
+        last_name,
+        full_name,
+        with_initial_name: with_initial
+      };
+
+      builder.address = { ...address };
+      builder.email = email;
+      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+
+      createdDepartmentHead = await builder.create();
+
+      expect(createdDepartmentHead).toBeInstanceOf(DepartmentHead);
+      expect(createdDepartmentHead.registration_id).toBe(registration_id);
+      expect(createdDepartmentHead.name.first_name).toBe(first_name);
+      expect(createdDepartmentHead._type).toBe(userTypes.USER_DEPARTMENT);
+
+      const compare = await PasswordHashService.verifyPassword(defaultPassword, createdDepartmentHead.password);
+      expect(compare).toBe(true);
+    });
+
+    test('Should find DepartmentHead by ID', async () => {
+      const finder = new DepartmentHead();
+      const found = await finder.findById(createdDepartmentHead.id);
+      expect(found).toBeInstanceOf(DepartmentHead);
+      expect(found.id).toStrictEqual(createdDepartmentHead.id);
+    });
+
+    
+    test('Should get created Student user details suing user-account-service', async () => { 
+      const service = UserAccountService;
+      const user = await service.getUserById(userTypes.USER_DEPARTMENT,createdDepartmentHead.id)
+      expect(user).toBeInstanceOf(DepartmentHead);
+      expect(user.id).toStrictEqual(createdDepartmentHead.id)
+      createdDepartmentHead = user
+    })
+    
+    test('password filed should not visible in default condition in user-account-service', async() => { 
+      expect(createdDepartmentHead.password).toBe(undefined)
+    })
+  })
  
