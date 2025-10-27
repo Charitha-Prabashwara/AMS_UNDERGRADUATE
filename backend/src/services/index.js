@@ -1,3 +1,4 @@
 
 const UserAccountService   = require('./UserAccountService')
-module.exports = {UserAccountService}
+const PasswordHashService = require('./PasswordHashService')
+module.exports = {UserAccountService, PasswordHashService}
