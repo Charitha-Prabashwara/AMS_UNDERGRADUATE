@@ -656,12 +656,10 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
       address: address,
       password: await PasswordHashService.hashPassword(defaultPassword)
     })
-
+    expect(admin).toBeInstanceOf(Admin);
     expect(admin.name).toStrictEqual(name)
     expect(admin.email).toBe(email)
     expect(admin.address).toStrictEqual(address)
-  
-
   })
 
     test('Should Create DepartmentHead', async () => {
@@ -688,7 +686,7 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
       address: address,
       password: await PasswordHashService.hashPassword(defaultPassword)
     })
-
+    expect(departmentHead).toBeInstanceOf(DepartmentHead);
     expect(departmentHead.name).toStrictEqual(name)
     expect(departmentHead.email).toBe(email)
     expect(departmentHead.address).toStrictEqual(address)
@@ -720,7 +718,7 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
       address: address,
       password: await PasswordHashService.hashPassword(defaultPassword)
     })
-
+    expect(lecturer).toBeInstanceOf(Lecturer);
     expect(lecturer.name).toStrictEqual(name)
     expect(lecturer.email).toBe(email)
     expect(lecturer.address).toStrictEqual(address)
@@ -746,14 +744,14 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
     
 
     const service = await UserAccountService
-    const student = await service.createUser(userTypes.USER_LECTURER,{
+    const student = await service.createUser(userTypes.USER_STUDENT,{
       registration_id: registration_id,
       name: name,
       email: email,
       address: address,
       password: await PasswordHashService.hashPassword(defaultPassword)
     })
-
+    expect(student).toBeInstanceOf(Student);
     expect(student.name).toStrictEqual(name)
     expect(student.email).toBe(email)
     expect(student.address).toStrictEqual(address)
