@@ -11,6 +11,7 @@ const {config, userTypes} = require('../../../src/config');
 const {UserAccountService, PasswordHashService} = require('../../../src/services/')
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const { ServerCapabilities } = require('mongodb');
 let mongoServer;
 
 beforeAll(async () => {
@@ -609,8 +610,7 @@ describe('Should update an Admin using user-account-service', () => {
         with_initial_name: faker.person.fullName()
       }
       const email = faker.internet.email().toLowerCase();
-      
-      
+           
       const service = UserAccountService
       const user = await service.updateUserById(userTypes.USER_STUDENT, createdStudent.id, {
         registration_id: registration_id,
@@ -618,7 +618,6 @@ describe('Should update an Admin using user-account-service', () => {
         address:{ ...address },
         password: await PasswordHashService.hashPassword(defaultPassword),
         email:email
-
       })
 
       expect(user).toBeInstanceOf(Student);
@@ -626,8 +625,139 @@ describe('Should update an Admin using user-account-service', () => {
       expect(user.name).toStrictEqual(name)
       expect(user.address).toStrictEqual(address)
       expect(user.email).toBe(email)
-     
-        
+          
     })
     
  })
+
+describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using user-account-service', () => {
+  
+  test('Should Create Admin', async () => {
+    const defaultPassword = '123456';
+    const registration_id = faker.string.uuid();;
+    const address = {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: faker.location.streetAddress({ useFullAddress: true }),
+      zip: faker.location.zipCode()
+    };
+    const name={
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      full_name: faker.person.fullName(),
+      with_initial_name: faker.person.fullName()
+    }
+    const email = faker.internet.email().toLowerCase();
+   
+    const service = await UserAccountService
+    const admin = await service.createUser(userTypes.USER_ADMIN,{
+      registration_id: registration_id,
+      name: name,
+      email: email,
+      address: address,
+      password: await PasswordHashService.hashPassword(defaultPassword)
+    })
+
+    expect(admin.name).toStrictEqual(name)
+    expect(admin.email).toBe(email)
+    expect(admin.address).toStrictEqual(address)
+  
+
+  })
+
+    test('Should Create DepartmentHead', async () => {
+    const defaultPassword = '123456';
+    const registration_id = faker.string.uuid();;
+    const address = {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: faker.location.streetAddress({ useFullAddress: true }),
+      zip: faker.location.zipCode()
+    };
+    const name={
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      full_name: faker.person.fullName(),
+      with_initial_name: faker.person.fullName()
+    }
+    const email = faker.internet.email().toLowerCase();
+  
+    const service = await UserAccountService
+    const departmentHead = await service.createUser(userTypes.USER_DEPARTMENT,{
+      registration_id: registration_id,
+      name: name,
+      email: email,
+      address: address,
+      password: await PasswordHashService.hashPassword(defaultPassword)
+    })
+
+    expect(departmentHead.name).toStrictEqual(name)
+    expect(departmentHead.email).toBe(email)
+    expect(departmentHead.address).toStrictEqual(address)
+  })
+
+
+  test('Should Create Lecturer', async () => {
+    const defaultPassword = '123456';
+    const registration_id = faker.string.uuid();
+    const address = {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: faker.location.streetAddress({ useFullAddress: true }),
+      zip: faker.location.zipCode()
+    };
+    const name={
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      full_name: faker.person.fullName(),
+      with_initial_name: faker.person.fullName()
+    }
+    const email = faker.internet.email().toLowerCase();
+    
+
+    const service = await UserAccountService
+    const lecturer = await service.createUser(userTypes.USER_LECTURER,{
+      registration_id: registration_id,
+      name: name,
+      email: email,
+      address: address,
+      password: await PasswordHashService.hashPassword(defaultPassword)
+    })
+
+    expect(lecturer.name).toStrictEqual(name)
+    expect(lecturer.email).toBe(email)
+    expect(lecturer.address).toStrictEqual(address)
+  
+  })
+
+
+  test('Should Create Student', async () => {
+    const defaultPassword = '123456';
+    const registration_id = faker.string.uuid();;
+    const address = {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: faker.location.streetAddress({ useFullAddress: true }),
+      zip: faker.location.zipCode()
+    };
+    const name={
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      full_name: faker.person.fullName(),
+      with_initial_name: faker.person.fullName()
+    }
+    const email = faker.internet.email().toLowerCase();
+    
+
+    const service = await UserAccountService
+    const student = await service.createUser(userTypes.USER_LECTURER,{
+      registration_id: registration_id,
+      name: name,
+      email: email,
+      address: address,
+      password: await PasswordHashService.hashPassword(defaultPassword)
+    })
+
+    expect(student.name).toStrictEqual(name)
+    expect(student.email).toBe(email)
+    expect(student.address).toStrictEqual(address)
+  
+
+  })
+})
