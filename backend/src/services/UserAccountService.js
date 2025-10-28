@@ -12,6 +12,25 @@ class UserAccountService{
         if(user === NullUser) throw UserNotFoundError()
         return user;
    }
+
+   static async updateUserById(userType, id, data){
+      
+      const userClass = selectCorrectUser(userType)
+      const user = await userClass.findById(id)
+      if(user === NullUser) throw UserNotFoundError()
+      
+      user.registration_id = data.registration_id
+      user.name = data.name
+      user.email = data.email
+      user.address = data.address
+      user.password = data.password
+      user.enable_state = data.enable_state
+      user._department = data._department
+
+      const savedUser = await user.save()
+      return savedUser
+
+   }
   
 
 
