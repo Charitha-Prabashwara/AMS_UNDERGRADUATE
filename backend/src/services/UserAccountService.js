@@ -1,7 +1,7 @@
 const {User, Admin, NullUser} = require('../classes/USERS')
 const PasswordHashService = require('./PasswordHashService')
 const {userTypes} = require('../config')
-const {selectCorrectUser} = require('./dependencies/userServicesSupport')
+const {selectCorrectUser, selectCorrectBuilder} = require('./dependencies/userServicesSupport')
 const {UserNotFoundError} = require('../errors')
 
 class UserAccountService{
@@ -11,6 +11,13 @@ class UserAccountService{
         const user = await userClass.findById(id);
         if(user === NullUser) throw UserNotFoundError()
         return user;
+   }
+
+   static async findUsers(userType, filter={}, options={}){
+      const userClass = selectCorrectUser(userType)
+      const users = await userClass.find(filter, options)
+      users.forEach(user => {if(user===NullUser) throw UserNotFoundError()});
+      return users;
    }
 
    static async updateUserById(userType, id, data){
@@ -30,6 +37,21 @@ class UserAccountService{
       const savedUser = await user.save()
       return savedUser
 
+   }
+
+   static async createUser(userType, data){
+      
+      const builder = selectCorrectBuilder(userType);
+
+      builder.registration_id = data.registration_id
+      builder.name = data.name
+      builder.email = data.email
+      builder.address = data.address
+      builder.password = data.password
+      builder._department = data._department
+
+      const user = await builder.create()
+      return user;
    }
   
 
