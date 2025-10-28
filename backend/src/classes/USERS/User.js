@@ -129,10 +129,10 @@ class User{
      * @returns {Promise<User[]>} Array of User instances that match.
      * @throws Will throw an error if the query fails.
      */
-    async find(){    
+    async find(options={}){    
         try {
             const params = this.#matchFieldsAndParams()
-            const users = await repository.find(params)
+            const users = await repository.find(params, options)
         
             return users.map(user => this.#wrapToUser(user));
         } catch (error) {
