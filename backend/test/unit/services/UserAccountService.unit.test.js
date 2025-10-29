@@ -199,7 +199,7 @@ describe('Should create an Student and get Student using user-account-service', 
       expect(createdStudent.name.first_name).toBe(first_name);
       expect(createdStudent._type).toBe(userTypes.USER_STUDENT);
 
-      createdUserList.Lecturer.push(createdStudent.id)
+      createdUserList.Student.push(createdStudent.id)
 
       const compare = await PasswordHashService.verifyPassword(defaultPassword, createdStudent.password);
       expect(compare).toBe(true);
@@ -407,7 +407,7 @@ describe('Should update an Admin using user-account-service', () => {
       expect(createdDepartmentHead.name.first_name).toBe(name.first_name);
       expect(createdDepartmentHead._type).toBe(userTypes.USER_DEPARTMENT);
       
-      createdUserList.Admin.push(createdDepartmentHead.id)
+      createdUserList.DepartmentHead.push(createdDepartmentHead.id)
 
       const compare = await PasswordHashService.verifyPassword(defaultPassword, createdDepartmentHead.password);
       expect(compare).toBe(true);
@@ -581,7 +581,7 @@ describe('Should update an Admin using user-account-service', () => {
       expect(createdStudent.name.first_name).toBe(name.first_name);
       expect(createdStudent._type).toBe(userTypes.USER_STUDENT);
       
-      createdUserList.Lecturer.push(createdStudent.id)
+      createdUserList.Student.push(createdStudent.id)
 
       const compare = await PasswordHashService.verifyPassword(defaultPassword, createdStudent.password);
       expect(compare).toBe(true);
@@ -660,6 +660,7 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
     expect(admin.name).toStrictEqual(name)
     expect(admin.email).toBe(email)
     expect(admin.address).toStrictEqual(address)
+    createdUserList.Admin.push(admin.id)
   })
 
     test('Should Create DepartmentHead', async () => {
@@ -690,6 +691,7 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
     expect(departmentHead.name).toStrictEqual(name)
     expect(departmentHead.email).toBe(email)
     expect(departmentHead.address).toStrictEqual(address)
+    createdUserList.DepartmentHead.push(departmentHead.id)
   })
 
 
@@ -722,7 +724,7 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
     expect(lecturer.name).toStrictEqual(name)
     expect(lecturer.email).toBe(email)
     expect(lecturer.address).toStrictEqual(address)
-  
+    createdUserList.Lecturer.push(lecturer.id)
   })
 
 
@@ -755,7 +757,52 @@ describe('Should create an users(Admin, Lecturer, DepartmentHead, Student) using
     expect(student.name).toStrictEqual(name)
     expect(student.email).toBe(email)
     expect(student.address).toStrictEqual(address)
-  
+    createdUserList.Student.push(student.id)
 
   })
 })
+
+describe('Should find users(Admin, Lecturer, DepartmentHead, Student) using user-account-service', () => {
+ 
+  test('Should find all Admins', async () => {
+    const service = UserAccountService
+    const admins = await service.findUsers(userTypes.USER_ADMIN, {});
+    
+    expect(admins.length).toBe(createdUserList.Admin.length)
+    admins.forEach(admin => {
+      expect(admin).toBeInstanceOf(Admin)
+      expect(admin._type).toBe(userTypes.USER_ADMIN)
+    });
+  })
+
+  test('Should find all Lecturers', async () => { 
+    const service = UserAccountService
+    const lecturers = await service.findUsers(userTypes.USER_LECTURER, {})
+    expect(lecturers.length).toBe(createdUserList.Lecturer.length)
+    lecturers.forEach(lecturer => {
+      expect(lecturer).toBeInstanceOf(Lecturer)
+      expect(lecturer._type).toBe(userTypes.USER_LECTURER)
+    });
+   })
+
+   test('Should find all DepartmentHeads', async () => { 
+    const service = UserAccountService
+    const departmentHeads = await service.findUsers(userTypes.USER_DEPARTMENT, {})
+    expect(departmentHeads.length).toBe(createdUserList.DepartmentHead.length)
+    departmentHeads.forEach(departmentHead => {
+      expect(departmentHead).toBeInstanceOf(DepartmentHead)
+      expect(departmentHead._type).toBe(userTypes.USER_DEPARTMENT)
+    });
+    })
+
+  test('Should find all Students', async () => {
+    const service = UserAccountService
+    const students = await service.findUsers(userTypes.USER_STUDENT, {})
+    expect(students.length).toBe(createdUserList.Student.length)
+    students.forEach(student => {
+      expect(student).toBeInstanceOf(Student)
+      expect(student._type).toBe(userTypes.USER_STUDENT)
+    });
+   })
+       
+});
