@@ -772,6 +772,7 @@ describe('Should find users(Admin, Lecturer, DepartmentHead, Student) using user
     admins.forEach(admin => {
       expect(admin).toBeInstanceOf(Admin)
       expect(admin._type).toBe(userTypes.USER_ADMIN)
+      expect(createdUserList.Admin).toContainEqual(admin.id);
     });
   })
 
@@ -782,6 +783,7 @@ describe('Should find users(Admin, Lecturer, DepartmentHead, Student) using user
     lecturers.forEach(lecturer => {
       expect(lecturer).toBeInstanceOf(Lecturer)
       expect(lecturer._type).toBe(userTypes.USER_LECTURER)
+      expect(createdUserList.Lecturer).toContainEqual(lecturer.id);
     });
    })
 
@@ -792,6 +794,7 @@ describe('Should find users(Admin, Lecturer, DepartmentHead, Student) using user
     departmentHeads.forEach(departmentHead => {
       expect(departmentHead).toBeInstanceOf(DepartmentHead)
       expect(departmentHead._type).toBe(userTypes.USER_DEPARTMENT)
+      expect(createdUserList.DepartmentHead).toContainEqual(departmentHead.id);
     });
     })
 
@@ -802,6 +805,7 @@ describe('Should find users(Admin, Lecturer, DepartmentHead, Student) using user
     students.forEach(student => {
       expect(student).toBeInstanceOf(Student)
       expect(student._type).toBe(userTypes.USER_STUDENT)
+      expect(createdUserList.Student).toContainEqual(student.id);
     });
    })
        
