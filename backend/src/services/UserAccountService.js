@@ -7,10 +7,10 @@ const {UserNotFoundError} = require('../errors')
 class UserAccountService{
 
    static async getUserById(userType, id){
-        const userClass = selectCorrectUser(userType)
-        const user = await userClass.findById(id);
-        if(user === NullUser) throw UserNotFoundError()
-        return user;
+      const userClass = selectCorrectUser(userType)
+      const user = await userClass.findById(id);
+      if(user === NullUser) throw UserNotFoundError()
+      return user;
    }
 
    static async findUsers(userType, filter={}, options={}){
