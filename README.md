@@ -91,7 +91,7 @@ Frontend may use Vite env (e.g., VITE_API_URL) — check `frontend/admin/.env` o
 
 ---
 
-## Design & architecture notes (for interview) 🧭
+## Design & architecture notes 🧭
 
 - Domain-driven classes in `/classes` encapsulate entity behavior and use the Builder pattern for flexible construction. 🏗️  
 - Repository layer (`classes/DATABASE`) abstracts Mongoose — controllers/services depend on repository abstractions (Dependency Inversion). 🔁  
@@ -115,17 +115,7 @@ Be prepared to explain:
 - Increase test coverage: add integration tests for auth and critical flows. 🧪  
 - Containerization: Dockerfile(s) and docker-compose for local multi-service testing (API + MongoDB). 🐳
 
----
 
-## How recruiters / hiring managers can evaluate quickly ✅
-
-- Run backend + frontend locally to verify endpoints and UI.  
-- Run `npm test` in `backend/` for automated verification of core services.  
-- Inspect `classes/` and `classes/DATABASE/` to validate design patterns and repository abstractions.  
-- Review `test/` to see unit-testing style and edge-case coverage.  
-- Request a 10–15 minute walkthrough of auth flow, user creation, and error handling.
-
----
 
 ## Contributing & contact 🤝
 
