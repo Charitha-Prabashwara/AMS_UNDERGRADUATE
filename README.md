@@ -2,18 +2,6 @@
 
 Practical, production-oriented Academic Management System built with Node.js/Express (backend) and React/Vite (frontend). This repo demonstrates real-world engineering practices: modular architecture, automated tests, clear separation of concerns, and a straightforward local development setup — ideal for recruiter review. ✅
 
----
-
-## Why review this project 🔍
-
-- Real-world stack: Express, Mongoose (MongoDB), JWT auth, bcrypt, Vite + React. 🚀  
-- Clean separation: controllers, services, repositories, DTOs, middleware and UI components. 🧩  
-- Design patterns: Builder, Singleton, Repository abstractions applied where appropriate. 🏗️  
-- Testing: Jest + Supertest for services and API integration tests. 🧪  
-- Practical engineering: dotenv config, password hashing, input validation (Joi), error handling middleware. 🔒  
-- Ready for evaluation: example tests, .env.example, and scripts to run locally. 🛠️
-
----
 
 ## Tech stack 🧰
 
