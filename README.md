@@ -140,4 +140,4 @@ This project uses the ISC license (see `backend/package.json`). Replace with you
 
 ---
 
-Thanks for reviewing — this repository is a concise, realistic sample of backend + frontend engineering practices, suitable for interview take-home reviews and portfolio demonstrations. 🎯
+Thanks for reviewing
