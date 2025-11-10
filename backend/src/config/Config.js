@@ -9,6 +9,8 @@ class Config{
             this.DB_MONGODB_DATABASE = env.DB_MONGODB_DATABASE;
             this.APPLICATION_PORT = env.APPLICATION_PORT;
             this.SLAT_ROUNDS = env.SLAT_ROUNDS;
+            this.ACCESS_TOKEN_SECRET = env.REFRESH_TOKEN_SECRET;
+            this.ACCESS_TOKEN_TTL = env.ACCESS_TOKEN_TTL;
             Config.instance = this;
 
         }

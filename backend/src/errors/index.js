@@ -4,6 +4,10 @@ const ValidationFailedError = require('./DataTransferObjectErrors/ValidationFail
 const DuplicateKeyError = require('./RepositoryErrors/UserRepositoryErrors/DuplicateKeyError')
 const ValidationError = require('./RepositoryErrors/UserRepositoryErrors/ValidationError')
 
+const TokenExpiredError = require('./AuthTokenErrors/TokenExpiredError')
+const JsonWebTokenError = require('./AuthTokenErrors/JsonWebTokenError')
+const TokenNotBefore = require('./AuthTokenErrors/TokenNotBeforeError')
+const GeneralTokenError = require('./AuthTokenErrors/GeneralTokenError')
 const DepartmentNotFoundError = require('./RepositoryErrors/DepartmentRepositoryErrors/DepartmentNotFoundError')
 const InvalidDepartmentIdError = require('./RepositoryErrors/DepartmentRepositoryErrors/InvalidDepartmentIdError')
 
@@ -14,5 +18,9 @@ module.exports = {
     DuplicateKeyError,
     ValidationError,
     DepartmentNotFoundError,
-    InvalidDepartmentIdError
+    InvalidDepartmentIdError,
+    TokenExpiredError,
+    JsonWebTokenError,
+    TokenNotBefore,
+    GeneralTokenError
 }
