@@ -25,14 +25,28 @@ class authTokenServiceSupport{
     }
     
     generateAccessToken(payload){
-       const accessToken = jwt.sign(payload, config.ACCESS_TOKEN_SECRET, {expiresIn: config.ACCESS_TOKEN_TTL})
-       return accessToken;
+      const accessToken = jwt.sign(payload, config.ACCESS_TOKEN_SECRET, {expiresIn: config.ACCESS_TOKEN_TTL})
+      return accessToken;
+    }
+
+    generateRefreshToken(payload){
+      const refreshToken = jwt.sign(payload, config.REFRESH_TOKEN_SECRET, {expiresIn: config.REFRESH_TOKEN_TTL})
+      return refreshToken;
     }
 
     verifyAccessToken(token){
       
       try {
         const decoded = jwt.verify(token, config.ACCESS_TOKEN_SECRET)
+        return decoded;
+      } catch (error) {
+        throw error
+      }
+    }
+
+    verifyRefreshToken(token){
+      try {
+        const decoded = jwt.verify(token, config.REFRESH_TOKEN_SECRET)
         return decoded;
       } catch (error) {
         throw error
