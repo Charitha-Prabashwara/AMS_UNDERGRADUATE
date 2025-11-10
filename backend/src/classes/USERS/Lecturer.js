@@ -32,6 +32,12 @@ class Lecturer extends User {
         const users = await super.find();
         return users.map(user =>  Lecturer._wrapToLecturer(user));
     }
+
+    async findOne(){
+        const user = await super.findOne();
+        return Lecturer._wrapToLecturer(user)
+    }
+
     async deleteOne(){
         const user = await super.deleteOne()
         return  Lecturer._wrapToLecturer(user)

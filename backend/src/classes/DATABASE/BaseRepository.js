@@ -49,6 +49,15 @@ class BaseRepository{
     return await query.lean();
   }
 
+  async findOne(filter={}, options={}){
+    const { limit = null, skip = 0, select = null, sort = null } = options;
+    let query = this.model.findOne(filter).skip(skip);
+      if (limit) query = query.limit(limit);
+      if (select) query = query.select(this.#selectProjection(select));
+      if (sort) query = query.sort(sort);
+    return await query.lean();
+  }
+
   async deleteOne(filter, select=[]){
       const deleted = await this.model.findOneAndDelete(filter).select(this.#selectProjection(select)).lean()
       if(!deleted) throw new UserNotFoundError();

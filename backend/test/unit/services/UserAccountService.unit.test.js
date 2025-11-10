@@ -91,6 +91,16 @@ let createdUserList = {
       expect(user.id).toStrictEqual(createdAdmin.id)
       createdAdmin = user
     })
+
+    test('Should get created Admin user email suing user-account-service', async () => { 
+      const service = UserAccountService;
+      const filter= {
+        email: createdAdmin.email
+      }
+      const user = await service.findOneUser(userTypes.USER_ADMIN,filter, {})
+      expect(user).toBeInstanceOf(Admin);
+      expect(user.email).toStrictEqual(createdAdmin.email)
+    })
     
     test('password filed should not visible in default condition in user-account-service', async() => { 
       expect(createdAdmin.password).toBe(undefined)
@@ -154,6 +164,16 @@ describe('Should create an Lecturer and get Lecturer using user-account-service'
       expect(user).toBeInstanceOf(Lecturer);
       expect(user.id).toStrictEqual(createdLecturer.id)
       createdLecturer = user
+    })
+
+    test('Should get created Lecturer user email suing user-account-service', async () => { 
+      const service = UserAccountService;
+      const filter= {
+        email: createdLecturer.email
+      }
+      const user = await service.findOneUser(userTypes.USER_LECTURER,filter, {})
+      expect(user).toBeInstanceOf(Lecturer);
+      expect(user.email).toStrictEqual(createdLecturer.email)
     })
     
     test('password filed should not visible in default condition in user-account-service', async() => { 
@@ -220,6 +240,16 @@ describe('Should create an Student and get Student using user-account-service', 
       expect(user.id).toStrictEqual(createdStudent.id)
       createdStudent = user
     })
+
+    test('Should get created Student user email suing user-account-service', async () => { 
+      const service = UserAccountService;
+      const filter= {
+        email: createdStudent.email
+      }
+      const user = await service.findOneUser(userTypes.USER_STUDENT,filter, {})
+      expect(user).toBeInstanceOf(Student);
+      expect(user.email).toStrictEqual(createdStudent.email)
+    })
     
     test('password filed should not visible in default condition in user-account-service', async() => { 
       expect(createdStudent.password).toBe(undefined)
@@ -277,7 +307,7 @@ describe('Should create an Student and get Student using user-account-service', 
     });
 
     
-    test('Should get created Student user details suing user-account-service', async () => { 
+    test('Should get created DepartmentHead user details suing user-account-service', async () => { 
       const service = UserAccountService;
       const user = await service.getUserById(userTypes.USER_DEPARTMENT,createdDepartmentHead.id)
       expect(user).toBeInstanceOf(DepartmentHead);
@@ -285,6 +315,16 @@ describe('Should create an Student and get Student using user-account-service', 
       createdDepartmentHead = user
     })
     
+    test('Should get created DepartmentHead user email suing user-account-service', async () => { 
+      const service = UserAccountService;
+      const filter= {
+        email: createdDepartmentHead.email    
+      }
+      const user = await service.findOneUser(userTypes.USER_DEPARTMENT,filter, {})
+      expect(user).toBeInstanceOf(DepartmentHead);
+      expect(user.email).toStrictEqual(createdDepartmentHead.email)
+    })
+
     test('password filed should not visible in default condition in user-account-service', async() => { 
       expect(createdDepartmentHead.password).toBe(undefined)
     })

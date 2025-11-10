@@ -20,6 +20,13 @@ class UserAccountService{
       return users;
    }
 
+   static async findOneUser(userType, filter={}, options={}){
+      const userClass = selectCorrectUser(userType);
+      const user = await userClass.findOne(filter, options);
+      if(user === NullUser){throw UserNotFoundError()};
+      return user;
+   }
+
    static async updateUserById(userType, id, data){
       
       const userClass = selectCorrectUser(userType)
@@ -53,6 +60,40 @@ class UserAccountService{
       const user = await builder.create()
       return user;
    }
+
+   static async deleteById(userType, id){
+      const userClass = selectCorrectUser(userType)
+      const user = await userClass.deleteById(id)
+      return user;
+   }
+
+   static async getEnableState(userType, id){
+
+   }
+
+   static async setEnableState(userType, id, enableState){
+
+   }
+
+   static async getUserByEmail(userType, email){
+
+   }
+
+   static async existsCount(userType, filter){
+
+   }
+
+   static async isExists(userType, id){
+
+   }
+
+   static async count(userType, filter={}){
+      
+   }
+   static async deleteMany(userType, filter={}){
+
+   }
+
   
 
 

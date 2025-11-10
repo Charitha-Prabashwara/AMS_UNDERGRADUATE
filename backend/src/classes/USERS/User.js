@@ -140,6 +140,17 @@ class User{
         }
     }
 
+    async findOne(options={}){    
+        try {
+            const params = this.#matchFieldsAndParams()
+            const user = await repository.findOne(params, options)
+            return this.#wrapToUser(user)
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
     /**
      * Deletes a user matching the current User instance fields.
      * @returns {Promise<User>} The deleted User instance.
