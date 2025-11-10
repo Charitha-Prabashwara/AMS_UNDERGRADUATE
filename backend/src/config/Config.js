@@ -10,7 +10,9 @@ class Config{
             this.APPLICATION_PORT = env.APPLICATION_PORT;
             this.SLAT_ROUNDS = env.SLAT_ROUNDS;
             this.ACCESS_TOKEN_SECRET = env.REFRESH_TOKEN_SECRET;
+            this.REFRESH_TOKEN_SECRET = env.REFRESH_TOKEN_SECRET;
             this.ACCESS_TOKEN_TTL = env.ACCESS_TOKEN_TTL;
+            this.REFRESH_TOKEN_TTL = env.REFRESH_TOKEN_TTL;
             Config.instance = this;
 
         }
