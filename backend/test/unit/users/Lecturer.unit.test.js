@@ -3,7 +3,7 @@ const {Lecturer,NullUser} = require('../../../src/classes/USERS');
 const LecturerBuilder = require('../../../src/classes/USERS/LecturerBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config} = require('../../../src/config');
+const {config, userTypes} = require('../../../src/config');
 const PasswordHashService =require('../../../src/services/PasswordHashService')
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -80,6 +80,7 @@ afterAll(async () => {
     const found = await finder.findById(createLecturer.id);
     expect(found).toBeInstanceOf(Lecturer);
     expect(found.id).toStrictEqual(createLecturer.id);
+    expect(found._type).toBe(userTypes.USER_LECTURER)
   });
 
 

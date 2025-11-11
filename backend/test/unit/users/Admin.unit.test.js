@@ -3,7 +3,7 @@ const {Admin, NullUser} = require('../../../src/classes/USERS');
 const AdminBuilder = require('../../../src/classes/USERS/AdminBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config} = require('../../../src/config');
+const {config, userTypes} = require('../../../src/config');
 const PasswordHashService =require('../../../src/services/PasswordHashService')
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -80,6 +80,7 @@ afterAll(async () => {
     const found = await finder.findById(createdAdmin.id);
     expect(found).toBeInstanceOf(Admin);
     expect(found.id).toStrictEqual(createdAdmin.id);
+    expect(found._type).toBe(userTypes.USER_ADMIN)
   });
 
 

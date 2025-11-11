@@ -2,7 +2,7 @@ const {DepartmentHead, NullUser} = require('../../../src/classes/USERS');
 const DepartmentHeadBuilder = require('../../../src/classes/USERS/DepartmentHeadBuilder')
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config} = require('../../../src/config');
+const {config, userTypes} = require('../../../src/config');
 const PasswordHashService =require('../../../src/services/PasswordHashService')
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -79,6 +79,7 @@ afterAll(async () => {
     const found = await finder.findById(createDepartmentHead.id);
     expect(found).toBeInstanceOf(DepartmentHead);
     expect(found.id).toStrictEqual(createDepartmentHead.id);
+    expect(found._type).toBe(userTypes.USER_DEPARTMENT)
   });
 
 
