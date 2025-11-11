@@ -155,11 +155,11 @@ afterAll(async () => {
     expect(departmentHead._type).toBe('department');
     expect(builder._type).toBe('department');
 
-    //expect(Object.getOwnPropertyDescriptor(departmentHead, '_type').writable).toBe(false);
-    //expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
+    expect(Object.getOwnPropertyDescriptor(departmentHead, '_type').writable).toBe(false);
+    expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
 
-    expect(() => { departmentHead._type = 'user'; }).toThrow();
-    expect(() => { builder._type = 'user'; }).toThrow();
+    //expect(() => { departmentHead._type = 'user'; }).toThrow();
+    //expect(() => { builder._type = 'user'; }).toThrow();
   });
 
   test('Should handle save error gracefully', async () => {

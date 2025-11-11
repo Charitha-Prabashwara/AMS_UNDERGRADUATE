@@ -7,8 +7,8 @@ class DepartmentHead extends User {
         super({ ...data, type: userTypes.USER_DEPARTMENT });
 
         Object.defineProperty(this, '_type', {
-            get() { return userTypes.USER_DEPARTMENT; },
-            set() { throw new TypeError('Cannot modify _type'); },
+            value: userTypes.USER_DEPARTMENT,
+            writable: false,
             enumerable: true,
             configurable: false
         });

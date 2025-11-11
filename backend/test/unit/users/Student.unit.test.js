@@ -156,11 +156,11 @@ afterAll(async () => {
     expect(student._type).toBe('student');
     expect(builder._type).toBe('student');
 
-    //expect(Object.getOwnPropertyDescriptor(student, '_type').writable).toBe(false);
-    //expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
+    expect(Object.getOwnPropertyDescriptor(student, '_type').writable).toBe(false);
+    expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
 
-    expect(() => { student._type = 'user'; }).toThrow();
-    expect(() => { builder._type = 'user'; }).toThrow();
+    //expect(() => { student._type = 'user'; }).toThrow();
+    //expect(() => { builder._type = 'user'; }).toThrow();
   });
 
   test('Should handle save error gracefully', async () => {

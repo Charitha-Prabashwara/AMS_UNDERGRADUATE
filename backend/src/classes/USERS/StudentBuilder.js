@@ -6,8 +6,8 @@ class StudentBuilder extends UserBuilder {
         super({...data, type: userTypes.USER_STUDENT});
         
         Object.defineProperty(this, '_type', {
-            get() { return userTypes.USER_STUDENT; },
-            set() { throw new TypeError('Cannot modify _type'); },
+            value: userTypes.USER_STUDENT,
+            writable: false,
             enumerable: true,
             configurable: false
         });

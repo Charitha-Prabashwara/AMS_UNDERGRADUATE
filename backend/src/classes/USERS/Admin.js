@@ -6,8 +6,8 @@ class Admin extends User {
         super({ ...data, type: userTypes.USER_ADMIN });
 
         Object.defineProperty(this, '_type', {
-            get() { return userTypes.USER_ADMIN; },
-            set() { throw new TypeError('Cannot modify _type'); },
+            value: userTypes.USER_ADMIN,
+            writable: false,
             enumerable: true,
             configurable: false
         });
@@ -48,6 +48,7 @@ class Admin extends User {
     const user = await super.deleteById(id)
     return  Admin._wrapToAdmin(user)
   }
+
 
 
 

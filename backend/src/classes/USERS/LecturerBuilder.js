@@ -6,8 +6,8 @@ class LecturerBuilder extends UserBuilder {
         super({...data, type: userTypes.USER_LECTURER});
         
         Object.defineProperty(this, '_type', {
-            get() { return userTypes.USER_LECTURER; },
-            set() { throw new TypeError('Cannot modify _type'); },
+            value: userTypes.USER_LECTURER,
+            writable: false,
             enumerable: true,
             configurable: false
         });

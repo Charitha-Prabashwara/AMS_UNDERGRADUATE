@@ -156,11 +156,11 @@ afterAll(async () => {
     expect(admin._type).toBe('admin');
     expect(builder._type).toBe('admin');
 
-    //expect(Object.getOwnPropertyDescriptor(admin, '_type').writable).toBe(false);
-    //expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
+    expect(Object.getOwnPropertyDescriptor(admin, '_type').writable).toBe(false);
+    expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
 
-    expect(() => { admin._type = 'user'; }).toThrow();
-    expect(() => { builder._type = 'user'; }).toThrow();
+    //expect(() => { admin._type = 'user'; }).toThrow();
+    //expect(() => { builder._type = 'user'; }).toThrow();
   });
 
   test('Should handle save error gracefully', async () => {
