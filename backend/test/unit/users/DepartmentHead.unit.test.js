@@ -74,6 +74,16 @@ afterAll(async () => {
     expect(found._type).toBe('department');
   });
 
+  test('Should find Department-Head using findOne by email', async () => { 
+     const finder = new DepartmentHead();
+     finder.email = createDepartmentHead.email
+    const found = await finder.findOne();
+    expect(found).toBeInstanceOf(DepartmentHead);
+    expect(found.id).toStrictEqual(createDepartmentHead.id);
+    expect(found._type).toBe(userTypes.USER_DEPARTMENT)
+  })
+
+
   test('Should find Department-Head by ID', async () => {
     const finder = new DepartmentHead();
     const found = await finder.findById(createDepartmentHead.id);

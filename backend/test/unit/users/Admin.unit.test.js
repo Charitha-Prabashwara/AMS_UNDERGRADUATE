@@ -75,6 +75,15 @@ afterAll(async () => {
     expect(found._type).toBe('admin');
   });
 
+  test('Should find Admin using findOne by email', async () => { 
+     const finder = new Admin();
+     finder.email = createdAdmin.email
+    const found = await finder.findOne();
+    expect(found).toBeInstanceOf(Admin);
+    expect(found.id).toStrictEqual(createdAdmin.id);
+    expect(found._type).toBe(userTypes.USER_ADMIN)
+   })
+
   test('Should find Admin by ID', async () => {
     const finder = new Admin();
     const found = await finder.findById(createdAdmin.id);
@@ -260,3 +269,88 @@ test('Should handle concurrent Admin creation safely', async () => {
     })
  
   })
+
+describe('Check and test found bug in findOne method', () => {
+  let builders = [];
+  let passwords = [];
+
+  beforeAll(async () => {
+    const tempBuilders = [];
+    const tempPasswords = [];
+
+    for (let i = 0; i < 30; i++) {
+      const builder = new AdminBuilder();
+      const defaultPassword = faker.internet.password(10);
+
+      builder.registration_id = faker.string.uuid();
+      builder.address = {
+        line1: faker.location.streetAddress({ useFullAddress: true }),
+        line2: faker.location.streetAddress({ useFullAddress: true }),
+        zip: faker.location.zipCode()
+      };
+      builder.email = faker.internet.email().toLowerCase();
+      builder.name = {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        full_name: faker.person.fullName(),
+        with_initial_name: faker.person.fullName()
+      };
+      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+
+      tempBuilders.push(builder);
+      tempPasswords.push(defaultPassword);
+    }
+
+    builders = tempBuilders;
+    passwords = tempPasswords;
+  });
+
+  test('should create and verify all admins', async () => {
+    for (let i = 0; i < builders.length; i++) {
+      const builder = builders[i];
+      const password = passwords[i];
+
+      const user = await builder.create();
+      expect(user).toBeDefined();
+      expect(user.email).toBe(builder.email);
+      expect(await PasswordHashService.verifyPassword(password, user.password)).toBe(true);
+    }
+   
+
+    await Promise.all(builders.map(async (builder) => {
+      const admin = new Admin();
+      admin.email = builder.email;
+      const result = await admin.findOne();
+      expect(result.email).toBe(builder.email);
+      expect(result.registration_id).toBe(builder.registration_id)
+      expect(result.address).toStrictEqual(builder.address)
+      expect(result.name).toStrictEqual(builder.name)
+      expect(result.password).toBe(builder.password)
+    }));
+
+    await Promise.all(builders.map(async (builder) => {
+      const admin = new Admin();
+      admin.registration_id = builder.registration_id;
+      const result = await admin.findOne();
+      expect(result.email).toBe(builder.email);
+      expect(result.registration_id).toBe(builder.registration_id)
+      expect(result.address).toStrictEqual(builder.address)
+      expect(result.name).toStrictEqual(builder.name)
+      expect(result.password).toBe(builder.password)
+    }));
+
+    await Promise.all(builders.map(async (builder) => {
+      const admin = new Admin();
+      admin.email = builder.email
+      admin.registration_id = builder.registration_id;
+      const result = await admin.findOne();
+      expect(result.email).toBe(builder.email);
+      expect(result.registration_id).toBe(builder.registration_id)
+      expect(result.address).toStrictEqual(builder.address)
+      expect(result.name).toStrictEqual(builder.name)
+      expect(result.password).toBe(builder.password)
+    }));
+  });
+
+
+});
