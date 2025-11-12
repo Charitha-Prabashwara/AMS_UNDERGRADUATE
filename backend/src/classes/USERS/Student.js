@@ -6,7 +6,6 @@ class Student extends User {
         super({ ...data, type: userTypes.USER_STUDENT });
 
         Object.defineProperty(this, '_type', {
-            value: userTypes.USER_STUDENT,
             writable: false,
             enumerable: true,
             configurable: false
@@ -47,6 +46,7 @@ class Student extends User {
         const user = await super.deleteById(id)
         return  Student._wrapToStudent(user)
     }
+
 }
 
 module.exports = Student;

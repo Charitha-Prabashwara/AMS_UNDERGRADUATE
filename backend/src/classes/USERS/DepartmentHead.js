@@ -6,8 +6,7 @@ class DepartmentHead extends User {
     constructor(data = {}) {
         super({ ...data, type: userTypes.USER_DEPARTMENT });
 
-        Object.defineProperty(this, '_type', {
-            value: userTypes.USER_DEPARTMENT,
+        Object.defineProperty(this, '_type', {  
             writable: false,
             enumerable: true,
             configurable: false
@@ -47,6 +46,7 @@ class DepartmentHead extends User {
         const user = await super.deleteById(id)
         return  DepartmentHead._wrapToDepartmentHead(user)
     }
+
  
 }
 

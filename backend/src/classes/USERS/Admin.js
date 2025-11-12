@@ -3,14 +3,12 @@ const NullUser = require('./NullUser')
 const {userTypes} = require('../../config')
 class Admin extends User {
     constructor(data = {}) {
-        super({ ...data, type: userTypes.USER_ADMIN });
-
-        Object.defineProperty(this, '_type', {
-            value: userTypes.USER_ADMIN,
-            writable: false,
-            enumerable: true,
-            configurable: false
-        });
+      super({ ...data, type: userTypes.USER_ADMIN });
+      Object.defineProperty(this, '_type', { 
+        writable: false,
+        enumerable: true,
+        configurable: false
+      });
   
     }
   static _wrapToAdmin(obj) {
@@ -48,10 +46,7 @@ class Admin extends User {
     const user = await super.deleteById(id)
     return  Admin._wrapToAdmin(user)
   }
-
-
-
-
+  
 }
 
 module.exports = Admin;
