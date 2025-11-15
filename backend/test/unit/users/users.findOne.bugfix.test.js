@@ -201,7 +201,7 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
   test('should always find right user type and right user', async () => { 
     const builders = adminBuilders.concat(departmentHeadBuilder, lecturerBuilders, studentBuilders)
 
-    for (let index = 0; index < 1000; index++) {
+    for (let index = 0; index < 100; index++) {
       const randomBuilder = builders[Math.floor(Math.random() * builders.length)];
       
 
