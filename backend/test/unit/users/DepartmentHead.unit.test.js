@@ -269,4 +269,36 @@ test('Should handle concurrent Department-Head creation safely', async () => {
       });
   })
 })
+
+test('should find by department head and update', async () => { 
+      const builder = new DepartmentHeadBuilder();
+      const defaultPassword = faker.internet.password(10);
+
+      builder.registration_id = faker.string.uuid();
+      builder.address = {
+        line1: faker.location.streetAddress({ useFullAddress: true }),
+        line2: faker.location.streetAddress({ useFullAddress: true }),
+        zip: faker.location.zipCode()
+      };
+      builder.email = faker.internet.email().toLowerCase();
+      builder.name = {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        full_name: faker.person.fullName(),
+        with_initial_name: faker.person.fullName()
+      };
+      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+
+      const user = await builder.create()
+
+      expect(user).toBeDefined()
+      expect(user.id).toBeDefined()
+      
+      const new_email =faker.internet.email().toLowerCase() 
+      user.email = new_email
+      const result = await user.findByIdAndUpdate(user)
+      expect(result).toBeDefined()
+      expect(result.email).toBe(new_email)
+
+  })
  

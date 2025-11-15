@@ -23,6 +23,11 @@ class DepartmentHead extends User {
         return DepartmentHead._wrapToDepartmentHead(user);
     }
 
+    async findByIdAndUpdate(userObject){
+        const user = await super.findByIdAndUpdate(userObject)
+        return DepartmentHead._wrapToDepartmentHead(user);
+    }
+
     async findById(id){
         const user = await super.findById(id);
         return  DepartmentHead._wrapToDepartmentHead(user)

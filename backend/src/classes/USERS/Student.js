@@ -1,6 +1,7 @@
 const User = require('./User');
 const {userTypes} = require('../../config');
 const NullUser = require('./NullUser');
+const Lecturer = require('./Lecturer');
 class Student extends User {
     constructor(data = {}) {
         super({ ...data, type: userTypes.USER_STUDENT });
@@ -19,6 +20,11 @@ class Student extends User {
 
     async save(){
         const user = await super.save()
+        return Student._wrapToStudent(user);
+    }
+
+    async findByIdAndUpdate(userObject){
+        const user = await super.findByIdAndUpdate(userObject)
         return Student._wrapToStudent(user);
     }
 

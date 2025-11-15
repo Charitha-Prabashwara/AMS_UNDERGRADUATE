@@ -22,6 +22,11 @@ class Lecturer extends User {
         return Lecturer._wrapToLecturer(user);
     }
 
+    async findByIdAndUpdate(userObject){
+        const user = await super.findByIdAndUpdate(userObject)
+        return Lecturer._wrapToLecturer(user);
+    }
+
     async findById(id){
         const user = await super.findById(id);
         return  Lecturer._wrapToLecturer(user)

@@ -109,6 +109,15 @@ class User{
         }
     }
 
+    async findByIdAndUpdate(user){
+        try{
+            const returned_object = await repository.save(user);
+            return this.#wrapToUser(returned_object)  
+        }catch(error){
+            throw error
+        }
+    }
+
     /**
      * Finds a user by ID.
      * @param {string} user_id - The ID of the user to find.

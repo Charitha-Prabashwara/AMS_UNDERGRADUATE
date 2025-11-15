@@ -22,6 +22,11 @@ class Admin extends User {
     return Admin._wrapToAdmin(user);
   }
 
+  async findByIdAndUpdate(userObject){
+    const user = await super.findByIdAndUpdate(userObject)
+    return Admin._wrapToAdmin(user);
+  }
+
   async findById(id){
     const user = await super.findById(id);
     return  Admin._wrapToAdmin(user)
