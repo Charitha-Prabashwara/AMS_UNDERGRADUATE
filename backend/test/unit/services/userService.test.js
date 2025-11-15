@@ -496,3 +496,132 @@ test('should update Admin by id suing userService', async () => {
       expect(updatedLecturer._type).toBe(userTypes.USER_LECTURER)
       expect(updatedStudent._type).toBe(userTypes.USER_STUDENT)
  })
+
+
+ test('should set suspend state by id userService', async () => { 
+  
+ 
+   const dataGen = async()=>{
+        const data = {}
+          data.registration_id = faker.string.uuid();
+          data.address = {
+            line1: faker.location.streetAddress({ useFullAddress: true }),
+            line2: faker.location.streetAddress({ useFullAddress: true }),
+            zip: faker.location.zipCode(),
+          };
+
+          data.email = faker.internet.email().toLowerCase();
+          data.name = {
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
+            full_name: faker.person.fullName(),
+            with_initial_name: faker.person.fullName(),
+          };
+          data.password = await PasswordHashService.hashPassword(faker.internet.password(10));
+            return data
+      }
+      
+     
+
+      const service = new UserService()
+
+      const adminData = await dataGen()
+      const departmentHeadData = await dataGen()
+      const lecturerData = await dataGen()
+      const studentData = await dataGen()
+
+      const admin = await service.createNewUser(userTypes.USER_ADMIN, adminData);
+      const departmentHead = await service.createNewUser(userTypes.USER_DEPARTMENT, departmentHeadData);
+      const lecturer = await service.createNewUser(userTypes.USER_LECTURER, lecturerData);
+      const student = await service.createNewUser(userTypes.USER_STUDENT, studentData)
+
+
+      expect(admin).toBeDefined()
+      expect(admin.registration_id).toBe(adminData.registration_id)
+      expect(admin.address).toStrictEqual(adminData.address)
+      expect(admin.name).toStrictEqual(adminData.name)
+      expect(admin.email).toBe(adminData.email)
+      expect(admin).toBeInstanceOf(Admin)
+      expect(admin._type).toBe(userTypes.USER_ADMIN)
+
+
+      expect(departmentHead).toBeDefined()
+      expect(departmentHead.registration_id).toBe(departmentHeadData.registration_id)
+      expect(departmentHead.address).toStrictEqual(departmentHeadData.address)
+      expect(departmentHead.name).toStrictEqual(departmentHeadData.name)
+      expect(departmentHead.email).toBe(departmentHeadData.email)
+      expect(departmentHead).toBeInstanceOf(DepartmentHead)
+      expect(departmentHead._type).toBe(userTypes.USER_DEPARTMENT)
+
+      expect(lecturer).toBeDefined()
+      expect(lecturer.registration_id).toBe(lecturerData.registration_id)
+      expect(lecturer.address).toStrictEqual(lecturerData.address)
+      expect(lecturer.name).toStrictEqual(lecturerData.name)
+      expect(lecturer.email).toBe(lecturerData.email)
+      expect(lecturer).toBeInstanceOf(Lecturer)
+      expect(lecturer._type).toBe(userTypes.USER_LECTURER)
+
+      expect(student).toBeDefined()
+      expect(student.registration_id).toBe(studentData.registration_id)
+      expect(student.address).toStrictEqual(studentData.address)
+      expect(student.name).toStrictEqual(studentData.name)
+      expect(student.email).toBe(studentData.email)
+      expect(student).toBeInstanceOf(Student)
+      expect(student._type).toBe(userTypes.USER_STUDENT)
+
+      const new_adminEmail = faker.internet.email().toLowerCase()
+      const new_departmentHeadEmail = faker.internet.email().toLowerCase()
+      const new_lecturerEmail = faker.internet.email().toLowerCase()
+      const new_studentEmail = faker.internet.email().toLowerCase()
+
+      admin.email = new_adminEmail
+      departmentHead.email = new_departmentHeadEmail
+      lecturer.email = new_lecturerEmail
+      student.email = new_studentEmail
+
+      const updatedAdmin = await service.setSuspend(userTypes.USER_ADMIN,admin.id, true);
+      const updatedDepartmentHead = await service.setSuspend(userTypes.USER_DEPARTMENT, departmentHead.id, true);
+      const updatedLecturer =await service.setSuspend(userTypes.USER_LECTURER, lecturer.id, true);
+      const updatedStudent =await service.setSuspend(userTypes.USER_STUDENT, student.id, true);
+
+      expect(updatedAdmin).toBeDefined()
+      expect(updatedDepartmentHead).toBeDefined()
+      expect(updatedLecturer).toBeDefined()
+      expect(updatedStudent).toBeDefined()
+
+      expect(updatedAdmin.registration_id).toBe(adminData.registration_id)
+      expect(updatedDepartmentHead.registration_id).toBe(departmentHeadData.registration_id)
+      expect(updatedLecturer.registration_id).toBe(lecturerData.registration_id)
+      expect(updatedStudent.registration_id).toBe(studentData.registration_id)
+
+      expect(updatedAdmin.address).toStrictEqual(adminData.address)
+      expect(updatedDepartmentHead.address).toStrictEqual(departmentHeadData.address)
+      expect(updatedLecturer.address).toStrictEqual(lecturerData.address)
+      expect(updatedStudent.address).toStrictEqual(studentData.address)
+
+      expect(updatedAdmin.name).toStrictEqual(adminData.name)
+      expect(updatedDepartmentHead.name).toStrictEqual(departmentHeadData.name)
+      expect(updatedLecturer.name).toStrictEqual(lecturerData.name)
+      expect(updatedStudent.name).toStrictEqual(studentData.name)
+
+      expect(updatedAdmin.email).toBe(adminData.email)
+      expect(updatedDepartmentHead.email).toBe(departmentHeadData.email)
+      expect(updatedLecturer.email).toBe(lecturerData.email)
+      expect(updatedStudent.email).toBe(studentData.email)
+
+      expect(updatedAdmin).toBeInstanceOf(Admin)
+      expect(updatedDepartmentHead).toBeInstanceOf(DepartmentHead)
+      expect(updatedLecturer).toBeInstanceOf(Lecturer)
+      expect(updatedStudent).toBeInstanceOf(Student)
+
+      expect(updatedAdmin._type).toBe(userTypes.USER_ADMIN)
+      expect(updatedDepartmentHead._type).toBe(userTypes.USER_DEPARTMENT)
+      expect(updatedLecturer._type).toBe(userTypes.USER_LECTURER)
+      expect(updatedStudent._type).toBe(userTypes.USER_STUDENT)
+
+      expect(updatedAdmin.enable_state).toBe(false)
+      expect(updatedDepartmentHead.enable_state).toBe(false)
+      expect(updatedLecturer.enable_state).toBe(false)
+      expect(updatedStudent.enable_state).toBe(false)
+
+  })

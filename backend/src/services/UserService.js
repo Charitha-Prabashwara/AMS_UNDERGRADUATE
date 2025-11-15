@@ -62,6 +62,14 @@ class UserService{
         return result;
     }
 
+    async setSuspend(userType, id, enable){
+        const userClass = selectCorrectUser(userType)
+        const result = await userClass.findByIdAndUpdate({_id:id, enable_state:!enable})
+        return result;
+    }
+
+    
+
 
 }
 
