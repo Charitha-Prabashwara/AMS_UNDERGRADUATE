@@ -11,6 +11,7 @@ const GeneralTokenError = require('./AuthTokenErrors/GeneralTokenError')
 const DepartmentNotFoundError = require('./RepositoryErrors/DepartmentRepositoryErrors/DepartmentNotFoundError')
 const InvalidDepartmentIdError = require('./RepositoryErrors/DepartmentRepositoryErrors/InvalidDepartmentIdError')
 
+const InvalidPasswordProvided = require('./PasswordHashErrors/InvalidPasswordProvided')
 module.exports = {
     UserNotFoundError,
     InvalidUserIdError,
@@ -22,5 +23,6 @@ module.exports = {
     TokenExpiredError,
     JsonWebTokenError,
     TokenNotBefore,
-    GeneralTokenError
+    GeneralTokenError,
+    InvalidPasswordProvided
 }
