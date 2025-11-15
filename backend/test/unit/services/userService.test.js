@@ -635,3 +635,81 @@ const create_users = []
         expect(user.enable_state).toBe(!isSuspended(user))
       });
    })
+
+   test('should check user instance is valid format instance', async () => {
+     const data = {}
+      data.registration_id = faker.string.uuid();
+      data.address = {
+        line1: faker.location.streetAddress({ useFullAddress: true }),
+        line2: faker.location.streetAddress({ useFullAddress: true }),
+        zip: faker.location.zipCode(),
+      };
+
+      data.email = faker.internet.email().toLowerCase();
+      data.name = {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        full_name: faker.person.fullName(),
+        with_initial_name: faker.person.fullName(),
+      };
+      data.password = await PasswordHashService.hashPassword(faker.internet.password(10));
+
+      const service = new UserService()
+      const user = await service.createNewUser(userTypes.USER_STUDENT, data)
+
+      expect(user).toBeDefined()
+      expect(user.registration_id).toBe(data.registration_id)
+      expect(user.address).toStrictEqual(data.address)
+      expect(user.name).toStrictEqual(data.name)
+      expect(user.email).toBe(data.email)
+      expect(user).toBeInstanceOf(Student)
+      expect(user._type).toBe(userTypes.USER_STUDENT)
+
+    })
+
+    test('should delete student by id suing userService', async () => {
+
+      const dataGen = async()=>{
+        const data = {}
+          data.registration_id = faker.string.uuid();
+          data.address = {
+            line1: faker.location.streetAddress({ useFullAddress: true }),
+            line2: faker.location.streetAddress({ useFullAddress: true }),
+            zip: faker.location.zipCode(),
+          };
+
+          data.email = faker.internet.email().toLowerCase();
+          data.name = {
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
+            full_name: faker.person.fullName(),
+            with_initial_name: faker.person.fullName(),
+          };
+          data.password = await PasswordHashService.hashPassword(faker.internet.password(10));
+            return data
+      }
+      
+     
+
+      const service = new UserService()
+
+      const adminData = await dataGen()
+      const departmentHeadData = await dataGen()
+      const lecturerData = await dataGen()
+      const studentData = await dataGen()
+
+      const admin = await service.createNewUser(userTypes.USER_ADMIN, adminData);
+      const departmentHead = await service.createNewUser(userTypes.USER_DEPARTMENT, departmentHeadData);
+      const lecturer = await service.createNewUser(userTypes.USER_LECTURER, lecturerData);
+      const student = await service.createNewUser(userTypes.USER_STUDENT, studentData)
+
+      expect(UserService.isInstanceOfAdmin(admin)).toBe(true)
+      expect(UserService.isInstanceOfDepartmentHead(departmentHead)).toBe(true)
+      expect(UserService.isInstanceOfLecturer(lecturer)).toBe(true)
+      expect(UserService.isInstanceOfStudent(student)).toBe(true)
+
+      expect(UserService.isInstanceOfAdmin(departmentHead)).toBe(false)
+      expect(UserService.isInstanceOfDepartmentHead(admin)).toBe(false)
+      expect(UserService.isInstanceOfLecturer(student)).toBe(false)
+      expect(UserService.isInstanceOfStudent(lecturer)).toBe(false)
+  })

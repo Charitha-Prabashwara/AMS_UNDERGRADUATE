@@ -1,10 +1,8 @@
+const { Admin, DepartmentHead, Lecturer, Student } = require('../classes/USERS');
 const { userTypes } = require('../config');
 const {selectCorrectUser, selectCorrectBuilder} = require('./dependencies/userServicesSupport')
 class UserService{
 
-    constructor(){
-
-    }
 
     async getUserById(userType, id){
         const userClass = selectCorrectUser(userType);
@@ -71,6 +69,27 @@ class UserService{
     static isSuspended(user){
         return !user.enable_state
     }
+
+    static userTypes(){
+        return userTypes.USER_TYPES
+    }
+
+    static isInstanceOfAdmin(admin){
+        return admin instanceof Admin && admin._type == userTypes.USER_ADMIN
+    }
+
+    static isInstanceOfDepartmentHead(departmentHead){
+        return departmentHead instanceof DepartmentHead && departmentHead._type == userTypes.USER_DEPARTMENT
+    }
+
+    static isInstanceOfLecturer(lecturer){
+        return lecturer instanceof Lecturer && lecturer._type == userTypes.USER_LECTURER
+    }
+
+    static isInstanceOfStudent(student){
+        return student instanceof Student && student._type == userTypes.USER_STUDENT
+    }
+
 
     
 
