@@ -1,4 +1,5 @@
-const {selectCorrectUser} = require('./dependencies/userServicesSupport')
+const { userTypes } = require('../config');
+const {selectCorrectUser, selectCorrectBuilder} = require('./dependencies/userServicesSupport')
 class UserService{
 
     constructor(){
@@ -31,7 +32,37 @@ class UserService{
         return result
     }
 
-    
+    async createNewUser(userType, data={}){
+        const builder = selectCorrectBuilder(userType);
+
+        builder.registration_id = data.registration_id;
+        builder.name = data.name;
+        builder.email = data.email;
+        builder.address = data.address;
+        builder.password = data.password;
+
+        if((userType == userTypes.USER_DEPARTMENT)||(userType == userTypes.USER_STUDENT)||(userType == userTypes.USER_LECTURER)){
+            builder._department = data.department;
+        }
+
+        const user = await builder.create();
+        return user;
+         
+    }
+
+    async deleteUserById(userType, id){
+        const userClass = selectCorrectUser(userType)
+        const result = await userClass.deleteById(id);
+        return result;
+    }
+
+    async findByIdAndUpdate(userType, user){
+        const userClass = selectCorrectUser(userType)
+        const result = await userClass.findByIdAndUpdate(user)
+        return result;
+    }
+
+
 }
 
 module.exports = UserService
