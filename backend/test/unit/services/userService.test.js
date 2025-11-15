@@ -110,7 +110,7 @@ describe('userService test', () => {
     for (const user of adminUsers) {
 
       const service = new UserService();
-      const found = await service.geyUserByEmail(userTypes.USER_ADMIN,user.email);
+      const found = await service.getUserByEmail(userTypes.USER_ADMIN,user.email);
         
       expect(found).toBeDefined();
       expect(found).toBeInstanceOf(Admin)

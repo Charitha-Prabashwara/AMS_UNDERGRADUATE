@@ -1,99 +1,173 @@
 const { Admin, DepartmentHead, Lecturer, Student } = require('../classes/USERS');
 const { userTypes } = require('../config');
 const {selectCorrectUser, selectCorrectBuilder} = require('./dependencies/userServicesSupport')
+
+/**
+ * UserService
+ * ------------
+ * Service class for managing different types of users (Admin, DepartmentHead, Lecturer, Student).
+ * Provides methods for fetching, creating, updating, deleting, and suspending users.
+ */
 class UserService{
 
+  /**
+  * Fetch a user by their database ID.
+  * @param {string} userType - The type of user (from userTypes).
+  * @param {string} id - The unique ID of the user.
+  * @returns {Promise<Object|null>} The user object if found, otherwise null.
+  */
+  async getUserById(userType, id){
+    const userClass = selectCorrectUser(userType);
+    return await userClass.findById(id);
+  }
 
-    async getUserById(userType, id){
-        const userClass = selectCorrectUser(userType);
-        const result = await userClass.findById(id);
-        return result
+  /**
+  * Fetch a user by their registration ID.
+  * @param {string} userType - The type of user (from userTypes).
+  * @param {string} registrationId - The registration ID of the user.
+  * @returns {Promise<Object|null>} The user object if found, otherwise null.
+  */
+  async getUserByRegistrationId(userType, registrationId){
+    const userClass = selectCorrectUser(userType);
+    userClass.registration_id = registrationId;
+    return await userClass.findOne();   
+  }
+
+  /**
+  * Fetch a user by their email address.
+  * @param {string} userType - The type of user (from userTypes).
+  * @param {string} email - The email address of the user.
+  * @returns {Promise<Object|null>} The user object if found, otherwise null.
+  */
+  async getUserByEmail(userType, email){
+    const userClass = selectCorrectUser(userType);
+    userClass.email = email;
+    return await userClass.findOne();
+  }
+
+  /**
+  * Retrieve all users and find users based on filter of a given class.
+  * @param {Object} user - User class (Admin, Lecturer, DepartmentHead, or Student).
+  * @returns {Promise<Array>} Array of user objects.
+  */
+  async getFindUsers(user){
+    const userClass  = user;
+    return await userClass.find();
+  }
+
+  /**
+  * Create a new user.
+  * @param {string} userType - Type of user (from userTypes).
+  * @param {Object} data - User data.
+  * @param {string} data.registration_id - User registration ID.
+  * @param {JSON} data.name - User name.
+  * @param {string} data.email - User email.
+  * @param {JSON} data.address - User address.
+  * @param {string} data.password - User password.
+  * @param {string} [data.department] - Department (required for certain user types).
+  * @returns {Promise<Object>} The newly created user object.
+  */
+  async createNewUser(userType, data={}){
+    const builder = selectCorrectBuilder(userType);
+
+    builder.registration_id = data.registration_id;
+    builder.name = data.name;
+    builder.email = data.email;
+    builder.address = data.address;
+    builder.password = data.password;
+
+    if((userType == userTypes.USER_DEPARTMENT)||(userType == userTypes.USER_STUDENT)||(userType == userTypes.USER_LECTURER)){
+      builder._department = data.department;
     }
+    return await builder.create();         
+  }
 
-    async getUserByRegistrationId(userType, registrationId){
-        const userClass = selectCorrectUser(userType);
-        userClass.registration_id = registrationId;
-        const result =await userClass.findOne();
-        return result;
-    }
+  /**
+  * Delete a user by their database ID.
+  * @param {string} userType - Type of user (from userTypes).
+  * @param {string} id - The ID of the user to delete.
+  * @returns {Promise<Object|null>} The deleted user object or null if not found.
+  */
+  async deleteUserById(userType, id){
+    const userClass = selectCorrectUser(userType)
+    return await userClass.deleteById(id);
+  }
 
-    async geyUserByEmail(userType, email){
-        const userClass = selectCorrectUser(userType);
-        userClass.email = email;
-        const result  = await userClass.findOne();
-        return result
-    }
+  /**
+  * Find a user by ID and update their data.
+  * @param {string} userType - Type of user (from userTypes).
+  * @param {Object} user - User object containing updates.
+  * @returns {Promise<Object|null>} The updated user object.
+  */
+  async findByIdAndUpdate(userType, user){
+    const userClass = selectCorrectUser(userType)
+    return await userClass.findByIdAndUpdate(user)
+  }
 
-    async getFindUsers(user){
-        const userClass  = user;
-        const result = await userClass.find();
-        return result
-    }
+  /**
+  * Suspend or unsuspend a user.
+  * @param {string} userType - Type of user (from userTypes).
+  * @param {string} id - The ID of the user to update.
+  * @param {boolean} enable - True to suspend, false to unsuspend.
+  * @returns {Promise<Object|null>} The updated user object.
+  */
+  async setSuspend(userType, id, enable){
+    const userClass = selectCorrectUser(userType)
+    return await userClass.findByIdAndUpdate({_id:id, enable_state:!enable})
+  }
 
-    async createNewUser(userType, data={}){
-        const builder = selectCorrectBuilder(userType);
+  /**
+  * Check if a user is suspended.
+  * @param {Object} user - User object.
+  * @returns {boolean} True if suspended, false otherwise.
+  */
+  static isSuspended(user){
+    return !user.enable_state
+  }
 
-        builder.registration_id = data.registration_id;
-        builder.name = data.name;
-        builder.email = data.email;
-        builder.address = data.address;
-        builder.password = data.password;
+  /**
+  * Get all supported user types.
+  * @returns {Array<string>} Array of user type strings.
+  */
+  static userTypes(){
+    return userTypes.USER_TYPES
+  }
 
-        if((userType == userTypes.USER_DEPARTMENT)||(userType == userTypes.USER_STUDENT)||(userType == userTypes.USER_LECTURER)){
-            builder._department = data.department;
-        }
+  /**
+  * Check if a user is an Admin.
+  * @param {Object} admin - User object.
+  * @returns {boolean} True if the user is an Admin.
+  */
+  static isInstanceOfAdmin(admin){
+    return admin instanceof Admin && admin._type == userTypes.USER_ADMIN
+  }
 
-        const user = await builder.create();
-        return user;
-         
-    }
+  /**
+  * Check if a user is a Department Head.
+  * @param {Object} departmentHead - User object.
+  * @returns {boolean} True if the user is a Department Head.
+  */
+  static isInstanceOfDepartmentHead(departmentHead){
+    return departmentHead instanceof DepartmentHead && departmentHead._type == userTypes.USER_DEPARTMENT
+  }
 
-    async deleteUserById(userType, id){
-        const userClass = selectCorrectUser(userType)
-        const result = await userClass.deleteById(id);
-        return result;
-    }
+  /**
+  * Check if a user is a Lecturer.
+  * @param {Object} lecturer - User object.
+  * @returns {boolean} True if the user is a Lecturer.
+  */
+  static isInstanceOfLecturer(lecturer){
+    return lecturer instanceof Lecturer && lecturer._type == userTypes.USER_LECTURER
+  }
 
-    async findByIdAndUpdate(userType, user){
-        const userClass = selectCorrectUser(userType)
-        const result = await userClass.findByIdAndUpdate(user)
-        return result;
-    }
-
-    async setSuspend(userType, id, enable){
-        const userClass = selectCorrectUser(userType)
-        const result = await userClass.findByIdAndUpdate({_id:id, enable_state:!enable})
-        return result;
-    }
-
-    static isSuspended(user){
-        return !user.enable_state
-    }
-
-    static userTypes(){
-        return userTypes.USER_TYPES
-    }
-
-    static isInstanceOfAdmin(admin){
-        return admin instanceof Admin && admin._type == userTypes.USER_ADMIN
-    }
-
-    static isInstanceOfDepartmentHead(departmentHead){
-        return departmentHead instanceof DepartmentHead && departmentHead._type == userTypes.USER_DEPARTMENT
-    }
-
-    static isInstanceOfLecturer(lecturer){
-        return lecturer instanceof Lecturer && lecturer._type == userTypes.USER_LECTURER
-    }
-
-    static isInstanceOfStudent(student){
-        return student instanceof Student && student._type == userTypes.USER_STUDENT
-    }
-
-
-    
-
-
+  /**
+  * Check if a user is a Student.
+  * @param {Object} student - User object.
+  * @returns {boolean} True if the user is a Student.
+  */
+  static isInstanceOfStudent(student){
+    return student instanceof Student && student._type == userTypes.USER_STUDENT
+  }
 }
 
 module.exports = UserService
