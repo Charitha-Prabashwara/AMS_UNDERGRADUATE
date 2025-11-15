@@ -154,7 +154,7 @@ class authTokenServiceSupport{
   * @returns {object} Decoded JWT payload if verification succeeds.
   *
   * @example
-  * const decoded = authService.verifyRefreshToken(refreshToken);
+  * const decoded = authTokenService.verifyRefreshToken(refreshToken);
   */
   verifyRefreshToken(token){
     return this.#verify(token, config.REFRESH_TOKEN_SECRET)
