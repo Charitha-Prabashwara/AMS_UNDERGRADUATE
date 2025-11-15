@@ -1,8 +1,8 @@
-const authTokenServiceSupport = require('../../../src/services/dependencies/authTokenServiceSupport');
+const authTokenServiceSupport = require('../../../src/services/authTokenService');
 const jwt = require('jsonwebtoken');
 const { config } = require('../../../src/config');
-const { TokenExpiredError, JsonWebTokenError, NotBeforeError } = require('jsonwebtoken');
-
+//const { TokenExpiredError, JsonWebTokenError, NotBeforeError } = require('jsonwebtoken');
+const {TokenExpiredError, JsonWebTokenError, TokenNotBefore, GeneralTokenError} = require('../../../src/errors/')
 jest.mock('jsonwebtoken');
 
 describe('authTokenServiceSupport Complete Test Suite', () => {
@@ -15,8 +15,8 @@ describe('authTokenServiceSupport Complete Test Suite', () => {
     // =======================
     describe('Singleton and Immutability', () => {
         test('should be a singleton', () => {
-            const instance1 = require('../../../src/services/dependencies/authTokenServiceSupport');
-            const instance2 = require('../../../src/services/dependencies/authTokenServiceSupport');
+            const instance1 = require('../../../src/services/authTokenService');
+            const instance2 = require('../../../src/services/authTokenService');
             expect(instance1).toBe(instance2);
         });
 
@@ -84,23 +84,24 @@ describe('authTokenServiceSupport Complete Test Suite', () => {
 
         test('TokenExpiredError', () => {
             const token = 'expired.token';
-            const error = new TokenExpiredError('jwt expired', new Date());
+            const error =new TokenExpiredError();
             jwt.verify.mockImplementation(() => { throw error; });
             expect(() => authTokenServiceSupport.verifyAccessToken(token)).toThrow(TokenExpiredError);
         });
 
         test('JsonWebTokenError', () => {
             const token = 'invalid.token';
-            const error = new JsonWebTokenError('jwt malformed');
+            const error =new JsonWebTokenError();
             jwt.verify.mockImplementation(() => { throw error; });
             expect(() => authTokenServiceSupport.verifyAccessToken(token)).toThrow(JsonWebTokenError);
         });
 
         test('NotBeforeError', () => {
             const token = 'notactive.token';
-            const error = new NotBeforeError('jwt not active', new Date());
+            const error =new TokenNotBefore();
+            error.name = 'NotBeforeError'
             jwt.verify.mockImplementation(() => { throw error; });
-            expect(() => authTokenServiceSupport.verifyAccessToken(token)).toThrow(NotBeforeError);
+            expect(() => authTokenServiceSupport.verifyAccessToken(token)).toThrow(TokenNotBefore);
         });
     });
 
