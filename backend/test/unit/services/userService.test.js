@@ -497,10 +497,10 @@ test('should update Admin by id suing userService', async () => {
       expect(updatedStudent._type).toBe(userTypes.USER_STUDENT)
  })
 
-
+const create_users = []
  test('should set suspend state by id userService', async () => { 
   
- 
+  
    const dataGen = async()=>{
         const data = {}
           data.registration_id = faker.string.uuid();
@@ -534,6 +534,8 @@ test('should update Admin by id suing userService', async () => {
       const departmentHead = await service.createNewUser(userTypes.USER_DEPARTMENT, departmentHeadData);
       const lecturer = await service.createNewUser(userTypes.USER_LECTURER, lecturerData);
       const student = await service.createNewUser(userTypes.USER_STUDENT, studentData)
+
+      create_users.push(admin, departmentHead, lecturer, student)
 
 
       expect(admin).toBeDefined()
@@ -625,3 +627,11 @@ test('should update Admin by id suing userService', async () => {
       expect(updatedStudent.enable_state).toBe(false)
 
   })
+
+  test('should we able to check user is suspended or not', async () => { 
+      const isSuspended = UserService.isSuspended
+
+      create_users.forEach(user => {
+        expect(user.enable_state).toBe(!isSuspended(user))
+      });
+   })

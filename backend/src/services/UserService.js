@@ -68,6 +68,10 @@ class UserService{
         return result;
     }
 
+    static isSuspended(user){
+        return !user.enable_state
+    }
+
     
 
 
