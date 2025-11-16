@@ -169,6 +169,11 @@ class UserService{
     return student instanceof Student && student._type == userTypes.USER_STUDENT
   }
 
+  /**
+  * Check if a user is null.
+  * @param {Object} user - User object.
+  * @returns {boolean} True if null user, false user.
+  */
   isNullUser(user){
     return user == NullUser
   }
