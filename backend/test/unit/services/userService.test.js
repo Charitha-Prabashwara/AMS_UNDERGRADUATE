@@ -629,7 +629,7 @@ const create_users = []
   })
 
   test('should we able to check user is suspended or not', async () => { 
-      const isSuspended = UserService.isSuspended
+      const isSuspended = new UserService().isSuspended
 
       create_users.forEach(user => {
         expect(user.enable_state).toBe(!isSuspended(user))
@@ -703,13 +703,13 @@ const create_users = []
       const lecturer = await service.createNewUser(userTypes.USER_LECTURER, lecturerData);
       const student = await service.createNewUser(userTypes.USER_STUDENT, studentData)
 
-      expect(UserService.isInstanceOfAdmin(admin)).toBe(true)
-      expect(UserService.isInstanceOfDepartmentHead(departmentHead)).toBe(true)
-      expect(UserService.isInstanceOfLecturer(lecturer)).toBe(true)
-      expect(UserService.isInstanceOfStudent(student)).toBe(true)
+      expect(service.isInstanceOfAdmin(admin)).toBe(true)
+      expect(service.isInstanceOfDepartmentHead(departmentHead)).toBe(true)
+      expect(service.isInstanceOfLecturer(lecturer)).toBe(true)
+      expect(service.isInstanceOfStudent(student)).toBe(true)
 
-      expect(UserService.isInstanceOfAdmin(departmentHead)).toBe(false)
-      expect(UserService.isInstanceOfDepartmentHead(admin)).toBe(false)
-      expect(UserService.isInstanceOfLecturer(student)).toBe(false)
-      expect(UserService.isInstanceOfStudent(lecturer)).toBe(false)
+      expect(service.isInstanceOfAdmin(departmentHead)).toBe(false)
+      expect(service.isInstanceOfDepartmentHead(admin)).toBe(false)
+      expect(service.isInstanceOfLecturer(student)).toBe(false)
+      expect(service.isInstanceOfStudent(lecturer)).toBe(false)
   })

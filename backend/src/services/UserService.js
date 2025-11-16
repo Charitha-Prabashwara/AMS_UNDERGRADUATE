@@ -1,4 +1,4 @@
-const { Admin, DepartmentHead, Lecturer, Student } = require('../classes/USERS');
+const { Admin, DepartmentHead, Lecturer, Student, NullUser } = require('../classes/USERS');
 const { userTypes } = require('../config');
 const {selectCorrectUser, selectCorrectBuilder} = require('./dependencies/userServicesSupport')
 
@@ -121,7 +121,7 @@ class UserService{
   * @param {Object} user - User object.
   * @returns {boolean} True if suspended, false otherwise.
   */
-  static isSuspended(user){
+  isSuspended(user){
     return !user.enable_state
   }
 
@@ -129,7 +129,7 @@ class UserService{
   * Get all supported user types.
   * @returns {Array<string>} Array of user type strings.
   */
-  static userTypes(){
+  userTypes(){
     return userTypes.USER_TYPES
   }
 
@@ -138,7 +138,7 @@ class UserService{
   * @param {Object} admin - User object.
   * @returns {boolean} True if the user is an Admin.
   */
-  static isInstanceOfAdmin(admin){
+  isInstanceOfAdmin(admin){
     return admin instanceof Admin && admin._type == userTypes.USER_ADMIN
   }
 
@@ -147,7 +147,7 @@ class UserService{
   * @param {Object} departmentHead - User object.
   * @returns {boolean} True if the user is a Department Head.
   */
-  static isInstanceOfDepartmentHead(departmentHead){
+  isInstanceOfDepartmentHead(departmentHead){
     return departmentHead instanceof DepartmentHead && departmentHead._type == userTypes.USER_DEPARTMENT
   }
 
@@ -156,7 +156,7 @@ class UserService{
   * @param {Object} lecturer - User object.
   * @returns {boolean} True if the user is a Lecturer.
   */
-  static isInstanceOfLecturer(lecturer){
+  isInstanceOfLecturer(lecturer){
     return lecturer instanceof Lecturer && lecturer._type == userTypes.USER_LECTURER
   }
 
@@ -165,8 +165,12 @@ class UserService{
   * @param {Object} student - User object.
   * @returns {boolean} True if the user is a Student.
   */
-  static isInstanceOfStudent(student){
+  isInstanceOfStudent(student){
     return student instanceof Student && student._type == userTypes.USER_STUDENT
+  }
+
+  isNullUser(user){
+    return user == NullUser
   }
 }
 
