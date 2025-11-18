@@ -12,6 +12,14 @@ const DepartmentNotFoundError = require('./RepositoryErrors/DepartmentRepository
 const InvalidDepartmentIdError = require('./RepositoryErrors/DepartmentRepositoryErrors/InvalidDepartmentIdError')
 
 const InvalidPasswordProvided = require('./PasswordHashErrors/InvalidPasswordProvided')
+const InvalidCredentialsError = require('./AuthServiceErrors/invalidCredentialsError')
+const LoginFailedError = require('./AuthServiceErrors/loginFailedError')
+const PasswordResetFailedError = require('./AuthServiceErrors/passwordResetFailedError')
+
+const AuthHeaderMissing = require('./AuthServiceErrors/AuthHeaderMissingError')
+const UnauthorizedError = require('./AuthServiceErrors/UnauthorizedError')
+const DoesNotHavePermissionError = require('./AuthServiceErrors/DoesNotHavePermissionError')
+const InvalidAuthFormatError = require('./AuthServiceErrors/InvalidAuthFormatError')
 module.exports = {
     UserNotFoundError,
     InvalidUserIdError,
@@ -24,5 +32,12 @@ module.exports = {
     JsonWebTokenError,
     TokenNotBefore,
     GeneralTokenError,
-    InvalidPasswordProvided
+    InvalidPasswordProvided,
+    InvalidCredentialsError,
+    LoginFailedError,
+    PasswordResetFailedError,
+    AuthHeaderMissing,
+    UnauthorizedError,
+    DoesNotHavePermissionError,
+    InvalidAuthFormatError
 }
