@@ -1,29 +1,28 @@
 
-
 class AuthTokenServiceHelper{
-    constructor(authTokenService){
-        this.authTokenService = authTokenService
-    }
+  constructor(authTokenService){
+    this.authTokenService = authTokenService
+  }
 
-    generatePayload(userType, id, expiresTimestamp, priority=0,other={}){
-        return this.authTokenService.generatePayload(userType, id, expiresTimestamp, priority=0,other={})
-    }
+  generatePayload(userType, id, expiresTimestamp, priority=0,other={}){
+    return this.authTokenService.generatePayload(userType, id, expiresTimestamp, priority=0,other={})
+  }
 
-    generateAccessToken(payload){
-        return this.authTokenService.generateAccessToken(payload)
-    }
+  generateAccessToken(payload){
+    return this.authTokenService.generateAccessToken(payload)
+  }
 
-    generateRefreshToken(payload){
-        return this.authTokenService.generateRefreshToken(payload)
-    }
+  generateRefreshToken(payload){
+    return this.authTokenService.generateRefreshToken(payload)
+  }
 
-    verifyAccessToken(token){
-        return this.authTokenService.verifyAccessToken(token)
-    }
+  verifyAccessToken(token){
+    return this.authTokenService.verifyAccessToken(token)
+  }
 
-    verifyRefreshToken(token){
-        return this.authTokenService.verifyRefreshToken(token)
-    }
+  verifyRefreshToken(token){
+    return this.authTokenService.verifyRefreshToken(token)
+  }
 }
 
 class PasswordHashServiceHelper{
@@ -33,11 +32,11 @@ class PasswordHashServiceHelper{
   }
 
   async hashPassword(password){
-    return await this.passwordHashService.hashPassword(password)
+    return this.passwordHashService.hashPassword(password)
   }
 
   async verifyPassword(password, hashedPassword){
-    return await this.passwordHashService.verifyPassword(password, hashedPassword);
+    return this.passwordHashService.verifyPassword(password, hashedPassword);
   }
 
 }
@@ -49,15 +48,15 @@ class UserServiceHelper{
   }
 
   async getUserById(userType, id){
-    return await this.userAccountService.getUserById(userType, id)
+    return this.userAccountService.getUserById(userType, id)
   }
 
   async getUserByEmail(userType, email){
-    return await this.userAccountService.getUserByEmail(userType, email)
+    return this.userAccountService.getUserByEmail(userType, email)
   }
 
   async findByIdAndUpdate(userType, user){
-    return await this.userAccountService.findByIdAndUpdate(userType, user)
+    return this.userAccountService.findByIdAndUpdate(userType, user)
   }
 
   isSuspended(user){
@@ -65,12 +64,8 @@ class UserServiceHelper{
   }
 
   isNullUser(user){
-
     return this.userAccountService.isNullUser(user)
   }
-
-
-
 }
 
 module.exports = {AuthTokenServiceHelper, PasswordHashServiceHelper, UserServiceHelper}
