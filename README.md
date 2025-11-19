@@ -1,133 +1,132 @@
-# AMS (Academic Management System) — Backend + Frontend 📚⚙️
+# 🎓 Academic Management System – Full Backend API  
+**Node.js • Express • MongoDB • JWT • RBAC**
 
-Practical, production-oriented Academic Management System built with Node.js/Express (backend) and React/Vite (frontend). This repo demonstrates real-world engineering practices: modular architecture, automated tests, clear separation of concerns, and a straightforward local development setup — ideal for recruiter review. ✅
+A scalable, modular, and production-oriented **Academic Management System** designed for universities, institutes, and educational platforms.  
+Built with **clean architecture** and **SOLID principles**, this backend manages users, departments, authentication, authorization, courses, and academic workflows.
 
-
-## Tech stack 🧰
-
-- Backend: Node.js, Express 5, Mongoose, Jest, Supertest  
-- Frontend: React, Vite, Material-UI (MUI)  
-- Auth & Security: bcrypt, jsonwebtoken  
-- Validation: Joi  
-- Dev tools: nodemon, dotenv  
-- DB: MongoDB (local or Atlas) 🗄️
+This project is engineered for **long-term maintainability**, **extensibility**, and **performance**, making it suitable for enterprise-level academic operations.
 
 ---
 
-## Repository layout (annotated) 🗂️
+## 🚀 Key Features
 
-- backend/  
-  - src/  
-    - app.js — express app setup (middleware, routes)  
-    - server.js — server bootstrap  
-    - classes/ — domain entities & builders (User, Student, Lecturer, Department, etc.)  
-    - classes/DATABASE/ — repository layer (BaseRepository, UserRepository, DepartmentRepository) — DB abstraction  
-    - controllers/ — route handlers  
-    - services/ — business logic (UserAccountService, PasswordHashService)  
-    - models/ — Mongoose schemas  
-    - middleware/ — error handling, DTO validation, translators  
-    - routes/ — route composition (admin routes, base.route)  
-  - test/ — unit & integration tests (services, entities, API) 🧾  
-  - .env.example — required env variables
-
-- frontend/admin/  
-  - src/  
-    - pages/ — React pages (dashboard, auth, component-overview, home) 🖥️  
-    - layout/ — Dashboard & Auth layout components (Header, Drawer, Footer)  
-    - components/ — reusable UI pieces (MainCard, Loadable)  
-    - routes/ — route configuration (MainRoutes, LoginRoutes)  
-    - assets/, themes/ — styles, MUI theme customizations 🎨
+### 🔐 Authentication & Authorization
+- JWT-based authentication  
+- Secure token handling (no sensitive error leaks)  
+- Role-Based Access Control (RBAC):
+  - Admin  
+  - Department Head  
+  - Lecturer  
+  - Student  
+- Custom Auth Middleware with:
+  - Token validation  
+  - Access-level protection  
+  - Priority-based request handling *(planned)*  
 
 ---
 
-## Quick start (developer) ⚡
+## 🧑‍🏫 User Management
 
-1. Clone the repo  
-   ```bash
-   git clone https://github.com/<your-username>/AMS_UNDERGRADUATE.git
-   cd AMS_UNDERGRADUATE
-   ```
+### Supported Roles
+- Admin  
+- Department Head  
+- Lecturer  
+- Student  
 
-2. Backend (run API)  
-   ```bash
-   cd backend
-   cp .env.example .env
-   # edit .env to set MONGO_URI, PORT, JWT_SECRET, etc.
-   npm install
-   npm run start        # development (nodemon)
-   # or for production
-   node src/server.js
-   ```
-   - App listens on `process.env.PORT` (set in .env). Default commonly 3000.
-
-3. Frontend (run Admin UI)  
-   ```bash
-   cd frontend/admin
-   npm install
-   npm run dev          # Vite dev server (port printed, e.g., 5173)
-   ```
-   - Open the Vite URL (e.g., http://localhost:5173). API proxy may route requests to backend.
-
-4. Run tests (backend)  
-   ```bash
-   cd backend
-   npm test
-   ```
-   - Tests include unit tests for services and some integration tests. 🧪
+### Features
+- Create / update / delete users  
+- Student registration & indexing  
+- Department-level filtering  
+- Structured builders for safe creation:
+  - `UserBuilder`
+  - `DepartmentBuilder`
+  - etc.
 
 ---
 
-## Environment variables (minimal) 🔧
-
-Copy `backend/.env.example` → `backend/.env` and set:
-
-- MONGO_URI=mongodb://localhost:27017/ams  
-- PORT=3000  
-- JWT_SECRET=your_secret_key  
-- REDIS_URL (optional)  
-- See `.env.example` for additional values.
-
-Frontend may use Vite env (e.g., VITE_API_URL) — check `frontend/admin/.env` or `vite.config.mjs`.
+## 🏛 Department Management
+- Create, update, delete departments  
+- Department Builder Pattern  
+- Clean **service → model → repository** pipeline  
+- Full unit test coverage (Jest)  
 
 ---
 
-## Design & architecture notes 🧭
-
-- Domain-driven classes in `/classes` encapsulate entity behavior and use the Builder pattern for flexible construction. 🏗️  
-- Repository layer (`classes/DATABASE`) abstracts Mongoose — controllers/services depend on repository abstractions (Dependency Inversion). 🔁  
-- Services implement business rules (separation of concerns), simplifying unit testing. 🧩  
-- DTOs + validation middleware enforce input contracts and consistent error responses. 🔍  
-- Error pipeline converts domain errors into well-formed API responses (see `middleware/ErrorHandler.js`). 🛡️
-
-Be prepared to explain:  
-- Why Repository + Service + Controller separation improves testability and maintainability.  
-- How Builder pattern improves entity construction and readability.  
-- How JWT, password hashing, and validation are chained in the auth flow.
+## 📚 Course & Academic Data
+*(Based on long-term system planning — extendable)*  
+- Courses & modules  
+- Enrollments  
+- Attendance & assignments  
+- Department-level course mapping  
 
 ---
 
-## Production considerations & next steps 📈
-
-- Add centralized logging (winston/pino) and structured logs (JSON). 📊  
-- Add health checks and readiness probes for containerized deployment. 🩺  
-- Harden security: helmet, rate limiting, CORS policy, input sanitization. 🔐  
-- CI/CD: GitHub Actions for lint, tests, and build pipelines. 🔁  
-- Increase test coverage: add integration tests for auth and critical flows. 🧪  
-- Containerization: Dockerfile(s) and docker-compose for local multi-service testing (API + MongoDB). 🐳
-
-
-
-## Contributing & contact 🤝
-
-- Contributions accepted via PR. Follow project style (prettier/eslint present).  
-- To discuss this project or request a walkthrough, contact via GitHub profile or email on your profile.
+## 🗄 Database Layer
+- MongoDB + Mongoose  
+- Repository Pattern for each domain  
+- Soft-delete support  
+- Automatic timestamps:
+  - `createdAt_timestamp`
+  - `updatedAt_timestamp`  
+- Clean object-to-DB mapping via builders/factories  
 
 ---
 
-## License 🏷️
-
-This project uses the ISC license (see `backend/package.json`). Replace with your preferred license if needed.
+## 🧱 Architecture & Code Quality
+- Domain-driven structure  
+- SOLID design  
+- Dependency inversion for modularity  
+- Builder pattern for safe and predictable entity creation  
+- High testability through dependency injection  
+- Centralized error handling  
+- Service layer fully decoupled from DB layer  
 
 ---
 
-Thanks for reviewing
+## 🧪 Testing (Jest)
+- High coverage test suite  
+- Fully mocked repositories & services  
+- Tests for:
+  - DepartmentService  
+  - UserService  
+  - Auth middleware *(planned)*  
+- Optional in-memory MongoDB testing  
+
+---
+
+## 🏗 Tech Stack
+- **Node.js / Express** – REST API  
+- **MongoDB / Mongoose** – Database  
+- **JWT** – Authentication  
+- **Jest** – Unit testing  
+- **SOLID / Clean Architecture** – Maintainable, scalable design  
+
+---
+
+## 📌 Project Goals
+This backend is designed for:
+
+- Long-term academic deployments (5–10 year lifespan)  
+- Offline and cloud-based academic platforms  
+- Enterprise-level stability and performance  
+- Easy integration with:
+  - React web apps  
+  - Mobile apps  
+  - External APIs  
+
+---
+
+## 📄 Planned Enhancements
+- Priority-based request queue  
+- Multi-department analytics  
+- Academic calendar system  
+- Offline-first React Native inventory module  
+- Redis caching for high-load routes  
+- Message queues for async operations (RabbitMQ / BullMQ)  
+
+---
+
+## 🤝 Contributions
+This system is built for flexibility and modularity —  
+**Contributions, improvements, and extensions are welcome.**
+
