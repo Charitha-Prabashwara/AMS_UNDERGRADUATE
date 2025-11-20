@@ -179,4 +179,15 @@ class UserServiceHelper{
   }
 }
 
-module.exports = {AuthTokenServiceHelper, PasswordHashServiceHelper, UserServiceHelper}
+class CookieServiceHelper{
+  constructor(cookieService){
+    this.cookieService = cookieService
+  }
+
+  refreshTokenCookie(token, clear=false){
+    return this.cookieService.refreshTokenCookie(token, clear)
+  }
+
+}
+
+module.exports = {AuthTokenServiceHelper, PasswordHashServiceHelper, UserServiceHelper, CookieServiceHelper}
