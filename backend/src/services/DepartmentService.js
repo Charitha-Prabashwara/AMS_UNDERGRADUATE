@@ -3,26 +3,38 @@ const DepartmentBuilder = require('../classes/DepartmentBuilder')
 
 class DepartmentService{
 
+    constructor(){
+        this.deptClass = new Department()
+    }
     async getDepartmentById(id){
-        const deptClass = new Department()
-        return await deptClass.findById(id);
+        return this.deptClass.findById(id);
     }
 
-    async getFindDepartment(department){
-        return await department.find()
+    async getFindDepartment(data={}){
+        const dept = new Department()
+        const {name,description, deleted, createdAt_timestamp, updatedAt_timestamp} = data
+
+        dept.name = name
+        dept.description = description
+        dept.deleted = deleted
+        dept.createdAt_timestamp = createdAt_timestamp
+        dept.updatedAt_timestamp =updatedAt_timestamp 
+        
+        return dept.find()
     }
 
-    async createDepartment(data={}){
+    async createDepartment(name={}, description){
+        const {long, short, key} = name
         const builder =new DepartmentBuilder()
-        builder.name = data.name
-        builder.description = data.description
 
-        return await builder.create() 
+        builder.name = {long: long, short:short, key:key}
+        builder.description = description
+        
+        return builder.create() 
     }
 
     async deleteDepartmentById(id){
-        const deptClass = new Department();
-        return await deptClass.deleteById(id)
+        return this.deptClass.deleteById(id)
     }
 
 }

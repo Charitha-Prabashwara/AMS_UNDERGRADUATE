@@ -1,144 +1,82 @@
-/**
- * @jest-environment node
- */
-
-jest.mock('../../../src/classes/Department.js');
-jest.mock('../../../src/classes/DepartmentBuilder.js');
-jest.mock('../../../src/classes/DATABASE', () => {
-    return {
-        DepartmentRepository: jest.fn().mockImplementation(() => ({
-            findById: jest.fn(),
-            deleteById: jest.fn(),
-            find: jest.fn(),
-            save: jest.fn(),
-            create: jest.fn(),
-            deleteOne: jest.fn(),
-        })),
-    };
-});
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const DepartmentService = require('../../../src/services/DepartmentService');
-const Department = require('../../../src/classes/Department');
 const DepartmentBuilder = require('../../../src/classes/DepartmentBuilder');
-const { DepartmentRepository } = require('../../../src/classes/DATABASE');
+const Department = require('../../../src/classes/Department');
 
-describe("DepartmentService", () => {
+let mongoServer;
+
+beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+    await mongoose.connect(uri);
+});
+
+afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+});
+
+describe("DepartmentService – Integration Test", () => {
 
     let service;
-    let repoMock;
 
     beforeEach(() => {
         service = new DepartmentService();
-        repoMock = new DepartmentRepository();
-        jest.clearAllMocks();
     });
 
-    // -------------------------------------------------------------------
-    // TEST: getDepartmentById
-    // -------------------------------------------------------------------
+    test("should create a department", async () => {
+       
+        const name = {long: "Department of Information and Communication Technology", short:"Department of ICT", key:"DICT"};
+        const description =  "Technology & Computer Science"
+        
 
-    test("getDepartmentById should return department by ID", async () => {
-        const deptData = { id: "123", name: "IT" };
+        const result = await service.createDepartment(name, description);
 
-        Department.mockImplementation(() => ({
-            findById: jest.fn().mockResolvedValue(deptData)
-        }));
-
-        const result = await service.getDepartmentById("123");
-
-        expect(result).toEqual(deptData);
-        expect(Department).toHaveBeenCalledTimes(1);
+        expect(result).toBeDefined();
+        expect(result.id).toBeDefined();
+        expect(result.name).toStrictEqual(name);
     });
 
-    test("getDepartmentById should throw error", async () => {
-        Department.mockImplementation(() => ({
-            findById: jest.fn().mockRejectedValue(new Error("DB error"))
-        }));
+    test("should get department by ID", async () => {
+        const builder = new DepartmentBuilder();
+        const name = {long: "Department of Information and Communication Technology", short:"Department of ICT", key:"DICT"};
+        builder.name =name
+        builder.description = "Math Faculty";
 
-        await expect(service.getDepartmentById("x"))
-            .rejects
-            .toThrow("DB error");
+        const created = await builder.create();
+
+        const found = await service.getDepartmentById(created.id);
+
+        expect(found).toBeDefined();
+        expect(found.id).toStrictEqual(created.id);
+        expect(found.name).toStrictEqual(name);
     });
 
-    // -------------------------------------------------------------------
-    // TEST: getFindDepartment
-    // -------------------------------------------------------------------
+    test("should return list of departments", async () => {
+        const departmentInstance = new Department();
+        const list = await service.getFindDepartment(departmentInstance);
 
-    test("getFindDepartment should return list", async () => {
-        const mockDeptList = [{ id: 1 }, { id: 2 }];
-
-        const departmentInstance = { find: jest.fn().mockResolvedValue(mockDeptList) };
-
-        const result = await service.getFindDepartment(departmentInstance);
-
-        expect(result).toEqual(mockDeptList);
-        expect(departmentInstance.find).toHaveBeenCalledTimes(1);
+        expect(list).toBeInstanceOf(Array);
     });
 
-    test("getFindDepartment should throw error", async () => {
-        const departmentInstance = {
-            find: jest.fn().mockRejectedValue(new Error("Query failed"))
-        };
+    test("should delete department by ID", async () => {
+        const builder = new DepartmentBuilder();
+        builder.name ={long: "Department of Information and Communication Technology", short:"Department of ICT", key:"DICT"};
+        builder.description = "Math Faculty";
 
-        await expect(service.getFindDepartment(departmentInstance))
-            .rejects
-            .toThrow("Query failed");
+        const created = await builder.create();
+
+        const deleted = await service.deleteDepartmentById(created.id);
+
+        expect(deleted).toBeDefined();
+        expect(deleted.id).toStrictEqual(created.id);
     });
 
-    // -------------------------------------------------------------------
-    // TEST: createDepartment
-    // -------------------------------------------------------------------
-
-    test("createDepartment should build and create new department", async () => {
-        const data = { name: "IT", description: "Tech dept" };
-        const createdDept = { id: "1", name: "IT" };
-
-        DepartmentBuilder.mockImplementation(() => ({
-            name: null,
-            description: null,
-            create: jest.fn().mockResolvedValue(createdDept)
-        }));
-
-        const result = await service.createDepartment(data);
-
-        expect(DepartmentBuilder).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(createdDept);
-    });
-
-    test("createDepartment should throw error if builder fails", async () => {
-        DepartmentBuilder.mockImplementation(() => ({
-            create: jest.fn().mockRejectedValue(new Error("Create failed"))
-        }));
-
-        await expect(service.createDepartment({}))
-            .rejects
-            .toThrow("Create failed");
-    });
-
-    // -------------------------------------------------------------------
-    // TEST: deleteDepartmentById
-    // -------------------------------------------------------------------
-
-    test("deleteDepartmentById should delete department by ID", async () => {
-        const deletedDept = { id: "55", deleted: true };
-
-        Department.mockImplementation(() => ({
-            deleteById: jest.fn().mockResolvedValue(deletedDept)
-        }));
-
-        const result = await service.deleteDepartmentById("55");
-
-        expect(result).toEqual(deletedDept);
-    });
-
-    test("deleteDepartmentById should throw error", async () => {
-        Department.mockImplementation(() => ({
-            deleteById: jest.fn().mockRejectedValue(new Error("Delete failed"))
-        }));
-
-        await expect(service.deleteDepartmentById("x"))
-            .rejects
-            .toThrow("Delete failed");
+    test("should throw error when department not found", async () => {
+        await expect(service.getDepartmentById("123456789012345678901234"))
+            .rejects.toThrow();
     });
 
 });
