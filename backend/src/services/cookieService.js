@@ -42,12 +42,15 @@ class CookieService{
      */
     static refreshTokenCookie(token, clear=false){
 
+       const ttlSeconds = Number.parseInt(config.REFRESH_TOKEN_COOKIE_TTL, 10);        
+        if (!Number.isInteger(ttlSeconds)) throw new Error("Invalid REFRESH_TOKEN_COOKIE_TTL: must be a number of seconds.");
+        
         return cookie.serialize('token', clear ? '' : token, {
             httpOnly: true,
             secure: config.NODE_ENV === envTypes.PRODUCTION,
             sameSite: 'Strict',
             path: '/auth/token',
-            maxAge:  clear ? 0 : config.REFRESH_TOKEN_COOKIE_TTL
+            maxAge:  clear ? 0 : ttlSeconds
         });
     }
 }
