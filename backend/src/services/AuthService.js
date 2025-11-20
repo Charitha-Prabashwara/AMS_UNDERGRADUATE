@@ -33,7 +33,7 @@ class AuthService{
       
       return {
         user:{id:updatedUser.id, type: updatedUser._type, email: updatedUser.email, name: updatedUser.name},
-        tokens:{refresh: refreshToken, access: refreshToken}
+        tokens:{refresh: refreshToken, access: accessToken}
       }
 
     } catch (error) {
@@ -71,7 +71,7 @@ class AuthService{
 
   async logOut(userType, id){
 
-    const user = this.#userService.getUserById(userType, id);
+    const user =await this.#userService.getUserById(userType, id);
     
     if(this.#userService.isNullUser(user) || this.#userService.isSuspended(user)){
       throw new Error('login failed')
