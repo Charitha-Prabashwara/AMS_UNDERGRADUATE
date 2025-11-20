@@ -6,7 +6,8 @@ jest.mock('cookie');
 
 jest.mock('../../../src/config', () => ({
   config: {
-    NODE_ENV: 'PRODUCTION'
+    NODE_ENV: 'PRODUCTION',
+    REFRESH_TOKEN_COOKIE_TTL:3600
   },
   envTypes: {
     PRODUCTION: 'PRODUCTION',
