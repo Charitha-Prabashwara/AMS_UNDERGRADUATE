@@ -1,14 +1,15 @@
 const {InvalidCredentialsError, LoginFailedError, PasswordResetFailedError, AuthHeaderMissing, UnauthorizedError, DoesNotHavePermissionError, InvalidAuthFormatError} = require('../errors')
-
+const CookieService = require('./cookieService')
 class AuthService{
   #userService
   #authTokenService
   #passwordHashService
-
-  constructor(userService, authTokenService, passwordHashService) {
+  #cookieService
+  constructor(userService, authTokenService, passwordHashService, cookieService) {
     this.#userService = userService
     this.#authTokenService = authTokenService
     this.#passwordHashService = passwordHashService
+    this.#cookieService = cookieService
   }
 
   async login(userType, email, password, priority=0){
@@ -30,10 +31,13 @@ class AuthService{
 
       const updatedUser = await this.#userService.findByIdAndUpdate(user._type, user);
       if(this.#userService.isNullUser(updatedUser)) throw new LoginFailedError()
+
+      const cookie = this.#cookieService.refreshTokenCookie(user.refresh_token, false)
       
       return {
         user:{id:updatedUser.id, type: updatedUser._type, email: updatedUser.email, name: updatedUser.name},
-        tokens:{refresh: refreshToken, access: accessToken}
+        tokens:{access: accessToken},
+        cookie:cookie
       }
 
     } catch (error) {
