@@ -13,6 +13,8 @@ class Config{
             this.REFRESH_TOKEN_SECRET = env.REFRESH_TOKEN_SECRET;
             this.ACCESS_TOKEN_TTL = env.ACCESS_TOKEN_TTL;
             this.REFRESH_TOKEN_TTL = env.REFRESH_TOKEN_TTL;
+            this.NODE_ENV = env.NODE_ENV;
+            this.REFRESH_TOKEN_COOKIE_TTL = env.REFRESH_TOKEN_COOKIE_TTL;
             Config.instance = this;
 
         }
