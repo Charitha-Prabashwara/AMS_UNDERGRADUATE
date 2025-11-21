@@ -1,5 +1,5 @@
-const {InvalidCredentialsError, LoginFailedError, PasswordResetFailedError, AuthHeaderMissing, UnauthorizedError, DoesNotHavePermissionError, InvalidAuthFormatError} = require('../errors')
-const CookieService = require('./cookieService')
+const {InvalidCredentialsError, LoginFailedError, PasswordResetFailedError, AuthHeaderMissing, UnauthorizedError, DoesNotHavePermissionError, InvalidAuthFormatError, LogoutFailed} = require('../errors')
+
 class AuthService{
   #userService
   #authTokenService
@@ -75,22 +75,27 @@ class AuthService{
 
   async logOut(userType, id){
 
-    const user =await this.#userService.getUserById(userType, id);
-    
-    if(this.#userService.isNullUser(user) || this.#userService.isSuspended(user)){
-      throw new Error('login failed')
+   
+
+    try {
+       const user =await this.#userService.getUserById(userType, id)
+        console.log(this.#userService.isSuspended(user));
+        
+      if(this.#userService.isNullUser(user) || this.#userService.isSuspended(user)){
+          throw new LogoutFailed()
+      }
+
+      user.access_token = null
+      user.refresh_token = null
+
+      const updatedUser = await this.#userService.findByIdAndUpdate(user._type, user);
+      if(this.#userService.isNullUser(updatedUser)) {throw new LogoutFailed()}
+
+      const cookie = this.#cookieService.refreshTokenCookie(null, true)
+      return {cookie: cookie}
+    } catch (error) {
+      throw error
     }
-
-    user.access_token=""
-    user.refresh_token=""
-
-    const updatedUser = await this.#userService.findByIdAndUpdate(user._type, user);
-
-    if(this.#userService.isNullUser(updatedUser)){
-      throw new Error('password reset failed')
-    }
-    return true;
-
   }
 }
 
