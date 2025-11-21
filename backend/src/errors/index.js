@@ -20,6 +20,7 @@ const AuthHeaderMissing = require('./AuthServiceErrors/AuthHeaderMissingError')
 const UnauthorizedError = require('./AuthServiceErrors/UnauthorizedError')
 const DoesNotHavePermissionError = require('./AuthServiceErrors/DoesNotHavePermissionError')
 const InvalidAuthFormatError = require('./AuthServiceErrors/InvalidAuthFormatError')
+const LogoutFailed = require('./AuthServiceErrors/LogoutFailedError')
 module.exports = {
     UserNotFoundError,
     InvalidUserIdError,
@@ -39,5 +40,6 @@ module.exports = {
     AuthHeaderMissing,
     UnauthorizedError,
     DoesNotHavePermissionError,
-    InvalidAuthFormatError
+    InvalidAuthFormatError,
+    LogoutFailed
 }
