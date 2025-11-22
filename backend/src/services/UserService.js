@@ -60,9 +60,16 @@ class UserService{
   * @param {string} userType - Type of user (from userTypes).
   * @param {Object} data - User data.
   * @param {string} data.registration_id - User registration ID.
-  * @param {JSON} data.name - User name.
+  * @param {Object} data.name - User name.
+  * @param {string} data.name.first_name - first name
+  * @param {string} data.name.last_name - last name
+  * @param {string} data.name.full_name - fullname name
+  * @param {string} data.name.with_initial_name - lame with initial
   * @param {string} data.email - User email.
-  * @param {JSON} data.address - User address.
+  * @param {Object} data.address - User address.
+  * @param {string} data.address.line1 - address line one.
+  * @param {string} [data.address.line2] - address line two (optional).
+  * @param {string} data.address.zip - ZIP
   * @param {string} data.password - User password.
   * @param {string} [data.department] - Department (required for certain user types).
   * @returns {Promise<Object>} The newly created user object.
