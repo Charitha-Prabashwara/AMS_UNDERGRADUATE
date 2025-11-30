@@ -1,3 +1,5 @@
 const {CreateUserDTO} = require('./userDTO/createUserDTO');
 const {ErrorResponseDTO} =require('./errorResponseDTO')
-module.exports = {CreateUserDTO, ErrorResponseDTO}
+const {GetUserByIdDTO} = require('./userDTO/getUserByIdDTO')
+const {GetUserByRegistrationIdDTO} = require('./userDTO/getUserByRegistrationId')
+module.exports = {CreateUserDTO, ErrorResponseDTO, GetUserByIdDTO, GetUserByRegistrationIdDTO}
