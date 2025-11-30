@@ -52,10 +52,13 @@ class BaseRepository{
   }
 
   async findOne(filter={}, options={}){
-    const { limit = null, skip = 0, select = null, sort = null } = options;
+    const { limit = null, skip = 0, select = [], sort = null } = options;
     let query = this.model.findOne(filter).skip(skip);
       if (limit) query = query.limit(limit);
-      if (select) query = query.select(this.#selectProjection(select));
+
+      const projection = this.#selectProjection(select);
+      if (projection) query = query.select(projection);
+
       if (sort) query = query.sort(sort);
     return await query.lean();
   }
