@@ -25,18 +25,28 @@ class UserService{
   * Fetch a user by their registration ID.
   * @param {string} userType - The type of user (from userTypes).
   * @param {string} registrationId - The registration ID of the user.
+  * @param {object} options - We can select, limit, sort, skip
+  * @param {string[]} options.select - We can select or hide specific attributes
+  * @param {number} [options.limit] - Maximum number of results.
+  * @param {number} [options.skip] - Number of documents to skip.
+  * @param {object|string} [options.sort] - Sort order.
   * @returns {Promise<Object|null>} The user object if found, otherwise null.
   */
-  async getUserByRegistrationId(userType, registrationId){
+  async getUserByRegistrationId(userType, registrationId, options={}){
     const userClass = selectCorrectUser(userType);
     userClass.registration_id = registrationId;
-    return await userClass.findOne();   
+    return await userClass.findOne(options);   
   }
 
   /**
   * Fetch a user by their email address.
   * @param {string} userType - The type of user (from userTypes).
   * @param {string} email - The email address of the user.
+  * @param {object} options - We can select, limit, sort, skip
+  * @param {string[]} options.select - We can select or hide specific attributes
+  * @param {number} [options.limit] - Maximum number of results.
+  * @param {number} [options.skip] - Number of documents to skip.
+  * @param {object|string} [options.sort] - Sort order.
   * @returns {Promise<Object|null>} The user object if found, otherwise null.
   */
   async getUserByEmail(userType, email, options={}){
