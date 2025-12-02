@@ -15,8 +15,8 @@ class AuthService{
   async login(userType, email, password, priority=0){
    
     try {
-      const user = await this.#userService.getUserByEmail(userType,email);
-
+      const user = await this.#userService.getUserByEmail(userType,email, {select:['+password']});
+      
       if(this.#userService.isNullUser(user) || this.#userService.isSuspended(user)) throw new InvalidCredentialsError()
 
       const isMatching = await this.#passwordHashService.verifyPassword(password, user.password)

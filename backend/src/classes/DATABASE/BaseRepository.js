@@ -14,7 +14,8 @@ class BaseRepository{
   }
 
   #selectProjection(select=[]){
-    return select.length ? select.join(' ') : this.#selectList;
+   const fields = select.length ? select : this.#selectList;
+   return fields.join(' ');
   }
 
   async findById(id, select=[]){

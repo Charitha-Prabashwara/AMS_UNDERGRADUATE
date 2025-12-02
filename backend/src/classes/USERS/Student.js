@@ -38,8 +38,8 @@ class Student extends User {
         return users.map(user =>  Student._wrapToStudent(user));
     }
 
-    async findOne(){
-        const user = await super.findOne();
+    async findOne(options={}){
+        const user = await super.findOne(options);
         return Student._wrapToStudent(user)
     }
 

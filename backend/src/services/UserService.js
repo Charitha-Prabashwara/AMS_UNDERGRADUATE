@@ -39,10 +39,10 @@ class UserService{
   * @param {string} email - The email address of the user.
   * @returns {Promise<Object|null>} The user object if found, otherwise null.
   */
-  async getUserByEmail(userType, email){
+  async getUserByEmail(userType, email, options={}){
     const userClass = selectCorrectUser(userType);
     userClass.email = email;
-    return await userClass.findOne();
+    return await userClass.findOne(options);
   }
 
   /**

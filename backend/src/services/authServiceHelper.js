@@ -143,8 +143,8 @@ class UserServiceHelper{
    * @param {string} email - User's email address.
    * @returns {Promise<Object|null>} User object or null if not found.
    */
-  async getUserByEmail(userType, email){
-    return this.userAccountService.getUserByEmail(userType, email)
+  async getUserByEmail(userType, email, options={}){
+    return this.userAccountService.getUserByEmail(userType, email, options)
   }
 
     /**

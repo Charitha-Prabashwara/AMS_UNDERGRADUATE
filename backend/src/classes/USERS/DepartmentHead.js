@@ -38,8 +38,8 @@ class DepartmentHead extends User {
         return users.map(user =>  DepartmentHead._wrapToDepartmentHead(user));
     }
 
-    async findOne(){
-        const user = await super.findOne();
+    async findOne(options={}){
+        const user = await super.findOne(options);
         return DepartmentHead._wrapToDepartmentHead(user)
     }
     async deleteOne(){

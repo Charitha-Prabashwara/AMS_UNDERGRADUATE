@@ -320,7 +320,7 @@ describe('Check and test found bug in findOne method', () => {
     await Promise.all(builders.map(async (builder) => {
       const admin = new Admin();
       admin.email = builder.email;
-      const result = await admin.findOne();
+      const result = await admin.findOne({select:['+password']});
       expect(result.email).toBe(builder.email);
       expect(result.registration_id).toBe(builder.registration_id)
       expect(result.address).toStrictEqual(builder.address)
@@ -331,7 +331,7 @@ describe('Check and test found bug in findOne method', () => {
     await Promise.all(builders.map(async (builder) => {
       const admin = new Admin();
       admin.registration_id = builder.registration_id;
-      const result = await admin.findOne();
+      const result = await admin.findOne({select:['+password']});
       expect(result.email).toBe(builder.email);
       expect(result.registration_id).toBe(builder.registration_id)
       expect(result.address).toStrictEqual(builder.address)
@@ -343,7 +343,7 @@ describe('Check and test found bug in findOne method', () => {
       const admin = new Admin();
       admin.email = builder.email
       admin.registration_id = builder.registration_id;
-      const result = await admin.findOne();
+      const result = await admin.findOne({select:['+password']});
       expect(result.email).toBe(builder.email);
       expect(result.registration_id).toBe(builder.registration_id)
       expect(result.address).toStrictEqual(builder.address)
