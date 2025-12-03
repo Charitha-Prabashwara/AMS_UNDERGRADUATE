@@ -75,7 +75,6 @@ class BaseRepository{
   async deleteById(id, select=[]){
     this._validateId(id)
     const deleted = await this.model.findByIdAndDelete(id).select(this.#selectProjection(select)).lean()
-    if(!deleted) throw new UserNotFoundError();
     return deleted
   }
 }
