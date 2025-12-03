@@ -32,8 +32,8 @@ class Admin extends User {
     return  Admin._wrapToAdmin(user)
   }
 
-  async find(){
-    const users = await super.find();
+  async find(options={}){
+    const users = await super.find(options);
     return users.map(user =>  Admin._wrapToAdmin(user));
   }
 
