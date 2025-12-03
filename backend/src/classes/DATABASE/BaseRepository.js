@@ -34,7 +34,6 @@ class BaseRepository{
         
         this._validateId(id)
         const found_user = await this.model.findByIdAndUpdate(id.toString(), user,{ new: true, lean: true }).select(this.#selectProjection(select)).lean()
-        if(!found_user) throw new UserNotFoundError()
         return found_user
   }
 
