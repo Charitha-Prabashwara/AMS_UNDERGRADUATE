@@ -21,6 +21,9 @@ const UnauthorizedError = require('./AuthServiceErrors/UnauthorizedError')
 const DoesNotHavePermissionError = require('./AuthServiceErrors/DoesNotHavePermissionError')
 const InvalidAuthFormatError = require('./AuthServiceErrors/InvalidAuthFormatError')
 const LogoutFailed = require('./AuthServiceErrors/LogoutFailedError')
+
+
+const UserUpdateFailed = require('./UserServiceErrors/UserUpdateFailedError')
 module.exports = {
     UserNotFoundError,
     InvalidUserIdError,
@@ -41,5 +44,6 @@ module.exports = {
     UnauthorizedError,
     DoesNotHavePermissionError,
     InvalidAuthFormatError,
-    LogoutFailed
+    LogoutFailed,
+    UserUpdateFailed
 }
