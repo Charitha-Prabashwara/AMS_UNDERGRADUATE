@@ -8,7 +8,9 @@
     "pm2dev": "pm2 start ecosystem.config.js --env development",
     "dev": "nodemon src/server.js",
     "test": "jest",
-    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "author": "CharithaPrabhashwara",
   "license": "ISC",
@@ -34,9 +36,14 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "eslint": "^9.39.1",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.0.5",
     "mongodb-memory-server": "^10.2.3",
     "pm2": "^6.0.14",
+    "prettier": "^3.7.4",
     "supertest": "^7.1.4"
   }
 }
