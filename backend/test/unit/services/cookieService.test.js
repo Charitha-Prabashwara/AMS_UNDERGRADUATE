@@ -7,113 +7,110 @@ jest.mock('cookie');
 jest.mock('../../../src/config', () => ({
   config: {
     NODE_ENV: 'PRODUCTION',
-    REFRESH_TOKEN_COOKIE_TTL:3600
+    REFRESH_TOKEN_COOKIE_TTL: 3600,
   },
   envTypes: {
     PRODUCTION: 'PRODUCTION',
     DEVELOPMENT: 'DEVELOPMENT',
-    TEST: 'TEST'
-  }
+    TEST: 'TEST',
+  },
 }));
 
-
 describe('CookieService.refreshTokenCookie', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
+  test('should create cookie string with provided token', () => {
+    const token = 'TEST_REFRESH_TOKEN';
 
-    test('should create cookie string with provided token', () => {
-        const token = 'TEST_REFRESH_TOKEN';
+    // Mock cookie.serialize return value
+    cookie.serialize.mockReturnValue('serialized_cookie_string');
 
-        // Mock cookie.serialize return value
-        cookie.serialize.mockReturnValue('serialized_cookie_string');
+    const result = CookieService.refreshTokenCookie(token, false);
 
-        const result = CookieService.refreshTokenCookie(token, false);
+    expect(cookie.serialize).toHaveBeenCalledWith(
+      'token',
+      token,
+      expect.objectContaining({
+        httpOnly: true,
+        secure: config.NODE_ENV === envTypes.PRODUCTION,
+        sameSite: 'Strict',
+        path: '/auth/token',
+        maxAge: config.REFRESH_TOKEN_COOKIE_TTL,
+      }),
+    );
 
-        expect(cookie.serialize).toHaveBeenCalledWith(
-            'token',
-            token,
-            expect.objectContaining({
-                httpOnly: true,
-                secure: config.NODE_ENV === envTypes.PRODUCTION,
-                sameSite: 'Strict',
-                path: '/auth/token',
-                maxAge: config.REFRESH_TOKEN_COOKIE_TTL,
-            })
-        );
+    expect(result).toBe('serialized_cookie_string');
+  });
 
-        expect(result).toBe('serialized_cookie_string');
-    });
+  test('should clear cookie when clear flag is true', () => {
+    cookie.serialize.mockReturnValue('clear_cookie_string');
 
-    test('should clear cookie when clear flag is true', () => {
-        cookie.serialize.mockReturnValue('clear_cookie_string');
+    const result = CookieService.refreshTokenCookie(null, true);
 
-        const result = CookieService.refreshTokenCookie(null, true);
+    expect(cookie.serialize).toHaveBeenCalledWith(
+      'token',
+      '',
+      expect.objectContaining({
+        httpOnly: true,
+        secure: config.NODE_ENV === envTypes.PRODUCTION,
+        sameSite: 'Strict',
+        path: '/auth/token',
+        maxAge: 0,
+      }),
+    );
 
-        expect(cookie.serialize).toHaveBeenCalledWith(
-            'token',
-            '',
-            expect.objectContaining({
-                httpOnly: true,
-                secure: config.NODE_ENV === envTypes.PRODUCTION,
-                sameSite: 'Strict',
-                path: '/auth/token',
-                maxAge: 0,
-            })
-        );
+    expect(result).toBe('clear_cookie_string');
+  });
 
-        expect(result).toBe('clear_cookie_string');
-    });
+  test('should set secure=true when environment is PRODUCTION', () => {
+    const originalEnv = config.NODE_ENV;
+    config.NODE_ENV = envTypes.PRODUCTION;
 
-    test('should set secure=true when environment is PRODUCTION', () => {
-        const originalEnv = config.NODE_ENV;
-        config.NODE_ENV = envTypes.PRODUCTION;
-      
-        
-        cookie.serialize.mockReturnValue('cookie_secure');
+    cookie.serialize.mockReturnValue('cookie_secure');
 
-        CookieService.refreshTokenCookie('tok');
+    CookieService.refreshTokenCookie('tok');
 
-        expect(cookie.serialize).toHaveBeenCalledWith(
-            'token',
-            'tok',
-            expect.objectContaining({
-                secure: true
-            })
-        );
+    expect(cookie.serialize).toHaveBeenCalledWith(
+      'token',
+      'tok',
+      expect.objectContaining({
+        secure: true,
+      }),
+    );
 
-        config.NODE_ENV = originalEnv; // restore
-    });
+    config.NODE_ENV = originalEnv; // restore
+  });
 
-    test('should set secure=false when environment is not PRODUCTION', () => {
-        const originalEnv = config.NODE_ENV;
-        config.NODE_ENV = envTypes.DEVELOPMENT; // Example
+  test('should set secure=false when environment is not PRODUCTION', () => {
+    const originalEnv = config.NODE_ENV;
+    config.NODE_ENV = envTypes.DEVELOPMENT; // Example
 
-        cookie.serialize.mockReturnValue('cookie_not_secure');
+    cookie.serialize.mockReturnValue('cookie_not_secure');
 
-        CookieService.refreshTokenCookie('tok');
+    CookieService.refreshTokenCookie('tok');
 
-        expect(cookie.serialize).toHaveBeenCalledWith(
-            'token',
-            'tok',
-            expect.objectContaining({
-                secure: false
-            })
-        );
+    expect(cookie.serialize).toHaveBeenCalledWith(
+      'token',
+      'tok',
+      expect.objectContaining({
+        secure: false,
+      }),
+    );
 
-        config.NODE_ENV = originalEnv; // restore
-    });
+    config.NODE_ENV = originalEnv; // restore
+  });
 
-    test('should always set httpOnly, sameSite, and path correctly', () => {
-        cookie.serialize.mockReturnValue('generic_cookie');
+  test('should always set httpOnly, sameSite, and path correctly', () => {
+    cookie.serialize.mockReturnValue('generic_cookie');
 
-        CookieService.refreshTokenCookie('x');
+    CookieService.refreshTokenCookie('x');
 
-        const call = cookie.serialize.mock.calls[0][2];
+    const call = cookie.serialize.mock.calls[0][2];
 
-        expect(call.httpOnly).toBe(true);
-        expect(call.sameSite).toBe('Strict');
-        expect(call.path).toBe('/auth/token');
-    });
+    expect(call.httpOnly).toBe(true);
+    expect(call.sameSite).toBe('Strict');
+    expect(call.path).toBe('/auth/token');
+  });
 });

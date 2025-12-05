@@ -1,14 +1,11 @@
+const { DepartmentModel } = require('../../models');
+const BaseRepository = require('./BaseRepository');
 
-const {DepartmentModel} = require('../../models');
-const BaseRepository = require('./BaseRepository')
-
-class DepartmentRepository extends BaseRepository{
-  
-  constructor(){
-    const defaultSelectList = []
-    super(DepartmentModel, defaultSelectList)
+class DepartmentRepository extends BaseRepository {
+  constructor() {
+    const defaultSelectList = [];
+    super(DepartmentModel, defaultSelectList);
   }
-
 }
 
-module.exports= DepartmentRepository;
+module.exports = DepartmentRepository;

@@ -1,17 +1,22 @@
-const {userTypes} = require('../../config')
+const { userTypes } = require('../../config');
 const AdminBuilder = require('../../classes/USERS/AdminBuilder');
-const DepartmentHeadBuilder = require('../../classes/USERS/DepartmentHeadBuilder')
+const DepartmentHeadBuilder = require('../../classes/USERS/DepartmentHeadBuilder');
 const LecturerBuilder = require('../../classes/USERS/LecturerBuilder');
-const StudentBuilder = require('../../classes/USERS/StudentBuilder')
+const StudentBuilder = require('../../classes/USERS/StudentBuilder');
 
-const {Admin, DepartmentHead, Lecturer, Student} = require('../../classes/USERS')
+const {
+  Admin,
+  DepartmentHead,
+  Lecturer,
+  Student,
+} = require('../../classes/USERS');
 
 /**
  * @typedef {import('../../classes/USERS/AdminBuilder')} AdminBuilder
  * @typedef {import('../../classes/USERS/DepartmentHeadBuilder')} DepartmentHeadBuilder
  * @typedef {import('../../classes/USERS/LecturerBuilder')} LecturerBuilder
  * @typedef {import('../../classes/USERS/StudentBuilder')} StudentBuilder
- * 
+ *
  * @typedef {import('../../classes/USERS/Admin')} Admin
  * @typedef {import('../../classes/USERS/DepartmentHead')} DepartmentHead
  * @typedef {import('../../classes/USERS/Lecturer')} Lecturer
@@ -24,12 +29,12 @@ const {Admin, DepartmentHead, Lecturer, Student} = require('../../classes/USERS'
  *
  * @type {Object<string, typeof AdminBuilder | typeof DepartmentHeadBuilder | typeof LecturerBuilder | typeof StudentBuilder>}
  */
-const buildersMap={
-    [userTypes.USER_STUDENT]: StudentBuilder,
-    [userTypes.USER_LECTURER]: LecturerBuilder,
-    [userTypes.USER_DEPARTMENT]: DepartmentHeadBuilder,
-    [userTypes.USER_ADMIN]: AdminBuilder
-}
+const buildersMap = {
+  [userTypes.USER_STUDENT]: StudentBuilder,
+  [userTypes.USER_LECTURER]: LecturerBuilder,
+  [userTypes.USER_DEPARTMENT]: DepartmentHeadBuilder,
+  [userTypes.USER_ADMIN]: AdminBuilder,
+};
 
 /**
  * Mapping of user types to their corresponding user model classes.
@@ -37,12 +42,12 @@ const buildersMap={
  *
  * @type {Object<string, typeof Admin | typeof DepartmentHead | typeof Lecturer | typeof Student>}
  */
-const userClassMap={
-    [userTypes.USER_STUDENT]: Student,
-     [userTypes.USER_LECTURER]: Lecturer,
-    [userTypes.USER_DEPARTMENT]: DepartmentHead,
-    [userTypes.USER_ADMIN]:Admin
-}
+const userClassMap = {
+  [userTypes.USER_STUDENT]: Student,
+  [userTypes.USER_LECTURER]: Lecturer,
+  [userTypes.USER_DEPARTMENT]: DepartmentHead,
+  [userTypes.USER_ADMIN]: Admin,
+};
 
 /**
  * Returns a new instance of the correct user builder class depending on the user type.
@@ -58,9 +63,9 @@ const userClassMap={
  * const newUser = await builder.create();
  */
 function selectCorrectBuilder(userType) {
-    const BuilderClass = buildersMap[userType];
-    if (!BuilderClass) throw new Error('undefined user type');
-    return new BuilderClass();
+  const BuilderClass = buildersMap[userType];
+  if (!BuilderClass) throw new Error('undefined user type');
+  return new BuilderClass();
 }
 
 /**
@@ -75,10 +80,10 @@ function selectCorrectBuilder(userType) {
  * const userModel = selectCorrectUser(userTypes.USER_STUDENT);
  * const student = await userModel.findById(studentId);
  */
-function selectCorrectUser(userType){
-    const userClass = userClassMap[userType];
-    if(!userClass) throw new Error('undefined user type')
-    return new userClass();
+function selectCorrectUser(userType) {
+  const userClass = userClassMap[userType];
+  if (!userClass) throw new Error('undefined user type');
+  return new userClass();
 }
 
 /**
@@ -94,8 +99,13 @@ function selectCorrectUser(userType){
  * @example
  * const nameObj = setNames("John", "Doe", "John Doe", "J. Doe");
  */
-function setNames(firstName, lastName, fullName, nameWithInitial){
-    return {first_name: firstName, last_name: lastName, full_name:fullName, with_initial_name:nameWithInitial}
+function setNames(firstName, lastName, fullName, nameWithInitial) {
+  return {
+    first_name: firstName,
+    last_name: lastName,
+    full_name: fullName,
+    with_initial_name: nameWithInitial,
+  };
 }
 
 /**
@@ -110,8 +120,13 @@ function setNames(firstName, lastName, fullName, nameWithInitial){
  * @example
  * const address = setAddress("123 Main St", "Apt 4B", "90210");
  */
-function setAddress(addressLine1, addressLine2, zip){
-    return {line1:addressLine1, line2:addressLine2, zip:zip}
+function setAddress(addressLine1, addressLine2, zip) {
+  return { line1: addressLine1, line2: addressLine2, zip: zip };
 }
 
-module.exports ={selectCorrectBuilder, setNames, setAddress, selectCorrectUser}
+module.exports = {
+  selectCorrectBuilder,
+  setNames,
+  setAddress,
+  selectCorrectUser,
+};

@@ -1,5 +1,5 @@
-const {BatchRepository} = require('./DATABASE')
-const Batch = require('./Batch')
+const { BatchRepository } = require('./DATABASE');
+const Batch = require('./Batch');
 
 /**
  * BatchBuilder
@@ -23,61 +23,56 @@ const Batch = require('./Batch')
  *
  * @class
  */
-class BatchBuilder{
+class BatchBuilder {
+  name;
+  academic;
 
- 
-    name
-    academic
-  
-    /**
-     * Create a new BatchBuilder
-     * @param {Object} [data={}] - source data to initialize the builder
-     * @param {string} [data._id] - optional MongoDB id
-     * @param {string} [data.name]
-     * @param {JSON}   [data.academic]
-     * @param {number} [data.lb]
-     * @param {number} [data.ub]
-     */
-    constructor(data={}){
-       
-        this.name = data.name
-        this.academic = data.academic
-        this.repository = new BatchRepository();
+  /**
+   * Create a new BatchBuilder
+   * @param {Object} [data={}] - source data to initialize the builder
+   * @param {string} [data._id] - optional MongoDB id
+   * @param {string} [data.name]
+   * @param {JSON}   [data.academic]
+   * @param {number} [data.lb]
+   * @param {number} [data.ub]
+   */
+  constructor(data = {}) {
+    this.name = data.name;
+    this.academic = data.academic;
+    this.repository = new BatchRepository();
+  }
+  /**
+   * Prepares a parameter object for database operations,
+   * including only defined fields.
+   * @private
+   * @returns {Promise<Object>} Parameters object for queries.
+   */
+  #matchFieldsAndParams() {
+    const fields = ['name', 'academic'];
+    const params = {};
+    for (const field of fields) {
+      if (this[field] !== undefined) {
+        params[field] = this[field];
+      }
     }
-         /**
-     * Prepares a parameter object for database operations,
-     * including only defined fields.
-     * @private
-     * @returns {Promise<Object>} Parameters object for queries.
-     */
-    #matchFieldsAndParams(){
+    return params;
+  }
 
-        const fields = ['name' ,'academic']
-        const params = {};
-        for (const field of fields) {
-            if (this[field] !== undefined) { 
-                 params[field] = this[field];
-            }
-        }
-        return params;
+  /**
+   * Create a Batch record in the repository using the fields set on the builder.
+   * Only defined fields are forwarded to the repository.
+   *
+   * @returns {Promise<Batch>} Promise that resolves to a new Batch instance
+   * @throws {Error} Propagates any repository error
+   */
+  async create() {
+    try {
+      const params = this.#matchFieldsAndParams();
+      const batch = await this.repository.create(params);
+      return new Batch(batch);
+    } catch (error) {
+      throw error;
     }
-
-    /**
-     * Create a Batch record in the repository using the fields set on the builder.
-     * Only defined fields are forwarded to the repository.
-     *
-     * @returns {Promise<Batch>} Promise that resolves to a new Batch instance
-     * @throws {Error} Propagates any repository error
-     */
-    async create(){
-          try {
-            const params = this.#matchFieldsAndParams()
-            const batch = await this.repository.create(params)
-            return new Batch(batch)
-        } catch (error) {
-            throw error
-        }
-    }
-
+  }
 }
 module.exports = BatchBuilder;

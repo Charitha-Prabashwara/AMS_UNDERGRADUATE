@@ -1,13 +1,18 @@
-
-const {Admin, NullUser, DepartmentHead, Lecturer, Student} = require('../../../src/classes/USERS');
-const AdminBuilder = require('../../../src/classes/USERS/AdminBuilder')
-const DepartmentHeadBuilder = require('../../../src/classes/USERS/DepartmentHeadBuilder')
-const LecturerBuilder = require('../../../src/classes/USERS/LecturerBuilder')
-const StudentBuilder = require('./../../../src/classes/USERS/StudentBuilder')
+const {
+  Admin,
+  NullUser,
+  DepartmentHead,
+  Lecturer,
+  Student,
+} = require('../../../src/classes/USERS');
+const AdminBuilder = require('../../../src/classes/USERS/AdminBuilder');
+const DepartmentHeadBuilder = require('../../../src/classes/USERS/DepartmentHeadBuilder');
+const LecturerBuilder = require('../../../src/classes/USERS/LecturerBuilder');
+const StudentBuilder = require('./../../../src/classes/USERS/StudentBuilder');
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config, userTypes} = require('../../../src/config');
-const PasswordHashService =require('../../../src/services/PasswordHashService')
+const { config, userTypes } = require('../../../src/config');
+const PasswordHashService = require('../../../src/services/PasswordHashService');
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
 let mongoServer;
@@ -27,26 +32,26 @@ let adminBuilders = [];
 let adminPasswords = [];
 
 let departmentHeadBuilder = [];
-let departmentHeadPasswords =[];
+let departmentHeadPasswords = [];
 
-let lecturerBuilders = []
-let lecturerPasswords = []
+let lecturerBuilders = [];
+let lecturerPasswords = [];
 
-let studentBuilders = []
-let studentPasswords = []
+let studentBuilders = [];
+let studentPasswords = [];
 describe('Create Admins, departmentHeads, Lecturers, Students', () => {
   beforeAll(async () => {
     const tempAdminBuilders = [];
     const tempAdminPasswords = [];
 
-    const tempDepartmentHeadBuilders = []
-    const tempDepartmentHeadPasswords=[]
+    const tempDepartmentHeadBuilders = [];
+    const tempDepartmentHeadPasswords = [];
 
-    const tempLecturerBuilders = []
-    const tempLecturerPasswords = []
+    const tempLecturerBuilders = [];
+    const tempLecturerPasswords = [];
 
-    const tempStudentBuilders = []
-    const tempStudentPasswords=[]
+    const tempStudentBuilders = [];
+    const tempStudentPasswords = [];
 
     for (let i = 0; i < 30; i++) {
       const builder = new AdminBuilder();
@@ -56,21 +61,21 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       builder.address = {
         line1: faker.location.streetAddress({ useFullAddress: true }),
         line2: faker.location.streetAddress({ useFullAddress: true }),
-        zip: faker.location.zipCode()
+        zip: faker.location.zipCode(),
       };
       builder.email = faker.internet.email().toLowerCase();
       builder.name = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         full_name: faker.person.fullName(),
-        with_initial_name: faker.person.fullName()
+        with_initial_name: faker.person.fullName(),
       };
-      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+      builder.password =
+        await PasswordHashService.hashPassword(defaultPassword);
 
       tempAdminBuilders.push(builder);
       tempAdminPasswords.push(defaultPassword);
     }
-
 
     for (let i = 0; i < 30; i++) {
       const builder = new DepartmentHeadBuilder();
@@ -80,16 +85,17 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       builder.address = {
         line1: faker.location.streetAddress({ useFullAddress: true }),
         line2: faker.location.streetAddress({ useFullAddress: true }),
-        zip: faker.location.zipCode()
+        zip: faker.location.zipCode(),
       };
       builder.email = faker.internet.email().toLowerCase();
       builder.name = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         full_name: faker.person.fullName(),
-        with_initial_name: faker.person.fullName()
+        with_initial_name: faker.person.fullName(),
       };
-      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+      builder.password =
+        await PasswordHashService.hashPassword(defaultPassword);
 
       tempDepartmentHeadBuilders.push(builder);
       tempDepartmentHeadPasswords.push(defaultPassword);
@@ -103,16 +109,17 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       builder.address = {
         line1: faker.location.streetAddress({ useFullAddress: true }),
         line2: faker.location.streetAddress({ useFullAddress: true }),
-        zip: faker.location.zipCode()
+        zip: faker.location.zipCode(),
       };
       builder.email = faker.internet.email().toLowerCase();
       builder.name = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         full_name: faker.person.fullName(),
-        with_initial_name: faker.person.fullName()
+        with_initial_name: faker.person.fullName(),
       };
-      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+      builder.password =
+        await PasswordHashService.hashPassword(defaultPassword);
 
       tempLecturerBuilders.push(builder);
       tempLecturerPasswords.push(defaultPassword);
@@ -126,16 +133,17 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       builder.address = {
         line1: faker.location.streetAddress({ useFullAddress: true }),
         line2: faker.location.streetAddress({ useFullAddress: true }),
-        zip: faker.location.zipCode()
+        zip: faker.location.zipCode(),
       };
       builder.email = faker.internet.email().toLowerCase();
       builder.name = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         full_name: faker.person.fullName(),
-        with_initial_name: faker.person.fullName()
+        with_initial_name: faker.person.fullName(),
       };
-      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+      builder.password =
+        await PasswordHashService.hashPassword(defaultPassword);
 
       tempStudentBuilders.push(builder);
       tempStudentPasswords.push(defaultPassword);
@@ -147,12 +155,12 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
     departmentHeadBuilder = tempDepartmentHeadBuilders;
     departmentHeadPasswords = tempDepartmentHeadPasswords;
 
-    lecturerBuilders = tempLecturerBuilders
-    lecturerPasswords = tempLecturerPasswords
+    lecturerBuilders = tempLecturerBuilders;
+    lecturerPasswords = tempLecturerPasswords;
 
     studentBuilders = tempStudentBuilders;
-    studentPasswords = tempStudentPasswords
-  },20000);
+    studentPasswords = tempStudentPasswords;
+  }, 20000);
 
   test('should create and verify all admins', async () => {
     for (let i = 0; i < adminBuilders.length; i++) {
@@ -162,7 +170,9 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       const user = await builder.create();
       expect(user).toBeDefined();
       expect(user.email).toBe(builder.email);
-      expect(await PasswordHashService.verifyPassword(password, user.password)).toBe(true);
+      expect(
+        await PasswordHashService.verifyPassword(password, user.password),
+      ).toBe(true);
     }
 
     for (let i = 0; i < departmentHeadBuilder.length; i++) {
@@ -172,7 +182,9 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       const user = await builder.create();
       expect(user).toBeDefined();
       expect(user.email).toBe(builder.email);
-      expect(await PasswordHashService.verifyPassword(password, user.password)).toBe(true);
+      expect(
+        await PasswordHashService.verifyPassword(password, user.password),
+      ).toBe(true);
     }
 
     for (let i = 0; i < lecturerBuilders.length; i++) {
@@ -182,7 +194,9 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       const user = await builder.create();
       expect(user).toBeDefined();
       expect(user.email).toBe(builder.email);
-      expect(await PasswordHashService.verifyPassword(password, user.password)).toBe(true);
+      expect(
+        await PasswordHashService.verifyPassword(password, user.password),
+      ).toBe(true);
     }
 
     for (let i = 0; i < studentBuilders.length; i++) {
@@ -192,74 +206,74 @@ describe('Create Admins, departmentHeads, Lecturers, Students', () => {
       const user = await builder.create();
       expect(user).toBeDefined();
       expect(user.email).toBe(builder.email);
-      expect(await PasswordHashService.verifyPassword(password, user.password)).toBe(true);
+      expect(
+        await PasswordHashService.verifyPassword(password, user.password),
+      ).toBe(true);
     }
+  }, 20000);
 
-
-  },20000);
-
-  test('should always find right user type and right user', async () => { 
-    const builders = adminBuilders.concat(departmentHeadBuilder, lecturerBuilders, studentBuilders)
+  test('should always find right user type and right user', async () => {
+    const builders = adminBuilders.concat(
+      departmentHeadBuilder,
+      lecturerBuilders,
+      studentBuilders,
+    );
 
     for (let index = 0; index < 100; index++) {
-      const randomBuilder = builders[Math.floor(Math.random() * builders.length)];
-      
+      const randomBuilder =
+        builders[Math.floor(Math.random() * builders.length)];
 
       expect(randomBuilder).toBeDefined();
 
       const email = randomBuilder.email;
       expect(email).toBeDefined();
-      const userType = randomBuilder._type
+      const userType = randomBuilder._type;
       expect(userType).toBeDefined();
 
-      const selectUserClass = (userType)=>{
-        if(userType == userTypes.USER_ADMIN) return new Admin()
-        if(userType == userTypes.USER_DEPARTMENT) return new DepartmentHead()
-        if(userType == userTypes.USER_LECTURER) return new Lecturer()
-        if(userType == userTypes.USER_STUDENT) return new Student()
-      }
+      const selectUserClass = (userType) => {
+        if (userType == userTypes.USER_ADMIN) return new Admin();
+        if (userType == userTypes.USER_DEPARTMENT) return new DepartmentHead();
+        if (userType == userTypes.USER_LECTURER) return new Lecturer();
+        if (userType == userTypes.USER_STUDENT) return new Student();
+      };
 
       const user = selectUserClass(userType);
       expect(user).toBeDefined();
 
-      user.email = randomBuilder.email
+      user.email = randomBuilder.email;
       const result = await user.findOne();
-      expect(result._type).toBe(userType)
+      expect(result._type).toBe(userType);
 
-      const randomBuilder2 = builders[Math.floor(Math.random() * builders.length)];
+      const randomBuilder2 =
+        builders[Math.floor(Math.random() * builders.length)];
 
-      const randomUserType = (userType)=>{
+      const randomUserType = (userType) => {
         let types = [];
-        if(userType == userTypes.USER_ADMIN){
+        if (userType == userTypes.USER_ADMIN) {
           types = [new DepartmentHead(), new Lecturer(), new Student()];
-          
         }
 
-        if(userType == userTypes.USER_DEPARTMENT){
+        if (userType == userTypes.USER_DEPARTMENT) {
           types = [new Admin(), new Lecturer(), new Student()];
         }
 
-        if(userType == userTypes.USER_LECTURER){
+        if (userType == userTypes.USER_LECTURER) {
           types = [new Admin(), new DepartmentHead(), new Student()];
         }
 
-        if(userType == userTypes.USER_STUDENT){
+        if (userType == userTypes.USER_STUDENT) {
           types = [new Admin(), new DepartmentHead(), new Lecturer()];
         }
 
-        return types[Math.floor(Math.random()* types.length)]
-      }
+        return types[Math.floor(Math.random() * types.length)];
+      };
 
-      const randomUser =  randomUserType(userType)
-      randomUser.email = result.email
-      const result2 = await randomUser.findOne()
-     
-      expect(result2).toBe(NullUser)
-      expect(result2.email).not.toBe(result.email)
+      const randomUser = randomUserType(userType);
+      randomUser.email = result.email;
+      const result2 = await randomUser.findOne();
+
+      expect(result2).toBe(NullUser);
+      expect(result2.email).not.toBe(result.email);
     }
-  }, 20000)
-
-
-
-  
+  }, 20000);
 });

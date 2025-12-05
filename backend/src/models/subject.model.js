@@ -1,36 +1,37 @@
 const mongoose = require('mongoose');
 
-const subjectSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required:true,
-        trim:true
+const subjectSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    code:{
-        type:String,
-        required:true,
-        unique:true,
-        trim:true
+    code: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
     },
-    credits:{
-        type:Number,
-        required:true
+    credits: {
+      type: Number,
+      required: true,
     },
-    deleted:{
-        type:Boolean,
-        required:false,
-        default:false
-    }
-},
- {
+    deleted: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  {
     timestamps: {
       createdAt: 'createdAt_timestamp',
-      updatedAt: 'updatedAt_timestamp'
+      updatedAt: 'updatedAt_timestamp',
     },
-    versionKey: false
-  }
-)
+    versionKey: false,
+  },
+);
 
-const SubjectModel = mongoose.model("Subject", subjectSchema);
+const SubjectModel = mongoose.model('Subject', subjectSchema);
 
 module.exports = SubjectModel;

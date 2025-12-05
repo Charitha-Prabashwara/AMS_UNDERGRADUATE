@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {config} = require('../config');
+const { config } = require('../config');
 
 const DB_connect = async () => {
   try {
@@ -8,6 +8,6 @@ const DB_connect = async () => {
     console.error('Error connecting to MongoDB:', error);
     process.exit(1); // Exit process on DB connection failure
   }
-}
+};
 
-module.exports = {mongoose, DB_connect};
+module.exports = { mongoose, DB_connect };

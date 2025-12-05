@@ -1,6 +1,5 @@
-class authServiceBaseError extends Error{
-
-    constructor(message = "Token error", statusCode = 500) {
+class authServiceBaseError extends Error {
+  constructor(message = 'Token error', statusCode = 500) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;

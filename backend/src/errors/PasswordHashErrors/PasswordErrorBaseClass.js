@@ -1,6 +1,5 @@
-class PasswordErrorBaseClass extends Error{
-
-    constructor(message = "Invalid password provided", statusCode = 401) {
+class PasswordErrorBaseClass extends Error {
+  constructor(message = 'Invalid password provided', statusCode = 401) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;

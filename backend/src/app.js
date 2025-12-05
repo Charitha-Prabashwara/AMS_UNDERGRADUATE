@@ -1,23 +1,25 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 
-const path = require('path')
-const cors = require("cors");
-const bodyParser = require("body-parser");
+const path = require('path');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
 //const swaggerUi = require("swagger-ui-express");
 //const swaggerJsDoc = require("swagger-jsdoc");
-const cookieParser = require("cookie-parser")
+const cookieParser = require('cookie-parser');
 const Redis = require('ioredis');
-const compression = require("compression");
-const {DB_connect} = require('./database/db');
+const compression = require('compression');
+const { DB_connect } = require('./database/db');
 
 // Database connection
 DB_connect();
 
-app.use(compression({
-  threshold: 1024 // compress only if response > 1 KB
-}));
+app.use(
+  compression({
+    threshold: 1024, // compress only if response > 1 KB
+  }),
+);
 
 // const redis = new Redis({
 //   host: '192.168.1.100',   // Replace with your Redis server IP
@@ -50,7 +52,7 @@ app.use(compression({
 // //     "Content-Type",
 // //     "Accept",
 // //     "Authorization",
-// //     "X-Token" 
+// //     "X-Token"
 // //   ],
 // //   credentials: true,
 // // };
@@ -58,12 +60,11 @@ app.use(compression({
 // // app.use(cors(corsOptions));
 // //this
 
-app.use(morgan('tiny'))
+app.use(morgan('tiny'));
 app.use(cookieParser());
-app.use(express.json({ limit: "10mb" }));
-app.use(bodyParser.json({ limit: "10mb" }));
+app.use(express.json({ limit: '10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
 //app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 
 // // Swagger setup
 // const swaggerOptions = {
@@ -95,7 +96,7 @@ app.use(bodyParser.json({ limit: "10mb" }));
 // const {autoInactiveExpiredOffers} = require("./services/offer.service");
 
 // // Routes imports
-const {base_router, adminRouter} = require('./routes');
+const { base_router, adminRouter } = require('./routes');
 // const categoryRouter = require("./routes/category.route");
 // const subcategoryRouter = require("./routes/subcategory.route");
 // const brandRouter = require("./routes/brand.route");
@@ -114,19 +115,18 @@ const {base_router, adminRouter} = require('./routes');
 // //autoInactiveExpiredOffers("* * * * * *", true);
 
 // // Offer Service - Automatically deactivate expired offers
-// // This line schedules a cron job to run every second and also executes 
+// // This line schedules a cron job to run every second and also executes
 // // the `autoInactiveExpiredOffers` function once when the backend restarts or starts.
 // //
-// // - The schedule "* * * * * *" represents every second. For more details on cron 
-// //   syntax, refer to the node-cron documentation: 
+// // - The schedule "* * * * * *" represents every second. For more details on cron
+// //   syntax, refer to the node-cron documentation:
 // //   https://github.com/node-cron/node-cron/blob/master/README.md
-// // - The `true` parameter ensures that expired offers are deactivated immediately 
+// // - The `true` parameter ensures that expired offers are deactivated immediately
 // //   upon backend startup, in addition to the scheduled execution.
 // autoInactiveExpiredOffers("0 0 * * *", true);
 
-
 // // Routes
-app.use("/api/v1/", base_router)
-app.use("/api/v1/admin/", adminRouter)
+app.use('/api/v1/', base_router);
+app.use('/api/v1/admin/', adminRouter);
 
-module.exports = app
+module.exports = app;

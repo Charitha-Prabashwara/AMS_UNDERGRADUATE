@@ -1,43 +1,55 @@
-const Joi = require("joi");
-const {ValidationFailedError} = require('../../../errors')
-const {userTypes} = require('../../../config');
+const Joi = require('joi');
+const { ValidationFailedError } = require('../../../errors');
+const { userTypes } = require('../../../config');
 
 class GetUserFindDTO {
   constructor(data) {
     const schema = Joi.object({
-         
-        registrationId: Joi.string().max(20),
-        firstName: Joi.string().pattern(/^[A-Z. ]+$/)
-                              .messages({ "string.pattern.base": "First name must be uppercase letters only" }),
+      registrationId: Joi.string().max(20),
+      firstName: Joi.string()
+        .pattern(/^[A-Z. ]+$/)
+        .messages({
+          'string.pattern.base': 'First name must be uppercase letters only',
+        }),
 
-        lastName: Joi.string().pattern(/^[A-Z. ]+$/)
-                              .messages({ "string.pattern.base": "Last name must be uppercase letters only" }),
+      lastName: Joi.string()
+        .pattern(/^[A-Z. ]+$/)
+        .messages({
+          'string.pattern.base': 'Last name must be uppercase letters only',
+        }),
 
-        fullName: Joi.string().pattern(/^[A-Z. ]+$/)
-                              .messages({ "string.pattern.base": "Full name must be uppercase letters only" }),
-        
-        nameWithInitial: Joi.string().pattern(/^[A-Z. ]+$/)
-                              .messages({ "string.pattern.base": "Full name must be uppercase letters only" }),
-        
-        email: Joi.string().email(),
-        addressLine1: Joi.string(),
-        addressLine2: Joi.string(),
-        addressZip: Joi.number().integer(),
+      fullName: Joi.string()
+        .pattern(/^[A-Z. ]+$/)
+        .messages({
+          'string.pattern.base': 'Full name must be uppercase letters only',
+        }),
 
-        type: Joi.string().valid(...userTypes.USER_TYPES).required(),
+      nameWithInitial: Joi.string()
+        .pattern(/^[A-Z. ]+$/)
+        .messages({
+          'string.pattern.base': 'Full name must be uppercase letters only',
+        }),
 
-        departmentId: Joi.string(),
-        lastLogin: Joi.date(),
-        enableState: Joi.boolean(),
-        createdAt: Joi.date(),
-        updatedAt: Joi.date()
-        
+      email: Joi.string().email(),
+      addressLine1: Joi.string(),
+      addressLine2: Joi.string(),
+      addressZip: Joi.number().integer(),
+
+      type: Joi.string()
+        .valid(...userTypes.USER_TYPES)
+        .required(),
+
+      departmentId: Joi.string(),
+      lastLogin: Joi.date(),
+      enableState: Joi.boolean(),
+      createdAt: Joi.date(),
+      updatedAt: Joi.date(),
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });
 
     if (error) {
-      throw new ValidationFailedError(error.message, 400, error.details)  
+      throw new ValidationFailedError(error.message, 400, error.details);
     }
 
     Object.assign(this, value);

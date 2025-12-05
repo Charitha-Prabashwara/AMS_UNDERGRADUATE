@@ -1,100 +1,96 @@
 const mongoose = require('mongoose');
-const {userTypes} = require('../config')
+const { userTypes } = require('../config');
 const userSchema = new mongoose.Schema(
   {
-   
     registration_id: {
       type: String,
       unique: true,
       required: true,
-      trim: true
+      trim: true,
     },
-    department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department'},
+    department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
     name: {
-   
-      first_name:{
+      first_name: {
         type: String,
-        required:true,
-        trim:true,
-        index:true
+        required: true,
+        trim: true,
+        index: true,
       },
 
-      last_name:{
+      last_name: {
         type: String,
-        required:true,
-        trim:true,
-        index:true
+        required: true,
+        trim: true,
+        index: true,
       },
 
-      full_name:{
+      full_name: {
         type: String,
-        required:true,
-        trim:true,
-        index:true
+        required: true,
+        trim: true,
+        index: true,
       },
 
-      with_initial_name:{
+      with_initial_name: {
         type: String,
-        required:true,
-        trim:true,
-        index:true
-      }
-
+        required: true,
+        trim: true,
+        index: true,
+      },
     },
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
-      trim: true
+      trim: true,
     },
     address: {
-      line1:{
+      line1: {
         type: String,
-        trim:true,
-        required:true
-
+        trim: true,
+        required: true,
       },
-      line2:{
+      line2: {
         type: String,
-        trim:true,
+        trim: true,
       },
-      zip:{
-        type:String,
-        trim:true,
-        required: true
-      }
+      zip: {
+        type: String,
+        trim: true,
+        required: true,
+      },
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+      type: String,
+      required: true,
     },
     access_token: {
-      type: String
+      type: String,
     },
     refresh_token: {
-      type: String
+      type: String,
     },
     last_login: {
-      type: Date
+      type: Date,
     },
     enable_state: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    type:{
-      type:String,
+    type: {
+      type: String,
       enum: userTypes.USER_TYPES,
-      default: userTypes.USER_USER
-    }
+      default: userTypes.USER_USER,
+    },
   },
   {
     timestamps: {
       createdAt: 'createdAt_timestamp',
-      updatedAt: 'updatedAt_timestamp'
+      updatedAt: 'updatedAt_timestamp',
     },
-    versionKey: false
-  }
+    versionKey: false,
+  },
 );
 
 const UserModel = mongoose.model('User', userSchema);

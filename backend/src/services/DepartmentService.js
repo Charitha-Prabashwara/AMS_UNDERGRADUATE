@@ -1,5 +1,5 @@
-const Department = require('../classes/Department')
-const DepartmentBuilder = require('../classes/DepartmentBuilder')
+const Department = require('../classes/Department');
+const DepartmentBuilder = require('../classes/DepartmentBuilder');
 
 /**
  * @class DepartmentService
@@ -11,103 +11,107 @@ const DepartmentBuilder = require('../classes/DepartmentBuilder')
  * Provides high-level operations such as creating departments,
  * retrieving department details, filtering data, and deleting departments.
  */
-class DepartmentService{
+class DepartmentService {
+  /**
+   * Initializes a new instance of DepartmentService.
+   * Creates a reusable Department model instance for repeated DB operations.
+   */
+  constructor() {
+    /** @private */
+    this.deptClass = new Department();
+  }
 
-    /**
-     * Initializes a new instance of DepartmentService.
-     * Creates a reusable Department model instance for repeated DB operations.
-     */
-    constructor(){
-        /** @private */
-        this.deptClass = new Department()
-    }
+  /**
+   * Retrieve a department record by its unique identifier.
+   *
+   * @async
+   * @param {string} id - The unique identifier of the department.
+   * @returns {Promise<Object|null>}
+   * Resolves with the department object if found, otherwise `null`.
+   *
+   * @throws {Error} Propagates any underlying database or model errors.
+   */
+  async getDepartmentById(id) {
+    return this.deptClass.findById(id);
+  }
 
-    /**
-     * Retrieve a department record by its unique identifier.
-     *
-     * @async
-     * @param {string} id - The unique identifier of the department.
-     * @returns {Promise<Object|null>}
-     * Resolves with the department object if found, otherwise `null`.
-     *
-     * @throws {Error} Propagates any underlying database or model errors.
-    */
-    async getDepartmentById(id){
-        return this.deptClass.findById(id);
-    }
+  /**
+   * Retrieve departments based on dynamic filtering criteria.
+   * Accepts partial filter fields and delegates matching logic to the model.
+   *
+   * @async
+   * @param {Object} [data={}] - Filtering criteria.
+   * @param {string} [data.name] - Department name (full or partial).
+   * @param {string} [data.description] - Description text (full or partial).
+   * @param {boolean} [data.deleted] - Filter by deletion state.
+   * @param {number} [data.createdAt_timestamp] - Creation timestamp filter.
+   * @param {number} [data.updatedAt_timestamp] - Last update timestamp filter.
+   *
+   * @returns {Promise<Array<Object>>}
+   * A list of matching departments. Empty array if none match.
+   *
+   * @throws {Error} If the model encounters invalid filter data.
+   */
+  async getFindDepartment(data = {}) {
+    const dept = new Department();
+    const {
+      name,
+      description,
+      deleted,
+      createdAt_timestamp,
+      updatedAt_timestamp,
+    } = data;
 
-        /**
-     * Retrieve departments based on dynamic filtering criteria.
-     * Accepts partial filter fields and delegates matching logic to the model.
-     *
-     * @async
-     * @param {Object} [data={}] - Filtering criteria.
-     * @param {string} [data.name] - Department name (full or partial).
-     * @param {string} [data.description] - Description text (full or partial).
-     * @param {boolean} [data.deleted] - Filter by deletion state.
-     * @param {number} [data.createdAt_timestamp] - Creation timestamp filter.
-     * @param {number} [data.updatedAt_timestamp] - Last update timestamp filter.
-     *
-     * @returns {Promise<Array<Object>>}
-     * A list of matching departments. Empty array if none match.
-     *
-     * @throws {Error} If the model encounters invalid filter data.
-     */
-    async getFindDepartment(data={}){
-        const dept = new Department()
-        const {name,description, deleted, createdAt_timestamp, updatedAt_timestamp} = data
+    dept.name = name;
+    dept.description = description;
+    dept.deleted = deleted;
+    dept.createdAt_timestamp = createdAt_timestamp;
+    dept.updatedAt_timestamp = updatedAt_timestamp;
 
-        dept.name = name
-        dept.description = description
-        dept.deleted = deleted
-        dept.createdAt_timestamp = createdAt_timestamp
-        dept.updatedAt_timestamp =updatedAt_timestamp 
-        
-        return dept.find()
-    }
+    return dept.find();
+  }
 
-    /**
-     * Create a new department using a builder pattern.
-     *
-     * @async
-     * @param {Object} name - Department name components.
-     * @param {string} name.long - Full descriptive name.
-     * @param {string} name.short - Abbreviated department name.
-     * @param {string} name.key - Unique department key identifier.
-     * @param {string} description - Department description.
-     *
-     * @returns {Promise<Object>}
-     * The newly created department object.
-     *
-     * @throws {Error}
-     * If validation fails or the builder encounters construction issues.
-     */
-    async createDepartment(name={}, description){
-        const {long, short, key} = name
-        const builder =new DepartmentBuilder()
+  /**
+   * Create a new department using a builder pattern.
+   *
+   * @async
+   * @param {Object} name - Department name components.
+   * @param {string} name.long - Full descriptive name.
+   * @param {string} name.short - Abbreviated department name.
+   * @param {string} name.key - Unique department key identifier.
+   * @param {string} description - Department description.
+   *
+   * @returns {Promise<Object>}
+   * The newly created department object.
+   *
+   * @throws {Error}
+   * If validation fails or the builder encounters construction issues.
+   */
+  async createDepartment(name = {}, description) {
+    const { long, short, key } = name;
+    const builder = new DepartmentBuilder();
 
-        builder.name = {long: long, short:short, key:key}
-        builder.description = description
-        
-        return builder.create() 
-    }
+    builder.name = { long: long, short: short, key: key };
+    builder.description = description;
 
-    /**
-     * Delete a department by its unique identifier.
-     * Performs a soft delete or hard delete depending on model implementation.
-     *
-     * @async
-     * @param {string} id - The department ID to delete.
-     * @returns {Promise<boolean>}
-     * Resolves `true` if deletion succeeded, otherwise `false`.
-     *
-     * @throws {Error}
-     * If the deletion process encounters database/model errors.
-     */
-    async deleteDepartmentById(id){
-        return this.deptClass.deleteById(id)
-    }
+    return builder.create();
+  }
 
+  /**
+   * Delete a department by its unique identifier.
+   * Performs a soft delete or hard delete depending on model implementation.
+   *
+   * @async
+   * @param {string} id - The department ID to delete.
+   * @returns {Promise<boolean>}
+   * Resolves `true` if deletion succeeded, otherwise `false`.
+   *
+   * @throws {Error}
+   * If the deletion process encounters database/model errors.
+   */
+  async deleteDepartmentById(id) {
+    return this.deptClass.deleteById(id);
+  }
 }
 
-module.exports = DepartmentService
+module.exports = DepartmentService;

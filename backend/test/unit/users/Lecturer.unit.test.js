@@ -1,10 +1,9 @@
-
-const {Lecturer,NullUser} = require('../../../src/classes/USERS');
-const LecturerBuilder = require('../../../src/classes/USERS/LecturerBuilder')
+const { Lecturer, NullUser } = require('../../../src/classes/USERS');
+const LecturerBuilder = require('../../../src/classes/USERS/LecturerBuilder');
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
-const {config, userTypes} = require('../../../src/config');
-const PasswordHashService =require('../../../src/services/PasswordHashService')
+const { config, userTypes } = require('../../../src/config');
+const PasswordHashService = require('../../../src/services/PasswordHashService');
 
 const { MongoMemoryServer } = require('mongodb-memory-server');
 let mongoServer;
@@ -20,170 +19,181 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
- const defaultPassword = '123456';
-  const registration_id = faker.string.uuid();
-  const first_name = faker.person.firstName();
-  const last_name = faker.person.lastName();
-  const full_name = faker.person.fullName();
-  const with_initial = faker.person.fullName();
-  const address = {
-    line1: faker.location.streetAddress({ useFullAddress: true }),
-    line2: undefined,
-    zip: faker.location.zipCode()
+const defaultPassword = '123456';
+const registration_id = faker.string.uuid();
+const first_name = faker.person.firstName();
+const last_name = faker.person.lastName();
+const full_name = faker.person.fullName();
+const with_initial = faker.person.fullName();
+const address = {
+  line1: faker.location.streetAddress({ useFullAddress: true }),
+  line2: undefined,
+  zip: faker.location.zipCode(),
+};
+const email = faker.internet.email().toLowerCase();
+
+let createLecturer;
+let new_email = faker.internet.email().toLowerCase();
+
+test('Should create a new lecturer successfully', async () => {
+  const builder = new LecturerBuilder();
+  builder.registration_id = registration_id;
+  builder.name = {
+    first_name,
+    last_name,
+    full_name,
+    with_initial_name: with_initial,
   };
-  const email = faker.internet.email().toLowerCase();
+  builder.address = { ...address };
+  builder.email = email;
+  builder.password = await PasswordHashService.hashPassword(defaultPassword);
 
-  let createLecturer;
-  let new_email = faker.internet.email().toLowerCase();
+  createLecturer = await builder.create();
 
-  test('Should create a new lecturer successfully', async () => {
-    const builder = new LecturerBuilder();
-    builder.registration_id = registration_id;
-    builder.name = {
-      first_name,
-      last_name,
-      full_name,
-      with_initial_name: with_initial
-    };
-    builder.address = { ...address };
-    builder.email = email;
-    builder.password = await PasswordHashService.hashPassword(defaultPassword);
+  expect(createLecturer).toBeInstanceOf(Lecturer);
+  expect(createLecturer.registration_id).toBe(registration_id);
+  expect(createLecturer.name.first_name).toBe(first_name);
+  expect(createLecturer._type).toBe('lecturer');
 
-    createLecturer = await builder.create();
+  const compare = await PasswordHashService.verifyPassword(
+    defaultPassword,
+    createLecturer.password,
+  );
+  expect(compare).toBe(true);
+});
 
-    expect(createLecturer).toBeInstanceOf(Lecturer);
-    expect(createLecturer.registration_id).toBe(registration_id);
-    expect(createLecturer.name.first_name).toBe(first_name);
-    expect(createLecturer._type).toBe('lecturer');
+test('Should find the created Lecturer by email', async () => {
+  const finder = new Lecturer();
+  finder.email = email;
 
-    const compare = await PasswordHashService.verifyPassword(defaultPassword, createLecturer.password);
-    expect(compare).toBe(true);
-  });
+  const foundLecturer = await finder.find();
+  expect(foundLecturer.length).toBeGreaterThan(0);
 
+  const found = foundLecturer[0];
+  expect(found.email).toBe(email);
+  expect(found.registration_id).toBe(registration_id);
+  expect(found.name.full_name).toBe(full_name);
+  expect(found._type).toBe('lecturer');
+});
 
-  test('Should find the created Lecturer by email', async () => {
-    const finder = new Lecturer();
-    finder.email = email;
+test('Should find Lecturer using findOne by email', async () => {
+  const finder = new Lecturer();
+  finder.email = createLecturer.email;
+  const found = await finder.findOne();
+  expect(found).toBeInstanceOf(Lecturer);
+  expect(found.id).toStrictEqual(createLecturer.id);
+  expect(found._type).toBe(userTypes.USER_LECTURER);
+});
 
-    const foundLecturer = await finder.find();
-    expect(foundLecturer.length).toBeGreaterThan(0);
+test('Should find Lecturer by ID', async () => {
+  const finder = new Lecturer();
+  const found = await finder.findById(createLecturer.id);
+  expect(found).toBeInstanceOf(Lecturer);
+  expect(found.id).toStrictEqual(createLecturer.id);
+  expect(found._type).toBe(userTypes.USER_LECTURER);
+});
 
-    const found = foundLecturer[0];
-    expect(found.email).toBe(email);
-    expect(found.registration_id).toBe(registration_id);
-    expect(found.name.full_name).toBe(full_name);
-    expect(found._type).toBe('lecturer');
-  });
+test('Should update Lecturer data successfully', async () => {
+  const lecturerToUpdate = new Lecturer({ email });
+  const users = await lecturerToUpdate.find();
 
-  test('Should find Lecturer using findOne by email', async () => { 
-     const finder = new Lecturer();
-     finder.email = createLecturer.email
-    const found = await finder.findOne();
-    expect(found).toBeInstanceOf(Lecturer);
-    expect(found.id).toStrictEqual(createLecturer.id);
-    expect(found._type).toBe(userTypes.USER_LECTURER)
-  })
+  expect(users.length).toBeGreaterThan(0);
+  const user = users[0];
 
-  test('Should find Lecturer by ID', async () => {
-    const finder = new Lecturer();
-    const found = await finder.findById(createLecturer.id);
-    expect(found).toBeInstanceOf(Lecturer);
-    expect(found.id).toStrictEqual(createLecturer.id);
-    expect(found._type).toBe(userTypes.USER_LECTURER)
-  });
+  const new_registration_id = faker.string.uuid();
+  const new_name = {
+    first_name: 'UpdatedFirst',
+    last_name: 'UpdatedLast',
+    full_name: 'Updated Full Name',
+    with_initial_name: 'U. Name',
+  };
+  const new_password = '789555';
 
+  user.registration_id = new_registration_id;
+  user.name = new_name;
+  user.email = new_email;
+  user.password = await PasswordHashService.hashPassword(new_password);
 
-  test('Should update Lecturer data successfully', async () => {
-    const lecturerToUpdate = new Lecturer({ email });
-    const users = await lecturerToUpdate.find();
+  await user.save();
 
-    expect(users.length).toBeGreaterThan(0);
-    const user = users[0];
+  const updatedUsers = await new Lecturer({ email: new_email }).find();
+  expect(updatedUsers.length).toBeGreaterThan(0);
+  const updated = updatedUsers[0];
 
-    const new_registration_id = faker.string.uuid();
-    const new_name = {
-      first_name: 'UpdatedFirst',
-      last_name: 'UpdatedLast',
-      full_name: 'Updated Full Name',
-      with_initial_name: 'U. Name'
-    };
-    const new_password = '789555';
+  expect(updated.registration_id).toBe(new_registration_id);
+  expect(updated.name).toStrictEqual(new_name);
+  expect(updated.email).toBe(new_email);
 
-    user.registration_id = new_registration_id;
-    user.name = new_name;
-    user.email = new_email;
-    user.password = await PasswordHashService.hashPassword(new_password);
+  const compare = await PasswordHashService.verifyPassword(
+    new_password,
+    updated.password,
+  );
+  expect(compare).toBe(true);
+});
 
-    await user.save();
+test('Should delete Lecturer by email (deleteOne)', async () => {
+  const deleter = new Lecturer({ email: new_email });
+  const deleted = await deleter.deleteOne();
 
-    const updatedUsers = await new Lecturer({ email: new_email }).find();
-    expect(updatedUsers.length).toBeGreaterThan(0);
-    const updated = updatedUsers[0];
+  expect(deleted).toBeInstanceOf(Lecturer);
+  expect(deleted.email).toBe(new_email);
 
-    expect(updated.registration_id).toBe(new_registration_id);
-    expect(updated.name).toStrictEqual(new_name);
-    expect(updated.email).toBe(new_email);
+  const check = await new Lecturer({ email: new_email }).find();
+  expect(check.length).toBe(0);
+});
 
-    const compare = await PasswordHashService.verifyPassword(new_password, updated.password);
-    expect(compare).toBe(true);
-  });
+test('Should delete Lecturer by ID (deleteById)', async () => {
+  const builder = new LecturerBuilder();
+  builder.registration_id = registration_id;
+  builder.name = {
+    first_name,
+    last_name,
+    full_name,
+    with_initial_name: with_initial,
+  };
+  builder.address = { ...address };
+  builder.email = faker.internet.email().toLowerCase();
+  builder.password = await PasswordHashService.hashPassword(defaultPassword);
 
-  test('Should delete Lecturer by email (deleteOne)', async () => {
-    const deleter = new Lecturer({ email: new_email });
-    const deleted = await deleter.deleteOne();
+  const newLecturer = await builder.create();
+  const deleted = await new Lecturer().deleteById(newLecturer.id);
 
-    expect(deleted).toBeInstanceOf(Lecturer);
-    expect(deleted.email).toBe(new_email);
+  expect(deleted.registration_id).toBe(registration_id);
+  expect(deleted.name.full_name).toBe(full_name);
 
-   
-    const check = await new Lecturer({ email: new_email }).find();
-    expect(check.length).toBe(0);
-  });
+  const findDeleted = await new Lecturer({ id: newLecturer.id }).find();
+  expect(findDeleted.length).toBe(0);
+});
 
-  test('Should delete Lecturer by ID (deleteById)', async () => {
-    
-    const builder = new LecturerBuilder();
-    builder.registration_id = registration_id;
-    builder.name = { first_name, last_name, full_name, with_initial_name: with_initial };
-    builder.address = { ...address };
-    builder.email = faker.internet.email().toLowerCase();
-    builder.password = await PasswordHashService.hashPassword(defaultPassword);
+test('Should not allow modification of _type in Lecturer or LecturerBuilder', () => {
+  const lecturer = new Lecturer();
+  const builder = new LecturerBuilder();
 
-    const newLecturer = await builder.create();
-    const deleted = await new Lecturer().deleteById(newLecturer.id);
+  expect(lecturer._type).toBe('lecturer');
+  expect(builder._type).toBe('lecturer');
 
-    expect(deleted.registration_id).toBe(registration_id);
-    expect(deleted.name.full_name).toBe(full_name);
+  expect(Object.getOwnPropertyDescriptor(lecturer, '_type').writable).toBe(
+    false,
+  );
+  expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(
+    false,
+  );
 
-    const findDeleted = await new Lecturer({ id: newLecturer.id }).find();
-    expect(findDeleted.length).toBe(0);
-  });
+  //expect(() => { lecturer._type = 'user'; }).toThrow();
+  //expect(() => { builder._type = 'user'; }).toThrow();
+});
 
-  test('Should not allow modification of _type in Lecturer or LecturerBuilder', () => {
-    const lecturer = new Lecturer();
-    const builder = new LecturerBuilder();
+test('Should handle save error gracefully', async () => {
+  const badLecturer = new Lecturer();
+  badLecturer.save = jest.fn().mockRejectedValue(new Error('DB error'));
+  await expect(badLecturer.save()).rejects.toThrow('DB error');
+});
 
-    expect(lecturer._type).toBe('lecturer');
-    expect(builder._type).toBe('lecturer');
-
-    expect(Object.getOwnPropertyDescriptor(lecturer, '_type').writable).toBe(false);
-    expect(Object.getOwnPropertyDescriptor(builder, '_type').writable).toBe(false);
-
-    //expect(() => { lecturer._type = 'user'; }).toThrow();
-    //expect(() => { builder._type = 'user'; }).toThrow();
-  });
-
-  test('Should handle save error gracefully', async () => {
-    const badLecturer = new Lecturer();
-    badLecturer.save = jest.fn().mockRejectedValue(new Error('DB error'));
-    await expect(badLecturer.save()).rejects.toThrow('DB error');
-  });
-
-  test('Should handle findById error gracefully', async () => {
-    const badLecturer = new Lecturer();
-    badLecturer.findById = jest.fn().mockRejectedValue(new Error('Find failed'));
-    await expect(badLecturer.findById('invalid')).rejects.toThrow('Find failed');
-  });
+test('Should handle findById error gracefully', async () => {
+  const badLecturer = new Lecturer();
+  badLecturer.findById = jest.fn().mockRejectedValue(new Error('Find failed'));
+  await expect(badLecturer.findById('invalid')).rejects.toThrow('Find failed');
+});
 
 test('Should not leak memory when repeatedly creating and deleting lecturers', async () => {
   const iterations = 30;
@@ -250,54 +260,52 @@ test('Should handle concurrent lecturer creation safely', async () => {
   expect(allLecturers.length).toBeGreaterThanOrEqual(parallelTasks);
 });
 
- describe('NullUser object test', () => {
-    test('find by id', async () => { 
-        const id = new mongoose.Types.ObjectId();
-        const user = await new Lecturer().findById(id);
-        expect(user).toBe(NullUser)
-     })
+describe('NullUser object test', () => {
+  test('find by id', async () => {
+    const id = new mongoose.Types.ObjectId();
+    const user = await new Lecturer().findById(id);
+    expect(user).toBe(NullUser);
+  });
 
-    test('find', async () => { 
-      const registration_id = faker.string.uuid()
-      const user = new Lecturer({registration_id:registration_id})
+  test('find', async () => {
+    const registration_id = faker.string.uuid();
+    const user = new Lecturer({ registration_id: registration_id });
 
-      expect(registration_id).toBe(user.registration_id)
-      const result = await user.find()
-      result.forEach(user => {
-        expect(user).toBe(NullUser)
-      });
-    })
- 
-  })
+    expect(registration_id).toBe(user.registration_id);
+    const result = await user.find();
+    result.forEach((user) => {
+      expect(user).toBe(NullUser);
+    });
+  });
+});
 
-test('should find by id lecturer and update', async () => { 
-      const builder = new LecturerBuilder();
-      const defaultPassword = faker.internet.password(10);
+test('should find by id lecturer and update', async () => {
+  const builder = new LecturerBuilder();
+  const defaultPassword = faker.internet.password(10);
 
-      builder.registration_id = faker.string.uuid();
-      builder.address = {
-        line1: faker.location.streetAddress({ useFullAddress: true }),
-        line2: faker.location.streetAddress({ useFullAddress: true }),
-        zip: faker.location.zipCode()
-      };
-      builder.email = faker.internet.email().toLowerCase();
-      builder.name = {
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        full_name: faker.person.fullName(),
-        with_initial_name: faker.person.fullName()
-      };
-      builder.password = await PasswordHashService.hashPassword(defaultPassword);
+  builder.registration_id = faker.string.uuid();
+  builder.address = {
+    line1: faker.location.streetAddress({ useFullAddress: true }),
+    line2: faker.location.streetAddress({ useFullAddress: true }),
+    zip: faker.location.zipCode(),
+  };
+  builder.email = faker.internet.email().toLowerCase();
+  builder.name = {
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    full_name: faker.person.fullName(),
+    with_initial_name: faker.person.fullName(),
+  };
+  builder.password = await PasswordHashService.hashPassword(defaultPassword);
 
-      const user = await builder.create()
+  const user = await builder.create();
 
-      expect(user).toBeDefined()
-      expect(user.id).toBeDefined()
-      
-      const new_email =faker.internet.email().toLowerCase() 
-      user.email = new_email
-      const result = await user.findByIdAndUpdate(user)
-      expect(result).toBeDefined()
-      expect(result.email).toBe(new_email)
+  expect(user).toBeDefined();
+  expect(user.id).toBeDefined();
 
-  })
+  const new_email = faker.internet.email().toLowerCase();
+  user.email = new_email;
+  const result = await user.findByIdAndUpdate(user);
+  expect(result).toBeDefined();
+  expect(result.email).toBe(new_email);
+});

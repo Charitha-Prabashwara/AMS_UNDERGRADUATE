@@ -1,9 +1,9 @@
-const UserRepositoryError = require('./UserRepositoryError')
+const UserRepositoryError = require('./UserRepositoryError');
 
-class InvalidUserIdError extends UserRepositoryError{
-    constructor(){
-        super("Invalid User ID", 400)  
-    }
+class InvalidUserIdError extends UserRepositoryError {
+  constructor() {
+    super('Invalid User ID', 400);
+  }
 }
 
-module.exports = InvalidUserIdError
+module.exports = InvalidUserIdError;

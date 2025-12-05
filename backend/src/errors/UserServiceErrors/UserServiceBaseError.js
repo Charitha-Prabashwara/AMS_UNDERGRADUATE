@@ -1,6 +1,5 @@
-class userServiceBaseError extends Error{
-
-    constructor(message = "User service error", statusCode = 500) {
+class userServiceBaseError extends Error {
+  constructor(message = 'User service error', statusCode = 500) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;

@@ -44,7 +44,7 @@ describe('Department Class Tests', () => {
 
     const result = await department.find();
     expect(result.length).toBeGreaterThan(0);
-    result.forEach(d => {
+    result.forEach((d) => {
       expect(d.name).toStrictEqual(name);
       expect(d).toBeInstanceOf(Department);
     });
@@ -83,7 +83,7 @@ describe('Department Class Tests', () => {
 
     const result = await department.find();
     expect(result.length).toBeGreaterThan(0);
-    result.forEach(d => expect(d.deleted).toBe(false));
+    result.forEach((d) => expect(d.deleted).toBe(false));
   });
 
   test('Should delete Department by id', async () => {
@@ -105,9 +105,13 @@ describe('Department Class Tests', () => {
 
   test('Should handle findById error gracefully', async () => {
     const badDepartment = new Department();
-    badDepartment.findById = jest.fn().mockRejectedValue(new Error('Find failed'));
+    badDepartment.findById = jest
+      .fn()
+      .mockRejectedValue(new Error('Find failed'));
 
-    await expect(badDepartment.findById('invalid')).rejects.toThrow('Find failed');
+    await expect(badDepartment.findById('invalid')).rejects.toThrow(
+      'Find failed',
+    );
   });
 
   test('Should handle concurrent Department creation safely', async () => {
@@ -124,7 +128,7 @@ describe('Department Class Tests', () => {
     });
 
     const results = await Promise.allSettled(tasks);
-    const rejected = results.filter(r => r.status === 'rejected');
+    const rejected = results.filter((r) => r.status === 'rejected');
     expect(rejected.length).toBe(0);
 
     const allDepartments = await new Department().find();

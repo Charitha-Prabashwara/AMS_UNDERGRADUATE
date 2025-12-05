@@ -1,6 +1,5 @@
-class UserRepositoryError extends Error{
-
-    constructor(message = "Repository error", statusCode = 500) {
+class UserRepositoryError extends Error {
+  constructor(message = 'Repository error', statusCode = 500) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;

@@ -1,9 +1,9 @@
-const UserRepositoryError = require('./UserRepositoryError')
+const UserRepositoryError = require('./UserRepositoryError');
 
-class UserNotFoundError extends UserRepositoryError{
-    constructor(){
-        super("User not found", 404)
-    }
+class UserNotFoundError extends UserRepositoryError {
+  constructor() {
+    super('User not found', 404);
+  }
 }
 
 module.exports = UserNotFoundError;

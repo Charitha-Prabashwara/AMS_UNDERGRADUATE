@@ -1,9 +1,9 @@
-const TokenErrorBaseClass = require('./TokenErrorBaseClass')
+const TokenErrorBaseClass = require('./TokenErrorBaseClass');
 
-class JsonWebTokenError extends TokenErrorBaseClass{
-     constructor(){
-        super("Invalid or tampered token", 403)
-    }
+class JsonWebTokenError extends TokenErrorBaseClass {
+  constructor() {
+    super('Invalid or tampered token', 403);
+  }
 }
 
 module.exports = JsonWebTokenError;
