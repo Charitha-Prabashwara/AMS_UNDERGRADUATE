@@ -44,6 +44,10 @@ class GetUserFindDTO {
       enableState: Joi.boolean(),
       createdAt: Joi.date(),
       updatedAt: Joi.date(),
+
+      skip: Joi.number(),
+      limit: Joi.number(),
+      sort: Joi.string(),
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });

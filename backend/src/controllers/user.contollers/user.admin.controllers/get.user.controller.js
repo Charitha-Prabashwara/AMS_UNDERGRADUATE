@@ -78,10 +78,13 @@ exports.allUsers = async (dto, req, res, next) => {
       updatedAt_timestamp: dto.updatedAt,
       _type: dto.type,
     };
-
-    const users = await userService.getFindUsers(dto.type, data, {
+    const options = {
+      skip: dto.skip,
+      limit: dto.limit,
       select: ['-password'],
-    });
+      sort: dto.sort,
+    }
+    const users = await userService.getFindUsers(dto.type, data, options);
 
     return res.status(httpStatus.OK).json({
       success: true,
