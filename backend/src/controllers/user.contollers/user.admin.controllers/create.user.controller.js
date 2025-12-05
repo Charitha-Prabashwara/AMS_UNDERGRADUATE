@@ -1,7 +1,7 @@
 const UserService = require('../../../services/UserService')
 const userService = new UserService()
 
-exports.create = async(dto,res, next)=>{
+exports.create = async(dto,req, res, next)=>{
     try {
        const user = await userService.createNewUser(dto.type, {
         registration_id:dto.registrationId,

@@ -60,9 +60,32 @@ class UserService{
   * @param {Object} user - User class (Admin, Lecturer, DepartmentHead, or Student).
   * @returns {Promise<Array>} Array of user objects.
   */
-  async getFindUsers(user){
-    const userClass  = user;
-    return await userClass.find();
+  async getFindUsers(userType, data={}, options={}){
+    const userClass = selectCorrectUser(userType);
+    
+ 
+    if(data.registration_id!= undefined) userClass.registration_id = data.registration_id;
+   
+    if(data.name.first_name) userClass["name.first_name"] = data.name.first_name;
+    if(data.name.last_name) userClass["name.last_name"] = data.name.last_name;
+    if(data.name.full_name) userClass["name.full_name"] = data.name.full_name;
+    if(data.name.with_initial_name) userClass["name.with_initial_name"] = data.name.with_initial_name;
+   
+    if(data.email) userClass.email = data.email;
+   
+    if(data.address.line1) userClass["address.line1"] = data.name.line1;
+    if(data.address.line2) userClass["address.line2"] = data.name.line2;
+    if(data.address.zip) userClass["address.zip"] = data.name.zip;
+    
+   
+    if(data.last_login) userClass.last_login = data.last_login;
+    if(data.enable_state) userClass.enable_state = data.enable_state;
+    if(data.createdAt_timestamp) userClass.createdAt_timestamp = data.createdAt_timestamp;
+    if(data.updatedAt_timestamp) userClass.updatedAt_timestamp = data.updatedAt_timestamp;
+    if(data.department) userClass._department = data.department;
+    
+
+    return await userClass.find(options);
   }
 
   /**

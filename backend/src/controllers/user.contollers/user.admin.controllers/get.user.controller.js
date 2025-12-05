@@ -62,5 +62,45 @@ exports.getUserByEmailId = async(dto,req, res, next)=>{
 
 
 exports.allUsers = async(dto, req, res, next)=>{
-    
+    try {
+        
+        const data = {
+            
+            registration_id: dto.registrationId,
+            name:{
+                first_name: dto.firstName,
+                last_name: dto.lastName,
+                full_name: dto.fullName,
+                with_initial_name: dto.nameWithInitial
+            },
+            email: dto.email,
+            address: {
+                line1: dto.addressLine1,
+                line2: dto.addressLine2,
+                zip: dto.addressZip
+            },
+            department: dto.departmentId,
+            last_login: dto.lastLogin,
+            enable_state: dto.enableState,
+            createdAt_timestamp: dto.createdAt,
+            updatedAt_timestamp: dto.updatedAt,
+            _type: dto.type
+        }
+        
+       
+        
+        const users = await userService.getFindUsers(dto.type, data, {select:['-password']})
+
+        return res.status(httpStatus.OK).json(
+            {
+                success:true,
+                data:{
+                    users:users
+                }
+
+            }
+        )
+    } catch (error) {
+        next(error)
+    }
 }

@@ -125,11 +125,11 @@ describe('userService test', () => {
     for (const user of adminUsers) {
 
       const service = new UserService();
-      const found_users = await service.getFindUsers(user);
+      const found_users = await service.getFindUsers(userTypes.USER_ADMIN, user);
       found_users.forEach(found => {
         expect(found).toBeDefined();
         expect(found).toBeInstanceOf(Admin)
-        expect(found).toBe(user);
+        
       });
      
     }

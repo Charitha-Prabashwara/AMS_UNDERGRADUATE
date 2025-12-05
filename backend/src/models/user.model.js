@@ -15,25 +15,29 @@ const userSchema = new mongoose.Schema(
       first_name:{
         type: String,
         required:true,
-        trim:true
+        trim:true,
+        index:true
       },
 
       last_name:{
         type: String,
         required:true,
-        trim:true
+        trim:true,
+        index:true
       },
 
       full_name:{
         type: String,
         required:true,
-        trim:true
+        trim:true,
+        index:true
       },
 
       with_initial_name:{
         type: String,
         required:true,
-        trim:true
+        trim:true,
+        index:true
       }
 
     },
