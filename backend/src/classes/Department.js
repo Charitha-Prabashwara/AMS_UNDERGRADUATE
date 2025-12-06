@@ -1,4 +1,5 @@
 const { DepartmentRepository } = require('./DATABASE');
+const repository =  new DepartmentRepository();
 class Department {
   id;
   name;
@@ -15,7 +16,6 @@ class Department {
     this.createdAt_timestamp = data.createdAt_timestamp;
     this.updatedAt_timestamp = data.updatedAt_timestamp;
 
-    this.repository = new DepartmentRepository();
   }
 
   #matchFieldsAndParams() {
@@ -40,7 +40,7 @@ class Department {
   async save() {
     try {
       const params = this.#matchFieldsAndParams();
-      const dept = await this.repository.save(params);
+      const dept = await repository.save(params);
       return new Department(dept);
     } catch (error) {
       throw error;
@@ -49,7 +49,7 @@ class Department {
 
   async findById(id) {
     try {
-      const dept = await this.repository.findById(id);
+      const dept = await repository.findById(id);
       return new Department(dept);
     } catch (error) {
       throw error;
@@ -59,7 +59,7 @@ class Department {
   async find() {
     try {
       const params = this.#matchFieldsAndParams();
-      const dept = await this.repository.find(params);
+      const dept = await repository.find(params);
       return dept.map((department) => new Department(department));
     } catch (error) {
       throw error;
@@ -69,7 +69,7 @@ class Department {
   async deleteOne() {
     try {
       const params = this.#matchFieldsAndParams();
-      const dept = this.repository.deleteOne(params);
+      const dept = repository.deleteOne(params);
       return new Department(dept);
     } catch (error) {
       throw error;
@@ -78,7 +78,7 @@ class Department {
 
   async deleteById(id) {
     try {
-      const dept = await this.repository.deleteById(id);
+      const dept = await repository.deleteById(id);
       return new Department(dept);
     } catch (error) {
       throw error;
