@@ -96,7 +96,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 // const {autoInactiveExpiredOffers} = require("./services/offer.service");
 
 // // Routes imports
-const { base_router, adminRouter } = require('./routes');
+const { base_router, adminRouter, departmentRouter } = require('./routes');
 // const categoryRouter = require("./routes/category.route");
 // const subcategoryRouter = require("./routes/subcategory.route");
 // const brandRouter = require("./routes/brand.route");
@@ -128,5 +128,6 @@ const { base_router, adminRouter } = require('./routes');
 // // Routes
 app.use('/api/v1/', base_router);
 app.use('/api/v1/admin/', adminRouter);
+app.use('/api/v1/department/', departmentRouter)
 
 module.exports = app;
