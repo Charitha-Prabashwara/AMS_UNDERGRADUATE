@@ -7,6 +7,8 @@ const {
 const { getUserByEmailDTO } = require('./userDTO/getUserByEmail');
 const { UpdateUserByIdDTO } = require('./userDTO/updateUserByIdDTO');
 const { GetUserFindDTO } = require('./userDTO/getUserFindDTO');
+const {GetDepartmentByIdDTO} = require('./departmentDTO/getDepartmentByIdDTO')
+const {CreateDepartmentDTO} = require('./departmentDTO/createDepartmentDTO')
 module.exports = {
   CreateUserDTO,
   ErrorResponseDTO,
@@ -15,4 +17,6 @@ module.exports = {
   getUserByEmailDTO,
   UpdateUserByIdDTO,
   GetUserFindDTO,
+  CreateDepartmentDTO,
+  GetDepartmentByIdDTO
 };
