@@ -8,7 +8,7 @@ const TokenExpiredError = require('./AuthTokenErrors/TokenExpiredError');
 const JsonWebTokenError = require('./AuthTokenErrors/JsonWebTokenError');
 const TokenNotBefore = require('./AuthTokenErrors/TokenNotBeforeError');
 const GeneralTokenError = require('./AuthTokenErrors/GeneralTokenError');
-const DepartmentNotFoundError = require('./RepositoryErrors/DepartmentRepositoryErrors/DepartmentNotFoundError');
+//const DepartmentNotFoundError = require('./RepositoryErrors/DepartmentRepositoryErrors/DepartmentNotFoundError');
 const InvalidDepartmentIdError = require('./RepositoryErrors/DepartmentRepositoryErrors/InvalidDepartmentIdError');
 
 const InvalidPasswordProvided = require('./PasswordHashErrors/InvalidPasswordProvided');
@@ -23,6 +23,8 @@ const InvalidAuthFormatError = require('./AuthServiceErrors/InvalidAuthFormatErr
 const LogoutFailed = require('./AuthServiceErrors/LogoutFailedError');
 
 const UserUpdateFailed = require('./UserServiceErrors/UserUpdateFailedError');
+
+const DepartmentNotFoundError = require('./DepartmentServiceErrors/DepartmentNotFoundError')
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -44,5 +46,5 @@ module.exports = {
   DoesNotHavePermissionError,
   InvalidAuthFormatError,
   LogoutFailed,
-  UserUpdateFailed,
+  UserUpdateFailed
 };
