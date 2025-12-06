@@ -1,5 +1,7 @@
 const Department = require('../classes/Department');
+const NullDepartment = require('../classes/NullDepartment')
 const DepartmentBuilder = require('../classes/DepartmentBuilder');
+const {DepartmentNotFoundError} = require('../errors')
 
 /**
  * @class DepartmentService
@@ -33,6 +35,7 @@ class DepartmentService {
    */
   async getDepartmentById(id) {
     return this.deptClass.findById(id);
+    
   }
 
   /**
@@ -111,6 +114,10 @@ class DepartmentService {
    */
   async deleteDepartmentById(id) {
     return this.deptClass.deleteById(id);
+  }
+
+  isNullDepartment(dept){
+    return dept == NullDepartment
   }
 }
 

@@ -83,9 +83,8 @@ describe('DepartmentService – Integration Test', () => {
     expect(deleted.id).toStrictEqual(created.id);
   });
 
-  test('should throw error when department not found', async () => {
-    await expect(
-      service.getDepartmentById('123456789012345678901234'),
-    ).rejects.toThrow();
+  test('should null object when department not found', async () => {
+    const dept =await service.getDepartmentById('123456789012345678901234')
+    await expect(service.isNullDepartment(dept)).toBe(true);
   });
 });
