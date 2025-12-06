@@ -1,25 +1,42 @@
 // assets
 import { ChromeOutlined, QuestionOutlined } from '@ant-design/icons';
-
+import { FaUserShield, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa";
 // icons
 const icons = {
   ChromeOutlined,
-  QuestionOutlined
+  QuestionOutlined,
+  FaUserShield,
+  FaChalkboardTeacher,
+  FaUserGraduate
 };
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
 
 const support = {
   id: 'support',
-  title: 'Support',
+  title: 'Academic User',
   type: 'group',
   children: [
     {
-      id: 'sample-page',
-      title: 'Sample Page',
+      id: 'lecturer',
+      title: 'Lecturer',
       type: 'item',
-      url: '/sample-page',
-      icon: icons.ChromeOutlined
+      url: '/lecturer',
+      icon: icons.FaChalkboardTeacher
+    },
+    {
+      id: 'hod',
+      title: 'Department Executive',
+      type: 'item',
+      url: '/hod',
+      icon: icons.FaUserShield
+    },
+    {
+      id: 'student',
+      title: 'Student',
+      type: 'item',
+      url: '/student',
+      icon: icons.FaUserGraduate
     },
     {
       id: 'documentation',
