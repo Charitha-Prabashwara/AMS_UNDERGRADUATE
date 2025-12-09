@@ -5,16 +5,16 @@ class UpdateDepartmentByIdDTO {
   constructor(data) {
     const schema = Joi.object({
       id: Joi.string()
-                    .pattern(/^[0-9a-fA-F]{24}$/)
-                    .required()
-                    .messages({
-                      'string.pattern.base': 'id must be a valid id',
-                    }),
+        .pattern(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .messages({
+          'string.pattern.base': 'id must be a valid id',
+        }),
       longName: Joi.string().max(100),
       shortName: Joi.string().max(20),
       keyName: Joi.string().max(10),
       description: Joi.string(),
-      deleted:Joi.boolean()
+      deleted: Joi.boolean(),
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });

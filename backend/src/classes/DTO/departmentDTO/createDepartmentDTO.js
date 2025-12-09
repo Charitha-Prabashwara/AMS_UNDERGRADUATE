@@ -4,12 +4,10 @@ const { userTypes } = require('../../../config');
 class CreateDepartmentDTO {
   constructor(data) {
     const schema = Joi.object({
-
       longName: Joi.string().max(100).required(),
       shortName: Joi.string().max(20).required(),
       keyName: Joi.string().max(10).required(),
       description: Joi.string(),
-
     });
 
     const { error, value } = schema.validate(data, { abortEarly: false });

@@ -1,6 +1,6 @@
 const { DepartmentRepository } = require('./DATABASE');
-const repository =  new DepartmentRepository();
-const NullDepartment = require('./NullDepartment')
+const repository = new DepartmentRepository();
+const NullDepartment = require('./NullDepartment');
 class Department {
   id;
   name;
@@ -16,7 +16,6 @@ class Department {
     this.deleted = data.deleted;
     this.createdAt_timestamp = data.createdAt_timestamp;
     this.updatedAt_timestamp = data.updatedAt_timestamp;
-
   }
 
   #matchFieldsAndParams() {
@@ -38,14 +37,14 @@ class Department {
     return params;
   }
 
-    #wrapTONullDepartment() {
-      return NullDepartment;
-    }
-  
-    #wrapToDepartment(obj) {
-      if (!obj) return this.#wrapTONullDepartment();
-      return new Department(obj);
-    }
+  #wrapTONullDepartment() {
+    return NullDepartment;
+  }
+
+  #wrapToDepartment(obj) {
+    if (!obj) return this.#wrapTONullDepartment();
+    return new Department(obj);
+  }
 
   async save() {
     try {
@@ -57,17 +56,17 @@ class Department {
     }
   }
 
-  async findById(id, select=[]) {
+  async findById(id, select = []) {
     try {
       const dept = await repository.findById(id, select);
-      return this.#wrapToDepartment(dept)
+      return this.#wrapToDepartment(dept);
     } catch (error) {
       throw error;
     }
   }
 
-  async findByIdAndUpdate(deptObj, select=[]){
-     try {
+  async findByIdAndUpdate(deptObj, select = []) {
+    try {
       const dept = await repository.save(deptObj, select);
       return this.#wrapToDepartment(dept);
     } catch (error) {
@@ -75,11 +74,11 @@ class Department {
     }
   }
 
-  async find(options={}) {
+  async find(options = {}) {
     try {
       const params = this.#matchFieldsAndParams();
       const dept = await repository.find(params, options);
-      return dept.map((dept) =>this.#wrapToDepartment(dept));
+      return dept.map((dept) => this.#wrapToDepartment(dept));
     } catch (error) {
       throw error;
     }

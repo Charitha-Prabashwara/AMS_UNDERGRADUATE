@@ -24,7 +24,7 @@ const LogoutFailed = require('./AuthServiceErrors/LogoutFailedError');
 
 const UserUpdateFailed = require('./UserServiceErrors/UserUpdateFailedError');
 
-const DepartmentNotFoundError = require('./DepartmentServiceErrors/DepartmentNotFoundError')
+const DepartmentNotFoundError = require('./DepartmentServiceErrors/DepartmentNotFoundError');
 module.exports = {
   UserNotFoundError,
   InvalidUserIdError,
@@ -46,5 +46,5 @@ module.exports = {
   DoesNotHavePermissionError,
   InvalidAuthFormatError,
   LogoutFailed,
-  UserUpdateFailed
+  UserUpdateFailed,
 };

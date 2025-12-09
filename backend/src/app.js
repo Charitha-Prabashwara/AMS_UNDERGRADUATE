@@ -5,8 +5,8 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 const cookieParser = require('cookie-parser');
 const Redis = require('ioredis');
 const compression = require('compression');
@@ -65,21 +65,18 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(bodyParser.json({ limit: '10mb' }));
 
-
 // // Swagger setup
 
-const swaggerOptions = require('./docs/swagger/swaggerOptions')
+const swaggerOptions = require('./docs/swagger/swaggerOptions');
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // // Routes imports
 const { base_router, adminRouter, departmentRouter } = require('./routes');
 
-
 // // Routes
 app.use('/api/v1/', base_router);
 app.use('/api/v1/admin/', adminRouter);
-app.use('/api/v1/department/', departmentRouter)
+app.use('/api/v1/department/', departmentRouter);
 
 module.exports = app;

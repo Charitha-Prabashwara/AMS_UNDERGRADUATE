@@ -83,7 +83,7 @@ exports.allUsers = async (dto, req, res, next) => {
       limit: dto.limit,
       select: ['-password'],
       sort: dto.sort,
-    }
+    };
     const users = await userService.getFindUsers(dto.type, data, options);
 
     return res.status(httpStatus.OK).json({

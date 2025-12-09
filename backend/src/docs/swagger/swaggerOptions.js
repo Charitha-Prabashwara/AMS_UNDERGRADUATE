@@ -44,16 +44,16 @@ This backend is suitable for:
 
 The system is optimized for long-term maintainability, extensibility, and enterprise use cases while enabling integration with web, mobile, and third-party platforms.
 
-      `
+      `,
     },
     servers: [
       {
         url: 'http://localhost:8080/api/v1',
-        description: 'Local Development Server'
-      }
-    ]
+        description: 'Local Development Server',
+      },
+    ],
   },
-  apis: ['./routes/*.js']
+  apis: ['./routes/*.js'],
 };
 
-module.exports = swaggerOptions
+module.exports = swaggerOptions;

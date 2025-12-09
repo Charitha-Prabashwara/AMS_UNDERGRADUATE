@@ -1,9 +1,9 @@
-const DepartmentServiceBaseError = require('./DepartmentServiceBaseError')
+const DepartmentServiceBaseError = require('./DepartmentServiceBaseError');
 
-class DepartmentNotFoundError extends DepartmentServiceBaseError{
-    constructor() {
-        super('Department not found', 404);
-     }
+class DepartmentNotFoundError extends DepartmentServiceBaseError {
+  constructor() {
+    super('Department not found', 404);
+  }
 }
 
-module.exports = DepartmentNotFoundError
+module.exports = DepartmentNotFoundError;

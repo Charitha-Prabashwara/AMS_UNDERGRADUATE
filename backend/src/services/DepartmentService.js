@@ -1,7 +1,7 @@
 const Department = require('../classes/Department');
-const NullDepartment = require('../classes/NullDepartment')
+const NullDepartment = require('../classes/NullDepartment');
 const DepartmentBuilder = require('../classes/DepartmentBuilder');
-const {DepartmentNotFoundError} = require('../errors')
+const { DepartmentNotFoundError } = require('../errors');
 
 /**
  * @class DepartmentService
@@ -35,7 +35,6 @@ class DepartmentService {
    */
   async getDepartmentById(id) {
     return this.deptClass.findById(id);
-    
   }
 
   /**
@@ -55,19 +54,21 @@ class DepartmentService {
    *
    * @throws {Error} If the model encounters invalid filter data.
    */
-  async getFindDepartment(data = {}, options={}) {
+  async getFindDepartment(data = {}, options = {}) {
     const dept = new Department();
-    
-    if(data.name){
-      if(data.name.long) dept['name.long'] = data.name.long;
-      if(data.name.short) dept['name.short'] = data.name.short;
-      if(data.name.key) dept['name.key'] = data.name.key;
+
+    if (data.name) {
+      if (data.name.long) dept['name.long'] = data.name.long;
+      if (data.name.short) dept['name.short'] = data.name.short;
+      if (data.name.key) dept['name.key'] = data.name.key;
     }
-   
-    if(data.description) dept.description = data.description;
-    if(data.deleted != undefined) dept.deleted = data.deleted;
-    if(data.createdAt_timestamp) dept.createdAt_timestamp = data.createdAt_timestamp;
-    if(data.updatedAt_timestamp) dept.updatedAt_timestamp = data.updatedAt_timestamp;
+
+    if (data.description) dept.description = data.description;
+    if (data.deleted != undefined) dept.deleted = data.deleted;
+    if (data.createdAt_timestamp)
+      dept.createdAt_timestamp = data.createdAt_timestamp;
+    if (data.updatedAt_timestamp)
+      dept.updatedAt_timestamp = data.updatedAt_timestamp;
 
     return dept.find(options);
   }
@@ -114,12 +115,12 @@ class DepartmentService {
     return this.deptClass.deleteById(id);
   }
 
-  async updateDepartmentById(data={}){
-    return this.deptClass.findByIdAndUpdate(data)
+  async updateDepartmentById(data = {}) {
+    return this.deptClass.findByIdAndUpdate(data);
   }
 
-  isNullDepartment(dept){
-    return dept == NullDepartment
+  isNullDepartment(dept) {
+    return dept == NullDepartment;
   }
 }
 
