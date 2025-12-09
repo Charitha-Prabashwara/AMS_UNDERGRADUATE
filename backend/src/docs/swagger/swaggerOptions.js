@@ -1,9 +1,10 @@
+const { version } = require('../../../package.json');
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'Academic Management System API',
-      version: '1.0.0',
+      version: version,
       description: `
         This API provides backend services for a comprehensive Academic Management System (AMS) designed for universities, institutes, and higher-education platforms. The system supports secure user operations, departmental management, authentication, academic data handling, and long-term system scalability.
 

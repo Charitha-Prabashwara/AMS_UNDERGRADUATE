@@ -5,13 +5,11 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
 const cookieParser = require('cookie-parser');
 const Redis = require('ioredis');
 const compression = require('compression');
 const { DB_connect } = require('./database/db');
-
+const envTypes = require('./config/EnvTypes')
 // Database connection
 DB_connect();
 
@@ -66,10 +64,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(bodyParser.json({ limit: '10mb' }));
 
 // // Swagger setup
+if (process.env.NODE_ENV !== envTypes.PRODUCTION) {
 
-const swaggerOptions = require('./docs/swagger/swaggerOptions');
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+ const swaggerUi = require('swagger-ui-express');
+ const swaggerJsDoc = require('swagger-jsdoc');
+ const swaggerOptions = require('./docs/swagger/swaggerOptions');
+ const swaggerDocs = swaggerJsDoc(swaggerOptions);
+ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+  customSiteTitle: "AMS API Documentation",
+  customCss: ".swagger-ui .topbar { display: none }",
+ }));
+
+}
 
 // // Routes imports
 const { base_router, adminRouter, departmentRouter } = require('./routes');
