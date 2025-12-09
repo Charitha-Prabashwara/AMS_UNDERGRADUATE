@@ -55,23 +55,21 @@ class DepartmentService {
    *
    * @throws {Error} If the model encounters invalid filter data.
    */
-  async getFindDepartment(data = {}) {
+  async getFindDepartment(data = {}, options={}) {
     const dept = new Department();
-    const {
-      name,
-      description,
-      deleted,
-      createdAt_timestamp,
-      updatedAt_timestamp,
-    } = data;
+    
+    if(data.name){
+      if(data.name.long) dept['name.long'] = data.name.long;
+      if(data.name.short) dept['name.short'] = data.name.short;
+      if(data.name.key) dept['name.key'] = data.name.key;
+    }
+   
+    if(data.description) dept.description = data.description;
+    if(data.deleted != undefined) dept.deleted = data.deleted;
+    if(data.createdAt_timestamp) dept.createdAt_timestamp = data.createdAt_timestamp;
+    if(data.updatedAt_timestamp) dept.updatedAt_timestamp = data.updatedAt_timestamp;
 
-    dept.name = name;
-    dept.description = description;
-    dept.deleted = deleted;
-    dept.createdAt_timestamp = createdAt_timestamp;
-    dept.updatedAt_timestamp = updatedAt_timestamp;
-
-    return dept.find();
+    return dept.find(options);
   }
 
   /**
@@ -114,6 +112,10 @@ class DepartmentService {
    */
   async deleteDepartmentById(id) {
     return this.deptClass.deleteById(id);
+  }
+
+  async updateDepartmentById(data={}){
+    return this.deptClass.findByIdAndUpdate(data)
   }
 
   isNullDepartment(dept){

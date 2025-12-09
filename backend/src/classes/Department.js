@@ -57,19 +57,28 @@ class Department {
     }
   }
 
-  async findById(id) {
+  async findById(id, select=[]) {
     try {
-      const dept = await repository.findById(id);
+      const dept = await repository.findById(id, select);
       return this.#wrapToDepartment(dept)
     } catch (error) {
       throw error;
     }
   }
 
-  async find() {
+  async findByIdAndUpdate(deptObj, select=[]){
+     try {
+      const dept = await repository.save(deptObj, select);
+      return this.#wrapToDepartment(dept);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async find(options={}) {
     try {
       const params = this.#matchFieldsAndParams();
-      const dept = await repository.find(params);
+      const dept = await repository.find(params, options);
       return dept.map((dept) =>this.#wrapToDepartment(dept));
     } catch (error) {
       throw error;
