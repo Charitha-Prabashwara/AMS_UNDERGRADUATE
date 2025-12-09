@@ -1,3 +1,6 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
 # 🎓 Academic Management System – Full Backend API  
 **Node.js • Express • MongoDB • JWT • RBAC**
 
