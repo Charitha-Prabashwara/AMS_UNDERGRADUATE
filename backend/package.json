@@ -1,7 +1,23 @@
 {
-  "name": "AMS-backend",
+  "name": "ams-api",
   "version": "1.0.0",
   "description": "This is a Backend service for AMS",
+  "keywords": [
+    "academic",
+    "management",
+    "university",
+    "school",
+    "gov",
+    "education",
+    "backend",
+    "nodejs",
+    "express",
+    "mongodb",
+    "jwt",
+    "rbac",
+    "res",
+    "api"
+  ],
   "main": "Server.js",
   "scripts": {
     "pm2start": "pm2 start ecosystem.config.js --env production",
@@ -12,8 +28,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "author": "CharithaPrabhashwara",
-  "license": "ISC",
+  "author": "Charitha Prabashwara",
+  "license": "GPL-3.0",
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
     "bcrypt": "^6.0.0",
