@@ -16,7 +16,7 @@ const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const Hod = Loadable(lazy(() => import('pages/extra-pages/hod')));
 const Lecturer = Loadable(lazy(() => import('pages/extra-pages/lecturer')));
 const Student = Loadable(lazy(() => import('pages/extra-pages/student')));
-
+const Department = Loadable(lazy(() => import('pages/extra-pages/department')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -59,6 +59,10 @@ const MainRoutes = {
      {
       path: 'student',
       element: <Student />
+    },
+    {
+      path: 'department',
+      element: <Department />
     }
   ]
 };

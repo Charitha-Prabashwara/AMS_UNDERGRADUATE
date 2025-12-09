@@ -21,8 +21,8 @@ const icons = {
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
 
 const utilities = {
-  id: 'utilities',
-  title: 'Utilities',
+  id: 'academic-uni',
+  title: 'Academic Unit',
   type: 'group',
   children: [
     {
@@ -44,6 +44,13 @@ const utilities = {
       title: 'Shadow',
       type: 'item',
       url: '/shadow',
+      icon: icons.BarcodeOutlined
+    },
+     {
+      id: 'department',
+      title: 'Department',
+      type: 'item',
+      url: '/department',
       icon: icons.BarcodeOutlined
     }
   ]
