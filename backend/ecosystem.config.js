@@ -4,6 +4,7 @@ module.exports = {
       name: "ams-api",
       script: "src/server.js",
       instances: 1,
+      fork:true,
       autorestart: true,
       max_memory_restart: "200M",
       watch: false,
