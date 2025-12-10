@@ -26,36 +26,33 @@ app.use(
 // });
 
 // //Uncomment this when using local development
-// //From this to
-// // const allowedOrigins = [
-// //   "http://localhost:3000",
-// //    "http://34.142.129.6",
-// //   "https://dev.damselbiz.com",
-// //   "https://dev.app.damselbiz.com"
-// // ];
+
+const allowedOrigins = [
+  "http://localhost:3000"
+];
 
 // // // CORS options
-// // const corsOptions = {
-// //   origin: (origin, callback) => {
-// //     if (!origin || allowedOrigins.includes(origin)) {
-// //       callback(null, true);
-// //     } else {
-// //       callback(new Error('Not allowed by CORS'));
-// //     }
-// //   },
-// //   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-// //   allowedHeaders: [
-// //     "Origin",
-// //     "X-Requested-With",
-// //     "Content-Type",
-// //     "Accept",
-// //     "Authorization",
-// //     "X-Token"
-// //   ],
-// //   credentials: true,
-// // };
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+    "X-Token"
+  ],
+  credentials: true,
+};
 
-// // app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 // //this
 
 app.use(morgan('tiny'));
